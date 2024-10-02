@@ -1,0 +1,11 @@
+{
+  "name": "lazapee",
+  "version": "1.0.0",
+  "description": "An E-Commerce Web Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LazaPee team",
+  "license": "ISC"
+}
