@@ -1,39 +1,65 @@
 import { Link, NavLink } from 'react-router-dom';
 import { IoSearchSharp, IoPersonCircle } from 'react-icons/io5';
 import { FaShoppingCart } from 'react-icons/fa';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import { useState } from 'react';
 export default function Header() {
   const navLinks = ['Shop', 'On Sale', 'New Arrivals', 'Brands'];
+  const userOptions = ['Profile', 'Orders', 'Wishlist', 'Logout'];
+  const [isUserOptionsVisible, setIsUserOptionsVisible] = useState(false);
   return (
-    <header className='container mx-auto my-3 flex items-center gap-10 bg-white p-4'>
-      <h1 className='font-display text-3xl font-bold'>LAZAPEE</h1>
-      <nav className=''>
+    <header className='container mx-auto flex items-center gap-10 bg-white p-4 md:my-3'>
+      <GiHamburgerMenu className='h-6 w-6 lg:hidden' />
+      <Link to='/' className='flex-1 md:flex-grow-0'>
+        <h1 className='font-display text-3xl font-bold'>LAZAPEE</h1>
+      </Link>
+      <nav className='hidden lg:block'>
         {navLinks.map((link) => (
           <NavLink
             to={`/${link.toLowerCase().replace(' ', '-')}`}
             key={link}
-            className='font-primary mx-6 font-medium'
+            className='mx-6 font-primary font-medium'
           >
             {link}
           </NavLink>
         ))}
       </nav>
-      <div className='flex h-12 flex-1 items-center gap-2 overflow-hidden rounded-full bg-[#F0F0F0] px-3 py-2'>
-        <button className='cursor-pointer'>
-          <IoSearchSharp className='fill-black opacity-40' />
-        </button>
-        <input
-          type='text'
-          className='font-primary flex-1 bg-transparent text-base leading-3 outline-none'
-          placeholder='Search for products...'
-        />
-      </div>
-      <div className='flex gap-4'>
-        <Link to='/cart'>
+      <div className='flex flex-1 items-center gap-4'>
+        <div className='flex items-center gap-2 overflow-hidden rounded-full px-3 py-2 md:h-12 md:flex-1 md:bg-[#F0F0F0]'>
+          <button className='cursor-pointer'>
+            <IoSearchSharp className='h-6 w-6 fill-black md:opacity-40' />
+          </button>
+          <input
+            type='text'
+            className='hidden w-0 bg-transparent font-primary text-base leading-3 outline-none md:block md:flex-1'
+            placeholder='Search for products...'
+          />
+        </div>
+        <Link to='/cart' className='lg:ml-4'>
           <FaShoppingCart className='h-6 w-6' />
         </Link>
-        <Link to='/profile'>
-          <IoPersonCircle className='h-6 w-6 hover:fill-red-400' />
-        </Link>
+        <div
+          className='relative'
+          onMouseEnter={() => {
+            setIsUserOptionsVisible(true);
+          }}
+        >
+          <IoPersonCircle className='h-6 w-6 cursor-pointer hover:fill-red-400' />
+          <div
+            className={`${isUserOptionsVisible ? 'block' : 'hidden'} absolute -bottom-2 right-0 translate-y-full`}
+            onMouseLeave={() => {
+              setIsUserOptionsVisible(false);
+            }}
+          >
+            <ul className='w-fit bg-red-500 p-4'>
+              {userOptions.map((option) => (
+                <li key={option}>
+                  <Link to={`/${option.toLowerCase()}`}>{option}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </header>
   );
