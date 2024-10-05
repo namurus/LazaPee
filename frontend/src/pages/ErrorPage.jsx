@@ -1,7 +1,6 @@
-import Template from './pages/Teamplate';
-import './styles/index.css';
+import Template from './Teamplate';
 
-function App() {
+export default function ErrorPage() {
   return (
     <Template>
       <div className='flex flex-1 flex-col items-center justify-center'>
@@ -11,5 +10,3 @@ function App() {
     </Template>
   );
 }
-
-export default App;

@@ -1,11 +1,11 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { IoSearchSharp, IoPersonCircle } from 'react-icons/io5';
 import { FaShoppingCart } from 'react-icons/fa';
 export default function Header() {
   const navLinks = ['Shop', 'On Sale', 'New Arrivals', 'Brands'];
   return (
     <header className='container mx-auto my-3 flex items-center gap-10 bg-white p-4'>
-      <h1 className='font-display text-3xl font-bold'>SHOP.CO</h1>
+      <h1 className='font-display text-3xl font-bold'>LAZAPEE</h1>
       <nav className=''>
         {navLinks.map((link) => (
           <NavLink
@@ -23,13 +23,17 @@ export default function Header() {
         </button>
         <input
           type='text'
-          className='flex-1 bg-transparent text-base leading-3 outline-none'
+          className='font-primary flex-1 bg-transparent text-base leading-3 outline-none'
           placeholder='Search for products...'
         />
       </div>
       <div className='flex gap-4'>
-        <FaShoppingCart className='h-6 w-6' />
-        <IoPersonCircle className='h-6 w-6' />
+        <Link to='/cart'>
+          <FaShoppingCart className='h-6 w-6' />
+        </Link>
+        <Link to='/profile'>
+          <IoPersonCircle className='h-6 w-6 hover:fill-red-400' />
+        </Link>
       </div>
     </header>
   );
