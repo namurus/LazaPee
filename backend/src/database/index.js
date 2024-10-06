@@ -1,7 +1,6 @@
-import { Sequelize, DataTypes } from 'sequelize';
+const Sequelize = require("sequelize")
 
-import * as config from '../config/sequelize.js';
-
+const config = require("../config/sequelize.js")
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -14,7 +13,7 @@ const modelDefiners = [
 ];
 
 for (const modelDefiner of modelDefiners) {
-	modelDefiner(sequelize, DataTypes);
+	modelDefiner(sequelize, Sequelize.DataTypes);
 }
 
 Object.keys(sequelize.models).forEach((modelName) => {
@@ -22,5 +21,4 @@ Object.keys(sequelize.models).forEach((modelName) => {
 		sequelize.models[modelName].associate(sequelize.models);
 	}
 });
-
-export default sequelize;
+module.exports = sequelize;
