@@ -7,6 +7,9 @@ export default {
         display: 'Paytone One',
         primary: 'Poppins',
       },
+      borderWidth: {
+        1: '1px',
+      },
     },
   },
   plugins: [],
