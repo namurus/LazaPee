@@ -7,7 +7,7 @@ export default function Template({ children }) {
   return (
     <div className='flex min-h-screen flex-col font-primary'>
       <Header />
-      <main className='flex flex-1 flex-col lg:[&>*:not(.full-screen-section)]:mx-24'>
+      <main className='flex flex-1 flex-col [&>*:not(.full-screen-section)]:mx-4 lg:[&>*:not(.full-screen-section)]:mx-24'>
         {children ? children : <ErrorContent />}
       </main>
       <Footer />

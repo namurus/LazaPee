@@ -3,6 +3,7 @@ import './styles/index.css';
 import Hero from './components/Hero';
 import BrandShowcase from './components/BrandShowcase';
 import ProductShowcase from './components/ProductShowcase';
+import CategoryShowcase from './components/CategoryShowcase';
 
 function App() {
   const heroInfo = {
@@ -32,6 +33,7 @@ function App() {
         <ProductShowcase showcaseTitle={'new arrivals'} />
         <ProductShowcase showcaseTitle={'top selling'} />
       </section>
+      <CategoryShowcase />
     </Template>
   );
 }

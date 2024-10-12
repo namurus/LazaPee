@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { stringToId } from '../helpers';
+import SectionHeading from './SectionHeading';
 
 ProductShowcase.propTypes = {
   showcaseTitle: PropTypes.string.isRequired,
@@ -25,10 +26,8 @@ function ProductShowcase({ showcaseTitle }) {
     fetchData();
   }, []);
   return (
-    <div className='m-4 [&>*]:my-7 lg:[&>*]:lg:my-12'>
-      <h1 className='text-center font-display text-3xl font-bold uppercase lg:text-5xl'>
-        {showcaseTitle}
-      </h1>
+    <div className='[&>*]:my-7 lg:[&>*]:lg:my-12'>
+      <SectionHeading title={showcaseTitle} />
       <div className='grid auto-cols-[minmax(250px,1fr)] grid-flow-col gap-4 overflow-x-auto sm:grid-flow-row sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-8'>
         {cards.map((card) => {
           return (
