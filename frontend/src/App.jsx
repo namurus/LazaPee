@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import BrandShowcase from './components/BrandShowcase';
 import ProductShowcase from './components/ProductShowcase';
 import CategoryShowcase from './components/CategoryShowcase';
+import CommentShowcase from './components/CommentShowcase';
 
 function App() {
   const heroInfo = {
@@ -34,6 +35,7 @@ function App() {
         <ProductShowcase showcaseTitle={'top selling'} />
       </section>
       <CategoryShowcase />
+      <CommentShowcase />
     </Template>
   );
 }

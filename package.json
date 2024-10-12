@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "tailwind-merge": "^2.5.3"
   }
 }

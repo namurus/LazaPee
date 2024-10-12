@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { stringToId } from '../helpers';
 import SectionHeading from './SectionHeading';
+import StarRating from './StarRating';
 
 ProductShowcase.propTypes = {
   showcaseTitle: PropTypes.string.isRequired,
@@ -45,9 +46,12 @@ function ProductShowcase({ showcaseTitle }) {
                       {card.title}
                     </h2>
                   </div>
-                  <p className='text-[0.75rem] font-light lg:text-sm'>
-                    {card.rating.rate}/5
-                  </p>
+                  <div className='flex items-center gap-4'>
+                    <StarRating rating={card.rating.rate} name={card.id} />
+                    <p className='text-[0.75rem] font-light lg:text-sm'>
+                      {card.rating.rate}/5
+                    </p>
+                  </div>
                   <div className='flex gap-3 text-xl font-semibold lg:text-2xl'>
                     <p>${card.price}</p>
                     <p className='line-through opacity-40'>
