@@ -4,7 +4,7 @@ import { heroBanner } from '../assets';
 import PropTypes from 'prop-types';
 export default function Hero({ displayTitle, displayText, infoModules }) {
   return (
-    <section className='nav-height w-full bg-[#F2F0F1]'>
+    <section className='full-screen-section w-full bg-[#F2F0F1]'>
       <div className='grid h-full min-h-[83svh] w-full grid-cols-1 grid-rows-2 gap-4 px-4 lg:grid-cols-2 lg:grid-rows-1 lg:px-20'>
         <div className='my-auto py-6'>
           <h1 className='mb-5 w-full max-w-2xl text-balance font-display text-4xl font-bold leading-[0.95] tracking-wider md:text-[4rem] md:leading-none'>

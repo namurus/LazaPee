@@ -11,7 +11,7 @@ function ProductShowcase({ showcaseTitle }) {
   const [cards, setCards] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch('https://fakestoreapi.com/products?limit=6');
+      const response = await fetch('https://fakestoreapi.com/products?limit=4');
       try {
         if (!response.ok) {
           throw new Error(`${response.status}`);
@@ -25,44 +25,52 @@ function ProductShowcase({ showcaseTitle }) {
     fetchData();
   }, []);
   return (
-    <div className='m-4 [&>*]:mb-7'>
-      <h1 className='m-7 text-center font-display text-3xl font-bold uppercase'>
+    <div className='m-4 [&>*]:my-7 lg:[&>*]:lg:my-12'>
+      <h1 className='text-center font-display text-3xl font-bold uppercase lg:text-5xl'>
         {showcaseTitle}
       </h1>
-      <div className='grid auto-cols-[minmax(250px,_1fr)] grid-flow-col gap-4 overflow-x-auto'>
+      <div className='grid auto-cols-[minmax(250px,1fr)] grid-flow-col gap-4 overflow-x-auto sm:grid-flow-row sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-8'>
         {cards.map((card) => {
           return (
-            <div key={card.id} className='[&>*]:mb-4'>
-              <div className='overflow-hidden rounded-2xl'>
-                <img
-                  src={card.image}
-                  className='aspect-square w-full overflow-hidden bg-[#F0EEED] object-contain'
-                />
-              </div>
-              <div>
-                <h2 className='truncate text-nowrap text-base font-semibold'>
-                  {card.title}
-                </h2>
-                <p className='text-[0.75rem] font-light'>
-                  {card.rating.rate}/5
-                </p>
-                <div className='grid grid-cols-[1.5fr_1fr_1fr] gap-3 px-4 text-xl font-semibold'>
-                  <p>${card.price}</p>
-                  <p className='line-through opacity-40'>${card.price * 1.2}</p>
-                  <div className='flex items-center justify-center rounded-xl bg-[#FF3333] bg-opacity-10 px-2 text-[0.625rem] text-[#FF3333]'>
-                    -20%
+            <Link to={`/product/${card.id}`} key={card.id}>
+              <div className='flex h-full cursor-pointer flex-col transition-all hover:-translate-y-1 [&>*]:mb-4'>
+                <div className='overflow-hidden rounded-2xl'>
+                  <img
+                    src={card.image}
+                    className='aspect-square w-full overflow-hidden bg-[#F0EEED] object-contain'
+                  />
+                </div>
+                <div className='flex flex-1 flex-col'>
+                  <div className='flex-1'>
+                    <h2 className='line-clamp-2 text-balance text-base font-semibold capitalize lg:text-xl'>
+                      {card.title}
+                    </h2>
+                  </div>
+                  <p className='text-[0.75rem] font-light lg:text-sm'>
+                    {card.rating.rate}/5
+                  </p>
+                  <div className='flex gap-3 text-xl font-semibold lg:text-2xl'>
+                    <p>${card.price}</p>
+                    <p className='line-through opacity-40'>
+                      ${card.price * 1.2}
+                    </p>
+                    <div className='flex items-center justify-center rounded-xl bg-[#FF3333] bg-opacity-10 px-2 text-[0.625rem] text-[#FF3333] lg:px-4 lg:text-[0.75rem]'>
+                      -20%
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
       <Link
         to={`/product/${stringToId(showcaseTitle)}`}
-        className='flex w-full items-center justify-center rounded-full border-2 px-14 py-4'
+        className='flex w-full items-center justify-center rounded-full border-2 px-14 py-4 shadow-lg drop-shadow-lg transition-all hover:border-black hover:underline lg:mx-auto lg:w-max'
       >
-        <button className='flex-1'>View Product</button>
+        <button className='flex-1 text-nowrap capitalize lg:flex-grow-0'>
+          view all
+        </button>
       </Link>
     </div>
   );

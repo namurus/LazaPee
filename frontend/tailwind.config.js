@@ -10,6 +10,13 @@ export default {
       borderWidth: {
         1: '1px',
       },
+      gridAutoColumns: {
+        productShowcase: 'minmax(clamp(250px, 1fr, 300px), 1fr)',
+      },
+      gridTemplateColumns: {
+        productShowcase:
+          'repeat(auto-fill, minmax(clamp(250px, 1fr, 300px), 1fr))',
+      },
     },
   },
   plugins: [],
