@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Template from './pages/Template';
+import './styles/index.css';
+import Hero from './components/Hero';
+import BrandShowcase from './components/BrandShowcase';
+import ProductShowcase from './components/ProductShowcase';
+import CategoryShowcase from './components/CategoryShowcase';
+import CommentShowcase from './components/CommentShowcase';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const heroInfo = {
+    displayTitle: 'FIND CLOTHES THAT MATCHES YOUR STYLE',
+    displayText:
+      'Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.',
+    infoModules: [
+      {
+        primaryText: '200+',
+        secondaryText: 'International Brands',
+      },
+      {
+        primaryText: '2000+',
+        secondaryText: 'High-Quality Products',
+      },
+      {
+        primaryText: '30,000+',
+        secondaryText: 'Happy Customers',
+      },
+    ],
+  };
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Template>
+      <Hero {...heroInfo} />
+      <BrandShowcase />
+      <section className='py-4 [&>:not(:last-child)]:border-b-2'>
+        <ProductShowcase showcaseTitle={'new arrivals'} />
+        <ProductShowcase showcaseTitle={'top selling'} />
+      </section>
+      <CategoryShowcase />
+      <CommentShowcase />
+    </Template>
+  );
 }
 
-export default App
+export default App;
