@@ -42,15 +42,15 @@ export default function Header() {
         </Link>
         <div
           className='relative'
-          onMouseEnter={() => {
-            setIsUserOptionsVisible(true);
+          onClick={() => {
+            setIsUserOptionsVisible(!isUserOptionsVisible);
           }}
         >
           <IoPersonCircle className='h-6 w-6 cursor-pointer hover:fill-red-400' />
           <div
             className={`${isUserOptionsVisible ? 'pointer-events-auto visible scale-100 opacity-100' : 'pointer-events-none invisible scale-0 opacity-0'} absolute -bottom-2 right-0 origin-top-right translate-y-full transition-all duration-300`}
             onMouseLeave={() => {
-              setIsUserOptionsVisible(false);
+              setIsUserOptionsVisible(!isUserOptionsVisible);
             }}
           >
             <ul className='w-fit bg-red-500 p-4'>
