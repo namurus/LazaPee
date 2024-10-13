@@ -1,4 +1,4 @@
-import Template from './pages/Teamplate';
+import Template from './pages/Template';
 import './styles/index.css';
 import Hero from './components/Hero';
 import BrandShowcase from './components/BrandShowcase';

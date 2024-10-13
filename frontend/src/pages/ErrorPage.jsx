@@ -1,4 +1,4 @@
-import Template from './Teamplate';
+import Template from './Template';
 
 export default function ErrorPage() {
   return (

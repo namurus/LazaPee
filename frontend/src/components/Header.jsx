@@ -8,10 +8,12 @@ export default function Header() {
   const userOptions = ['Profile', 'Orders', 'Wishlist', 'Logout'];
   const [isUserOptionsVisible, setIsUserOptionsVisible] = useState(false);
   return (
-    <header className='container mx-auto flex items-center gap-10 bg-white p-4 md:my-3'>
+    <header className='flex items-center gap-10 bg-white p-4 lg:container md:my-3 lg:mx-auto lg:px-0'>
       <GiHamburgerMenu className='h-6 w-6 lg:hidden' />
       <Link to='/' className='flex-1 md:flex-grow-0'>
-        <h1 className='font-display text-3xl font-bold'>LAZAPEE</h1>
+        <h1 className='font-display text-2xl font-bold lg:text-[2rem]'>
+          LAZAPEE
+        </h1>
       </Link>
       <nav className='hidden lg:block'>
         {navLinks.map((link) => (
@@ -24,7 +26,7 @@ export default function Header() {
           </NavLink>
         ))}
       </nav>
-      <div className='flex flex-1 items-center gap-4'>
+      <div className='flex flex-1 items-center justify-evenly gap-4'>
         <div className='flex items-center gap-2 overflow-hidden rounded-full px-3 py-2 md:h-12 md:flex-1 md:bg-[#F0F0F0]'>
           <button className='cursor-pointer'>
             <IoSearchSharp className='h-6 w-6 fill-black md:opacity-40' />
