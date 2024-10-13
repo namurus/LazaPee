@@ -15,7 +15,7 @@ export default function Hero({ displayTitle, displayText, infoModules }) {
               {displayText}
             </p>
             <Link to='/shop'>
-              <Button style='mt-5 rounded-full bg-black px-16 py-4 text-white w-full lg:w-auto hover:bg-[#333]'>
+              <Button style='mt-5 rounded-full bg-black px-16 py-4 text-white w-full outline outline-black outline-2 lg:w-auto hover:bg-transparent hover:text-black transition-all'>
                 SHOP NOW
               </Button>
             </Link>

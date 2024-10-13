@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 function SectionHeading({ title = 'Section Heading', className }) {
   const defaultClassName =
-    'section-heading text-balance text-center font-display text-3xl font-bold uppercase lg:text-5xl';
+    'section-heading text-balance text-center font-display text-3xl font-normal uppercase lg:text-5xl';
   const mergedClassName = twMerge(defaultClassName, className);
 
   return <h2 className={mergedClassName}>{title}</h2>;

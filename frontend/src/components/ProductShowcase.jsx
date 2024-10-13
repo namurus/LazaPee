@@ -54,10 +54,7 @@ function ProductShowcase({ showcaseTitle }) {
                       </h2>
                     </div>
                     <div className='flex items-center gap-4'>
-                      <StarRating
-                        rating={card.rating.rate}
-                        name={Object.prototype.toString(card.id)}
-                      />
+                      <StarRating rating={card.rating.rate} name={card.id} />
                       <p className='text-[0.75rem] font-light lg:text-sm'>
                         {card.rating.rate}/5
                       </p>
@@ -82,7 +79,7 @@ function ProductShowcase({ showcaseTitle }) {
         to={`/product/${stringToId(showcaseTitle)}`}
         className='flex w-full items-center justify-center rounded-full border-2 px-14 py-4 shadow-lg drop-shadow-lg transition-all hover:border-black hover:underline lg:mx-auto lg:w-max'
       >
-        <button className='flex-1 text-nowrap capitalize lg:flex-grow-0'>
+        <button className='flex-1 text-nowrap capitalize lg:w-[100px] lg:flex-grow-0'>
           view all
         </button>
       </Link>
