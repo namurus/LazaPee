@@ -6,6 +6,7 @@ import {
   TiSocialInstagram,
 } from 'react-icons/ti';
 import { FaGithub } from 'react-icons/fa6';
+import Button from './Button';
 
 function IconLinks() {
   return (
@@ -79,7 +80,7 @@ export default function Footer() {
             'max-w-[35rem] text-balance text-left text-white lg:text-[2.5rem] lg:leading-[1.125]'
           }
         />
-        <div className='w-full max-w-[350px] justify-self-end text-sm lg:text-base'>
+        <div className='w-full justify-self-end text-sm lg:max-w-[350px] lg:text-base'>
           <div className='mb-3 flex items-center rounded-full bg-white px-4 py-3 text-black'>
             <CiMail className='mr-3 h-5 w-5' />
             <input
@@ -88,12 +89,12 @@ export default function Footer() {
               className='w-full flex-1 border-none bg-transparent outline-none placeholder:font-light'
             />
           </div>
-          <button className='w-full rounded-full bg-white px-4 py-3 text-black outline outline-2 transition-all hover:bg-transparent hover:text-inherit'>
+          <Button style='w-full rounded-full bg-white px-4 py-3 text-black outline outline-2 transition-all hover:bg-transparent hover:text-inherit'>
             Subscribe to Newsletter
-          </button>
+          </Button>
         </div>
       </div>
-      <div className='bg-[#F0F0F0] p-4 pt-36 text-left text-black'>
+      <div className='bg-[#F0F0F0] p-4 pt-36 text-left text-black lg:pt-28'>
         <div className='sm:container sm:mx-auto'>
           <div className='gap-20 lg:flex lg:justify-between'>
             <div className='grid flex-1 grid-cols-2 gap-8 py-6 text-sm font-light md:grid-cols-3 lg:grid-cols-5 lg:text-base'>
