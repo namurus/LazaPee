@@ -1,10 +1,10 @@
 import express from 'express';
 import 'dotenv/config';
 import db from '@/database';
-const app = express();
+import router from './routes/index.route';
+import bodyParser from 'body-parser';
 
 
-// Test connection
 const ping = async () => {
 	try {
 		await db.authenticate();
@@ -14,7 +14,17 @@ const ping = async () => {
 	}
 };
 
+// Test connection
 ping();
+
+
+const app = express();
+// parse application/json
+app.use(bodyParser.json())
+
+
+// routers
+router(app)
 
 app.get('/', (req, res) => {
 	res.send('Hello World!');
