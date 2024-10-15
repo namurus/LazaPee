@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 import { compare, hash } from 'bcrypt';
+import * as helpers from '@/helpers/token';
 module.exports = (sequelize, DataTypes) => {
 	class User extends Model {
 		/**
@@ -13,6 +14,18 @@ module.exports = (sequelize, DataTypes) => {
 		}
 		validatePassword(plainPassword) {
 			return compare(plainPassword, this.password);
+		}
+		generateToken() {
+			const user = {
+				id: this.id,
+				email: this.email,
+				role: this.role,
+				avatar: this.avatar,
+				fullName: this.fullName,
+				address: this.address,
+			}
+			const token = helpers.generateToken(user);
+			return token;
 		}
 	}
 

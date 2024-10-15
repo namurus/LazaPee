@@ -17,7 +17,9 @@ export const login = async (req, res, next) => {
 		}
 
 		// Generate and return token
-		return res.status(200).json({});
+		const token = user.generateToken();
+		res.cookie('token', token);
+		return res.status(200).json({code: 200, user, token});
 	} catch (err) {
 		return next(err);
 	}
@@ -44,7 +46,9 @@ export const register = async (req, res, next) => {
 		});
 
 		// Generate and return tokens
-		res.status(201).json({ user });
+		const token = user.generateToken();
+		res.cookie('token', token);
+		return res.status(201).json({code: 201, user, token});
 	} catch (err) {
 		next(err);
 	}
