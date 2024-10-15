@@ -10,6 +10,9 @@ const productRoutes = [
       {
         path: 'details/:productID',
         element: <div>Product Details element Placeholder</div>,
+        handle: {
+          crumb: (data) => <span>{data.name}</span>,
+        },
       },
     ],
   },

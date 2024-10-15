@@ -25,7 +25,7 @@ export default function Header() {
   const userOptions = ['Account', 'Orders', 'Voucher', 'Logout'];
   const [isUserOptionsVisible, setIsUserOptionsVisible] = useState(false);
   return (
-    <header className='flex items-center gap-10 bg-white p-4 lg:container md:my-3 lg:mx-auto lg:px-0'>
+    <header className='flex items-center gap-10 border-b-1 border-black border-opacity-10 bg-white p-4 lg:container md:my-3 lg:mx-auto lg:px-0'>
       <GiHamburgerMenu className='h-6 w-6 lg:hidden' />
       <Link to='/' className='flex-1 md:flex-grow-0'>
         <h1 className='font-display text-2xl font-bold lg:text-[2rem]'>

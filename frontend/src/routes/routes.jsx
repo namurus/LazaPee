@@ -1,9 +1,10 @@
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import App from '../App';
 import { ErrorPage, HomePage } from '../pages';
 import userRoutes from './userRoutes';
 import productRoutes from './productRoutes';
 import authRoutes from './authRoutes';
+import cartRoute from './cartRoute';
 
 const routes = [
   {
@@ -22,13 +23,13 @@ const routes = [
       {
         path: '/shop',
         element: <div>Shop element Placeholder</div>,
+        handle: {
+          crumb: () => <Link to='/shop'>Shop</Link>,
+        },
       },
       ...userRoutes,
       ...productRoutes,
-      {
-        path: '/cart',
-        element: <div>Cart element Placeholder</div>,
-      },
+      cartRoute,
       {
         path: '/checkout',
         element: <div>Checkout element Placeholder</div>,
