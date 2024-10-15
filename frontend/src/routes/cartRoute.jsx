@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { CardPage } from '../pages';
+import { CartPage } from '../pages';
 // import { AuthGuard } from '../guards';
 
 const route = {
   path: '/cart',
-  element: <CardPage />,
+  element: <CartPage />,
+  loader: loader,
   handle: {
     crumb: () => <Link to='/cart'>Cart</Link>,
   },
@@ -35,8 +36,18 @@ const route = {
 //     })
 // }
 
-export function action() {
-  return null;
+export async function loader() {
+  try {
+    const response = await fetch('https://dummyjson.com/carts/2');
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+  } catch {
+    throw new Error('Failed to fetch cart items');
+  }
 }
 
 export default route;
