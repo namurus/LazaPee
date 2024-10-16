@@ -5,6 +5,8 @@ import userRoutes from './userRoutes';
 import productRoutes from './productRoutes';
 import authRoutes from './authRoutes';
 import cartRoute from './cartRoute';
+import { AuthGuard } from '../guards';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 const routes = [
   {
@@ -18,7 +20,7 @@ const routes = [
       },
       {
         path: '*',
-        element: <Navigate to='/' />,
+        element: <Navigate to='404' />,
       },
       {
         path: '/shop',
@@ -32,10 +34,28 @@ const routes = [
       cartRoute,
       {
         path: '/checkout',
-        element: <div>Checkout element Placeholder</div>,
+        element: (
+          <AuthGuard>
+            <div>Checkout element Placeholder</div>
+          </AuthGuard>
+        ),
       },
       ...authRoutes,
     ],
+  },
+  {
+    path: '/admin',
+    element: (
+      <AuthGuard>
+        <RoleBasedGuard allowedRoles={['admin']}>
+          <div>Admin element Placeholder</div>
+        </RoleBasedGuard>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: '/404',
+    element: <ErrorPage />,
   },
 ];
 
