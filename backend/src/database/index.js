@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import userModel from "./models/user";
+import productModel from "./models/product";
 
 import * as config from '@/config/sequelize';
 // Configuration
@@ -11,8 +12,8 @@ const sequelize = new Sequelize(sequelizeConfig);
 const modelDefiners = [
 	// ....
 	//Add models
-	userModel
-
+	userModel,
+	productModel
 ];
 
 for (const modelDefiner of modelDefiners) {
