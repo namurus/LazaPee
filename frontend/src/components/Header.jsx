@@ -4,7 +4,10 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { useAuth } from '../hooks/useAuth';
+import InverseButton from './InverseButton';
 export default function Header() {
+  const { isAuthenticated } = useAuth();
   const navLinks = [
     {
       title: 'Shop',
@@ -72,28 +75,36 @@ export default function Header() {
         <Link to='/cart' className='lg:ml-4'>
           <FaShoppingCart className='h-6 w-6' />
         </Link>
-        <div
-          className='relative'
-          onClick={() => {
-            setIsUserOptionsVisible(!isUserOptionsVisible);
-          }}
-        >
-          <IoPersonCircle className='h-6 w-6 cursor-pointer hover:fill-red-400' />
+        {isAuthenticated ? (
           <div
-            className={`${isUserOptionsVisible ? 'pointer-events-auto visible scale-100 opacity-100' : 'pointer-events-none invisible scale-0 opacity-0'} absolute -bottom-2 right-0 origin-top-right translate-y-full transition-all duration-300`}
-            onMouseLeave={() => {
+            className='relative'
+            onClick={() => {
               setIsUserOptionsVisible(!isUserOptionsVisible);
             }}
           >
-            <ul className='w-fit bg-red-500 p-4'>
-              {userOptions.map((option) => (
-                <li key={option}>
-                  <Link to={`/user/${option.toLowerCase()}`}>{option}</Link>
-                </li>
-              ))}
-            </ul>
+            <IoPersonCircle className='h-6 w-6 cursor-pointer hover:fill-red-400' />
+            <div
+              className={`${isUserOptionsVisible ? 'pointer-events-auto visible scale-100 opacity-100' : 'pointer-events-none invisible scale-0 opacity-0'} absolute -bottom-2 right-0 origin-top-right translate-y-full transition-all duration-300`}
+              onMouseLeave={() => {
+                setIsUserOptionsVisible(!isUserOptionsVisible);
+              }}
+            >
+              <ul className='w-fit bg-red-500 p-4'>
+                {userOptions.map((option) => (
+                  <li key={option}>
+                    <Link to={`/user/${option.toLowerCase()}`}>{option}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
+        ) : (
+          <Link to='/auth/login'>
+            <InverseButton style={'px-4 py-2 rounded-full font-bold uppercase'}>
+              signup
+            </InverseButton>
+          </Link>
+        )}
       </div>
     </header>
   );

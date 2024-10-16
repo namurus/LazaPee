@@ -6,7 +6,7 @@ import {
   TiSocialInstagram,
 } from 'react-icons/ti';
 import { FaGithub } from 'react-icons/fa6';
-import Button from './Button';
+import InverseButton from './InverseButton';
 
 function IconLinks() {
   return (
@@ -89,9 +89,13 @@ export default function Footer() {
               className='w-full flex-1 border-none bg-transparent outline-none placeholder:font-light'
             />
           </div>
-          <Button style='w-full rounded-full bg-white px-4 py-3 text-black outline outline-2 transition-all hover:bg-transparent hover:text-inherit'>
+
+          <InverseButton
+            switchColor={true}
+            style={'rounded-full px-4 py-3 hover:text-inherit'}
+          >
             Subscribe to Newsletter
-          </Button>
+          </InverseButton>
         </div>
       </div>
       <div className='bg-[#F0F0F0] p-4 pt-36 text-left text-black lg:pt-28'>

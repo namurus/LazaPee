@@ -1,7 +1,13 @@
+import { AuthGuard } from '../guards';
+
 const userRoutes = [
   {
     path: '/user',
-    element: <div>User element Placeholder</div>,
+    element: (
+      <AuthGuard>
+        <div>User element Placeholder</div>,
+      </AuthGuard>
+    ),
     children: [
       {
         path: 'account',
@@ -24,6 +30,10 @@ const userRoutes = [
       {
         path: 'orders',
         element: <div>Orders element Placeholder</div>,
+      },
+      {
+        path: 'logout',
+        element: <div>Logout element Placeholder</div>,
       },
     ],
   },

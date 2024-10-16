@@ -1,4 +1,4 @@
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import App from '../App';
 import { ErrorPage, HomePage } from '../pages';
 import userRoutes from './userRoutes';
@@ -15,32 +15,33 @@ const routes = [
     errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
-        element: <HomePage />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <HomePage />,
+          },
+          {
+            path: '/shop',
+            element: <div>Shop element Placeholder</div>,
+            handle: {
+              crumb: () => <Link to='/shop'>Shop</Link>,
+            },
+          },
+          ...userRoutes,
+          ...productRoutes,
+          cartRoute,
+          {
+            path: '/checkout',
+            element: (
+              <AuthGuard>
+                <div>Checkout element Placeholder</div>
+              </AuthGuard>
+            ),
+          },
+          ...authRoutes,
+        ],
       },
-      {
-        path: '*',
-        element: <Navigate to='404' />,
-      },
-      {
-        path: '/shop',
-        element: <div>Shop element Placeholder</div>,
-        handle: {
-          crumb: () => <Link to='/shop'>Shop</Link>,
-        },
-      },
-      ...userRoutes,
-      ...productRoutes,
-      cartRoute,
-      {
-        path: '/checkout',
-        element: (
-          <AuthGuard>
-            <div>Checkout element Placeholder</div>
-          </AuthGuard>
-        ),
-      },
-      ...authRoutes,
     ],
   },
   {
@@ -52,10 +53,6 @@ const routes = [
         </RoleBasedGuard>
       </AuthGuard>
     ),
-  },
-  {
-    path: '/404',
-    element: <ErrorPage />,
   },
 ];
 
