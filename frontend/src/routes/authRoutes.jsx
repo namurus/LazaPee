@@ -1,3 +1,6 @@
+import { AuthGuard } from '../guards';
+import GuestGuard from '../guards/GuestGuard';
+
 const authRoutes = [
   {
     path: '/auth',
@@ -5,15 +8,27 @@ const authRoutes = [
     children: [
       {
         path: 'login',
-        element: <div>Login element Placeholder</div>,
+        element: (
+          <GuestGuard>
+            <div>Login element Placeholder</div>
+          </GuestGuard>
+        ),
       },
       {
         path: 'signup',
-        element: <div>Signup element Placeholder</div>,
+        element: (
+          <GuestGuard>
+            <div>Signup element Placeholder</div>
+          </GuestGuard>
+        ),
       },
       {
         path: 'logout',
-        element: <div>Logout element Placeholder</div>,
+        element: (
+          <AuthGuard>
+            <div>Logout element Placeholder</div>,
+          </AuthGuard>
+        ),
       },
     ],
   },
