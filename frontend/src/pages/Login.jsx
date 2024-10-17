@@ -21,15 +21,15 @@ const Login = () => {
           password: password,
           expiresInMins: 30,
         }),
-        credentials: 'same-origin',
+        credentials: 'include',
       });
-
-      const data = await response.json();
       
       if (response.ok) {
+        const data = await response.json();
         setMessage(`Welcome ${data.firstName} ${data.lastName}!`);
       } else {
-        setError(data.message || 'Login failed');
+        const errorData = await response.json();
+        setError(errorData.message || 'Login failed');
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again later.');
@@ -95,7 +95,7 @@ const Login = () => {
         <img
           src={loginBanner}
           alt="Son Tung M-TP"
-          className="w-full h-full object-cover" // Sử dụng h-auto để duy trì tỷ lệ khung hình
+          className="w-full h-full object-cover"
         />
       </div>
     </div>
