@@ -5,6 +5,7 @@ import { stringToId } from '../helpers';
 import SectionHeading from './SectionHeading';
 import StarRating from './StarRating';
 import LoadingSpinner from './LoadingSpinner';
+import Button from './Button';
 
 ProductShowcase.propTypes = {
   showcaseTitle: PropTypes.string.isRequired,
@@ -33,13 +34,12 @@ function ProductShowcase({ showcaseTitle }) {
   return (
     <div className='container mx-auto [&>*]:my-7 lg:[&>*]:lg:my-12'>
       <SectionHeading title={showcaseTitle} />
+      {loading && <LoadingSpinner />}
       <div className='grid auto-cols-[minmax(250px,1fr)] grid-flow-col gap-4 overflow-x-auto overflow-y-hidden sm:grid-flow-row sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-8'>
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
+        {!loading &&
           cards.map((card) => {
             return (
-              <Link to={`/product/${card.id}`} key={card.id}>
+              <Link to={`/product/details/${card.id}`} key={card.id}>
                 <div className='flex h-full cursor-pointer flex-col transition-all hover:-translate-y-1 [&>*]:mb-4'>
                   <div className='overflow-hidden rounded-2xl'>
                     <img
@@ -54,7 +54,10 @@ function ProductShowcase({ showcaseTitle }) {
                       </h2>
                     </div>
                     <div className='flex items-center gap-4'>
-                      <StarRating rating={card.rating.rate} name={card.id} />
+                      <StarRating
+                        rating={card.rating.rate}
+                        name={`${card.id}`}
+                      />
                       <p className='text-[0.75rem] font-light lg:text-sm'>
                         {card.rating.rate}/5
                       </p>
@@ -72,16 +75,17 @@ function ProductShowcase({ showcaseTitle }) {
                 </div>
               </Link>
             );
-          })
-        )}
+          })}
       </div>
       <Link
         to={`/product/${stringToId(showcaseTitle)}`}
         className='flex w-full items-center justify-center rounded-full border-2 px-14 py-4 shadow-lg drop-shadow-lg transition-all hover:border-black hover:underline lg:mx-auto lg:w-max'
       >
-        <button className='flex-1 text-nowrap capitalize lg:w-[100px] lg:flex-grow-0'>
+        <Button
+          style={'flex-1 text-nowrap capitalize lg:w-[100px] lg:flex-grow-0'}
+        >
           view all
-        </button>
+        </Button>
       </Link>
     </div>
   );
