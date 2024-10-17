@@ -5,55 +5,59 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('product', {
       id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         unique: true,
         primaryKey: true,
       },
       productName: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         field: 'full_name',
       },
       brand: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
         field: 'brand',
       },
       image: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         field: 'image',
       },
       price: {
-        type: DataTypes.DECIMAL,
+        type: Sequelize.DECIMAL,
         field: 'price',
       },
       stock: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         field: 'stock',
         defaultValue: 0,
       },
       description: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         field: 'description',
+      },
+      status: {
+        type: Sequelize.ENUM('available', 'out of stock'),
+        field: 'status',
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'created_at',
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'updated_at',
       },
       deletedAt: {
         allowNull: true,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         field: 'deleted_at',
       },
 

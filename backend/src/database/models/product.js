@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       productName: {
         type: DataTypes.STRING,
+        allowNull: false,
         field: 'full_name',
       },
       brand: {
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       price: {
         type: DataTypes.DECIMAL, // Use DECIMAL for currency, may change to FLOAT in future
+        allowNull: false,
         field: 'price',
       },
       stock: {
@@ -48,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.TEXT,
         field: 'description',
+      },
+      status: {
+        type: DataTypes.ENUM('available', 'out of stock'),
+        field: 'status',
       },
       createdAt: {
         allowNull: false,
