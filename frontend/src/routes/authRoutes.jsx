@@ -1,5 +1,6 @@
 import { AuthGuard } from '../guards';
 import GuestGuard from '../guards/GuestGuard';
+import Login from '../pages/Login';
 
 const authRoutes = [
   {
@@ -10,7 +11,7 @@ const authRoutes = [
         path: 'login',
         element: (
           <GuestGuard>
-            <div>Login element Placeholder</div>
+            <Login />
           </GuestGuard>
         ),
       },
