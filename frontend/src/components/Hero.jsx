@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import Button from './Button';
 import { heroBanner } from '../assets';
 import PropTypes from 'prop-types';
+import InverseButton from './InverseButton';
 export default function Hero({ displayTitle, displayText, infoModules }) {
   return (
     <section className='full-screen-section w-full bg-[#F2F0F1]'>
@@ -15,9 +15,9 @@ export default function Hero({ displayTitle, displayText, infoModules }) {
               {displayText}
             </p>
             <Link to='/shop'>
-              <Button style='mt-5 rounded-full bg-black px-16 py-4 text-white w-full outline outline-black outline-2 lg:w-auto hover:bg-transparent hover:text-black transition-all'>
+              <InverseButton style={'mt-5 px-16 py-4 lg:w-auto rounded-full'}>
                 SHOP NOW
-              </Button>
+              </InverseButton>
             </Link>
           </div>
           <div className='flex flex-wrap'>

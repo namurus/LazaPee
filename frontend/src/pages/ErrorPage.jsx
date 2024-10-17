@@ -1,6 +1,6 @@
 import Template from './Template';
 
-export default function ErrorPage() {
+function ErrorPage() {
   return (
     <Template>
       <ErrorContent />
@@ -17,4 +17,4 @@ function ErrorContent() {
   );
 }
 
-export { ErrorContent };
+export default ErrorPage;

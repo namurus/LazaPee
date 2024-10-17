@@ -1,6 +1,8 @@
 import SectionHeading from './SectionHeading';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { stringToId } from '../helpers';
 
 function CategoryCard({ category }) {
   return (
@@ -55,11 +57,18 @@ function CategoryShowcase() {
     <section>
       <div className='rounded-[1.25rem] bg-[#F0F0F0] p-6 lg:container lg:mx-auto lg:rounded-[3rem] lg:p-16'>
         <div className='mb-7 mt-4 lg:m-12'>
-          <SectionHeading title='BROWSE BY dress STYLE' />
+          <SectionHeading title='BROWSE BY category' />
         </div>
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-3 lg:grid-rows-2 lg:[&>*:nth-child(2)]:col-span-2 lg:[&>*:nth-child(3)]:col-span-2'>
           {categories.map((category) => {
-            return <CategoryCard key={category.name} category={category} />;
+            return (
+              <Link
+                to={`/product/${stringToId(category.name)}`}
+                key={category.name}
+              >
+                <CategoryCard category={category} />;
+              </Link>
+            );
           })}
         </div>
       </div>
