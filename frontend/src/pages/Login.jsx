@@ -37,7 +37,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen">
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center bg-white p-4 lg:p-10">
         <h1 className="text-3xl lg:text-4xl font-semibold mb-2">WELCOME BACK</h1>
         <p className="text-gray-500 mb-8">Welcome back! Please enter your details.</p>
@@ -94,8 +94,8 @@ const Login = () => {
       <div className="w-full lg:w-1/2 bg-gray-100 flex justify-center items-center">
         <img
           src={loginBanner}
-          alt="Illustration of a person in sportswear jumping"
-          className="w-full h-auto object-cover" // Sử dụng h-auto để duy trì tỷ lệ khung hình
+          alt="Son Tung M-TP"
+          className="w-full h-full object-cover" // Sử dụng h-auto để duy trì tỷ lệ khung hình
         />
       </div>
     </div>
