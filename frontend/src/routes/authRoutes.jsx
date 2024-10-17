@@ -5,7 +5,12 @@ import Login from '../pages/Login';
 const authRoutes = [
   {
     path: '/auth',
-    element: <div>Auth element Placeholder</div>,
+    // element: <div>Auth element Placeholder</div>,
+    element: (
+      <GuestGuard>
+        <Login />
+      </GuestGuard>
+    ),
     children: [
       {
         path: 'login',
