@@ -1,16 +1,19 @@
+import { Navigate } from 'react-router-dom';
 import { AuthGuard } from '../guards';
 import GuestGuard from '../guards/GuestGuard';
+import Login from '../pages/Login';
 
 const authRoutes = [
   {
     path: '/auth',
-    element: <div>Auth element Placeholder</div>,
+    // element: <div>Auth element Placeholder</div>,
+    element: <Navigate to="/auth/login" />,
     children: [
       {
         path: 'login',
         element: (
           <GuestGuard>
-            <div>Login element Placeholder</div>
+            <Login />
           </GuestGuard>
         ),
       },
@@ -29,6 +32,10 @@ const authRoutes = [
             <div>Logout element Placeholder</div>,
           </AuthGuard>
         ),
+      },
+      {
+        path: '*',
+        element: <Navigate to="/auth/login" />, // Chuyển hướng về login nếu không có route nào khác
       },
     ],
   },
