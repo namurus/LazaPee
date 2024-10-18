@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 function GuestGuard({ children }) {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
-  return isAuthenticated ? (
+  return !isAuthenticated ? (
     children
   ) : (
     <Navigate to='/' state={{ from: location }} />
