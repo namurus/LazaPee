@@ -1,15 +1,15 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useAuth } from '../hooks/useAuth';
 
 function GuestGuard({ children }) {
   const { isAuthenticated } = useAuth();
-
-  if (isAuthenticated) {
-    return <Navigate to='/' />;
-  }
-
-  return children;
+  const location = useLocation();
+  return isAuthenticated ? (
+    children
+  ) : (
+    <Navigate to='/' state={{ from: location }} />
+  );
 }
 
 GuestGuard.propTypes = {

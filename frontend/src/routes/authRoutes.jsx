@@ -1,10 +1,15 @@
+import { Outlet } from 'react-router-dom';
 import { AuthGuard } from '../guards';
 import GuestGuard from '../guards/GuestGuard';
 
 const authRoutes = [
   {
     path: '/auth',
-    element: <div>Auth element Placeholder</div>,
+    element: (
+      <>
+        <Outlet />
+      </>
+    ),
     children: [
       {
         path: 'login',

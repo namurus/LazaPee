@@ -69,7 +69,7 @@ function CartItem({ item, handleQuantityChange, handleRemoveItem }) {
                 handleQuantityChange(item.title, value);
               }}
               min={1}
-              className='flex items-center justify-center bg-transparent text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
+              className='flex items-center justify-center bg-transparent text-center font-semibold [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
             />
 
             <Button

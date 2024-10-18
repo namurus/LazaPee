@@ -101,7 +101,7 @@ export default function Header() {
         ) : (
           <Link to='/auth/login'>
             <InverseButton style={'px-4 py-2 rounded-full font-bold uppercase'}>
-              signup
+              signin
             </InverseButton>
           </Link>
         )}
