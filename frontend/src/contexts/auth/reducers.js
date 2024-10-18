@@ -2,27 +2,27 @@ import { AuthActionType } from './constant';
 
 const reducerHandlers = {
   [AuthActionType.INITIALIZE]: (state, action) => {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, userAccessToken } = action.payload;
     return {
       ...state,
       isAuthenticated,
-      user,
+      userAccessToken,
       isInitialized: true,
     };
   },
   [AuthActionType.LOGIN]: (state, action) => {
-    const { user } = action.payload;
+    const { userAccessToken } = action.payload;
     return {
       ...state,
       isAuthenticated: true,
-      user,
+      userAccessToken,
     };
   },
   [AuthActionType.LOGOUT]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
-      user: null,
+      userAccessToken: null,
     };
   },
 };
@@ -48,7 +48,6 @@ function login(payload) {
 }
 
 function logout() {
-  localStorage.removeItem('ACCESS_TOKEN');
   return {
     type: AuthActionType.LOGOUT,
   };

@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { AuthGuard } from '../guards';
 import GuestGuard from '../guards/GuestGuard';
 import Login from '../pages/Login';
@@ -6,8 +6,11 @@ import Login from '../pages/Login';
 const authRoutes = [
   {
     path: '/auth',
-    // element: <div>Auth element Placeholder</div>,
-    element: <Navigate to="/auth/login" />,
+    element: (
+      <>
+        <Outlet />
+      </>
+    ),
     children: [
       {
         path: 'login',
@@ -35,7 +38,7 @@ const authRoutes = [
       },
       {
         path: '*',
-        element: <Navigate to="/auth/login" />, // Chuyển hướng về login nếu không có route nào khác
+        element: <Navigate to='/auth/login' />, // Chuyển hướng về login nếu không có route nào khác
       },
     ],
   },

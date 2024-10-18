@@ -6,7 +6,7 @@ const AuthActionType = {
 
 const initialState = {
   isAuthenticated: false,
-  user: null,
+  userAccessToken: null,
   isInitialized: false,
 };
 
