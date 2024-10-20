@@ -107,9 +107,9 @@ CloseableFilter.propTypes = {
 };
 
 function ProductPage() {
-  const { products, categoryID, page } = useLoaderData();
+  const { products, categoryID, page, sortBy } = useLoaderData();
   const subCatagories = ['T-shirts', 'Shorts', 'Shirts', 'Hoodie', 'Jeans'];
-  const [searchParams, setSearchParams] = useSearchParams({ page });
+  const [searchParams, setSearchParams] = useSearchParams({ page, sortBy });
   const [pickedColor, setPickedColor] = useState(null);
   const [pickedSize, setPickedSize] = useState(null);
   const [hideFilter, setHideFilter] = useState(true);
@@ -155,7 +155,7 @@ function ProductPage() {
             className={
               hideFilter
                 ? 'hidden h-fit rounded-[1.25rem] border lg:block lg:max-w-[300px]'
-                : 'fixed bottom-0 left-0 top-0 z-10 w-screen bg-black bg-opacity-20 lg:block lg:max-w-[300px]'
+                : 'fixed bottom-0 left-0 top-0 z-10 w-screen bg-black bg-opacity-20 md:block lg:max-w-[300px]'
             }
           >
             <div
@@ -175,7 +175,9 @@ function ProductPage() {
                   <button
                     key={subCategory}
                     onClick={() => {
-                      setSearchParams({ subCategory });
+                      const newSubCategory = subCategory.toLowerCase();
+                      searchParams.set('subCat', newSubCategory);
+                      setSearchParams(searchParams);
                     }}
                     className='flex w-full items-center font-light opacity-60'
                   >
@@ -225,18 +227,18 @@ function ProductPage() {
             </div>
           </div>
           <div className='flex-1'>
-            <div>
+            <div className='md:flex md:justify-between'>
               <h1 className='text-[2rem] font-semibold capitalize'>
                 {categoryID}
               </h1>
-              <div className='flex items-center text-sm font-light text-opacity-60'>
+              <div className='flex items-center gap-3 text-sm font-light text-opacity-60'>
                 <p>
                   Showing {page + 1}-{maxPage} of {products.length} Products
                 </p>
                 <div
                   className={
                     hideFilter
-                      ? 'ml-auto w-fit rounded-full bg-neutral p-2'
+                      ? 'ml-auto w-fit rounded-full bg-neutral p-2 md:hidden'
                       : 'hidden'
                   }
                 >
@@ -244,6 +246,22 @@ function ProductPage() {
                     className='h-4 w-4'
                     onClick={() => setHideFilter(false)}
                   />
+                </div>
+                <div className='hidden md:block'>
+                  Sort by:
+                  {
+                    <select
+                      className='ml-2 cursor-pointer px-2 py-1 font-normal *:capitalize'
+                      defaultValue={searchParams.get('sort')}
+                      onChange={(e) => {
+                        searchParams.set('sort', e.target.value);
+                        setSearchParams(searchParams);
+                      }}
+                    >
+                      <option value='most-popular'>Most Popular</option>
+                      <option value='new-arrivals'>New arrivals</option>
+                    </select>
+                  }
                 </div>
               </div>
             </div>
