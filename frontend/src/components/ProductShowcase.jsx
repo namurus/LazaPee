@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { stringToId } from '../helpers';
 import SectionHeading from './SectionHeading';
-import StarRating from './StarRating';
 import LoadingSpinner from './LoadingSpinner';
 import Button from './Button';
+import ProductItem from './ProductItem';
 
 ProductShowcase.propTypes = {
   showcaseTitle: PropTypes.string.isRequired,
@@ -40,39 +40,7 @@ function ProductShowcase({ showcaseTitle }) {
           cards.map((card) => {
             return (
               <Link to={`/product/details/${card.id}`} key={card.id}>
-                <div className='flex h-full cursor-pointer flex-col transition-all hover:-translate-y-1 [&>*]:mb-4'>
-                  <div className='overflow-hidden rounded-2xl'>
-                    <img
-                      src={card.image}
-                      className='aspect-square w-full overflow-hidden bg-[#F0EEED] object-contain'
-                    />
-                  </div>
-                  <div className='flex flex-1 flex-col'>
-                    <div className='flex-1'>
-                      <h2 className='line-clamp-2 text-balance text-base font-semibold capitalize lg:text-xl'>
-                        {card.title}
-                      </h2>
-                    </div>
-                    <div className='flex items-center gap-4'>
-                      <StarRating
-                        rating={card.rating.rate}
-                        name={`${card.id}`}
-                      />
-                      <p className='text-[0.75rem] font-light lg:text-sm'>
-                        {card.rating.rate}/5
-                      </p>
-                    </div>
-                    <div className='flex gap-3 text-xl font-semibold lg:text-2xl'>
-                      <p>${card.price}</p>
-                      <p className='line-through opacity-40'>
-                        ${card.price * 1.2}
-                      </p>
-                      <div className='flex items-center justify-center rounded-xl bg-[#FF3333] bg-opacity-10 px-2 text-[0.625rem] text-[#FF3333] lg:px-4 lg:text-[0.75rem]'>
-                        -20%
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ProductItem product={card} />
               </Link>
             );
           })}

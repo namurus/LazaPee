@@ -23,7 +23,7 @@ function StarRating({ rating, name }) {
                 x2='100%'
                 y2='0%'
               >
-                <stop offset={`${fillPercentage}%`} stopColor='#FF3333' />
+                <stop offset={`${fillPercentage}%`} stopColor='#FEC244' />
                 <stop offset={`${fillPercentage}%`} stopColor='#E5E7EB' />
               </linearGradient>
             </defs>

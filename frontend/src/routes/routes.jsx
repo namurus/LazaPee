@@ -15,7 +15,6 @@ const routes = [
     errorElement: <ErrorPage />,
     children: [
       {
-        errorElement: <ErrorPage />,
         children: [
           {
             index: true,

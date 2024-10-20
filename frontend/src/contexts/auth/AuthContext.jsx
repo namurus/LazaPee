@@ -29,7 +29,6 @@ export default function AuthProvider({ children }) {
         state.userAccessToken && !config._retry
           ? `Bearer ${state.userAccessToken}`
           : config.headers.Authorization;
-      console.log('request used');
       return config;
     });
     return () => instance.interceptors.request.eject(interceptor);
