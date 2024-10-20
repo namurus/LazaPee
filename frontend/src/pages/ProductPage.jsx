@@ -112,6 +112,7 @@ function ProductPage() {
   const [searchParams, setSearchParams] = useSearchParams({ page, sortBy });
   const [pickedColor, setPickedColor] = useState(null);
   const [pickedSize, setPickedSize] = useState(null);
+  const [priceRange, setPriceRange] = useState([0, 5000]);
   const [hideFilter, setHideFilter] = useState(true);
   const [filterList, setFilterList] = useState([]);
   const maxPage = products.length / 9 < 1 ? 1 : Math.ceil(products.length / 9);
@@ -132,6 +133,10 @@ function ProductPage() {
     setPickedSize(size);
   };
 
+  const setPriceRangeHandle = (min, max) => {
+    setPriceRange([min, max]);
+  };
+
   useEffect(() => {
     const filteredProducts = products.filter((product) => {
       if (pickedColor && product.color !== pickedColor) {
@@ -140,11 +145,14 @@ function ProductPage() {
       if (pickedSize && !product.size?.includes(pickedSize)) {
         return false;
       }
+      if (product.price < priceRange[0] || product.price > priceRange[1]) {
+        return false;
+      }
       return true;
     });
 
     setFilterList(filteredProducts);
-  }, [pickedColor, pickedSize, products]);
+  }, [pickedColor, pickedSize, products, priceRange]);
 
   return (
     <>
@@ -188,7 +196,12 @@ function ProductPage() {
               </div>
               <CloseableFilter title='Price'>
                 <div>
-                  <RangeSlider rangeMin={0} rangeMax={5000} minGap={100} />
+                  <RangeSlider
+                    rangeMin={0}
+                    rangeMax={5000}
+                    minGap={100}
+                    onChange={setPriceRangeHandle}
+                  />
                 </div>
               </CloseableFilter>
               <CloseableFilter title='Color'>

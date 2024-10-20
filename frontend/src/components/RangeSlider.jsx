@@ -1,31 +1,35 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import CurrencyFormatter from '../helpers/CurrencyFormatter';
 
-const formater = new Intl.NumberFormat('vi-VN', {
-  style: 'currency',
-  currency: 'VND',
-});
-
-const RangeSlider = ({ rangeMin, rangeMax, minGap }) => {
+const RangeSlider = ({ rangeMin, rangeMax, minGap, onChange }) => {
   const [minValue, setMinValue] = useState((rangeMax - rangeMin) / 4);
   const [maxValue, setMaxValue] = useState(((rangeMax - rangeMin) / 4) * 3);
   const [formatedValue, setFormatedValue] = useState({
-    min: formater.format(minValue * 1000),
-    max: formater.format(maxValue * 1000),
+    min: CurrencyFormatter.formatWithLocaleInfo(minValue * 1000, 'VND'),
+    max: CurrencyFormatter.formatWithLocaleInfo(maxValue * 1000, 'VND'),
   });
 
   const handleMinChange = (e) => {
     const setValue = Math.min(parseInt(e.target.value), maxValue - minGap);
-    const value = formater.format(setValue * 1000);
+    const value = CurrencyFormatter.formatWithLocaleInfo(
+      setValue * 1000,
+      'VND'
+    );
     setFormatedValue({ ...formatedValue, min: value });
     setMinValue(setValue);
+    if (onChange) onChange(setValue, maxValue);
   };
 
   const handleMaxChange = (e) => {
     const setValue = Math.max(parseInt(e.target.value), minValue + minGap);
-    const value = formater.format(setValue * 1000);
+    const value = CurrencyFormatter.formatWithLocaleInfo(
+      setValue * 1000,
+      'VND'
+    );
     setFormatedValue({ ...formatedValue, max: value });
     setMaxValue(setValue);
+    if (onChange) onChange(minValue, setValue);
   };
 
   return (
@@ -74,6 +78,7 @@ RangeSlider.propTypes = {
   rangeMin: PropTypes.number.isRequired,
   rangeMax: PropTypes.number.isRequired,
   minGap: PropTypes.number.isRequired,
+  onChange: PropTypes.func,
 };
 
 export default RangeSlider;

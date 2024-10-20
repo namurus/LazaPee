@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import StarRating from './StarRating';
+import CurrencyFormatter from '../helpers/CurrencyFormatter';
 
 function ProductItem({ product }) {
   return (
@@ -25,10 +26,18 @@ function ProductItem({ product }) {
             {product.rating.rate}/5
           </p>
         </div>
-        <div className='flex gap-3 text-xl font-semibold lg:text-2xl'>
-          <p>${product.price}</p>
+        <div className='grid grid-cols-3 gap-12 text-lg font-semibold lg:text-xl'>
+          <p>
+            {CurrencyFormatter.formatWithLocaleInfo(
+              product.price * 1000,
+              'VND'
+            )}
+          </p>
           <p className='line-through opacity-40'>
-            ${Math.round(product.price * 1.2 * 10) / 10}
+            {CurrencyFormatter.formatWithLocaleInfo(
+              Math.round(product.price * 1.2 * 10 * 1000) / 10,
+              'VND'
+            )}
           </p>
           <div className='flex items-center justify-center rounded-xl bg-[#FF3333] bg-opacity-10 px-2 text-[0.625rem] text-[#FF3333] lg:px-4 lg:text-[0.75rem]'>
             -20%
