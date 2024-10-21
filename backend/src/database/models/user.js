@@ -41,6 +41,12 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				field: 'full_name',
 			},
+			username: {
+				type: DataTypes.STRING,
+				allowNull: 'false',
+				unique: true,
+				field: 'username',
+			},
 			email: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -51,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 				field: 'password',
+			},
+			phone: {
+				type: DataTypes.STRING,
+				field: 'phone',
 			},
 			avatar: {
 				type: DataTypes.STRING,
@@ -68,14 +78,11 @@ module.exports = (sequelize, DataTypes) => {
 			createdAt: {
 				allowNull: false,
 				type: DataTypes.DATE,
-				defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 				field: 'created_at',
 			},
 			updatedAt: {
 				allowNull: false,
 				type: DataTypes.DATE,
-				defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-				onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
 				field: 'updated_at',
 			},
 			deletedAt: {
