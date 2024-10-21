@@ -2,12 +2,17 @@ import { Navigate } from 'react-router-dom';
 import { AuthGuard } from '../guards';
 import GuestGuard from '../guards/GuestGuard';
 import Login from '../pages/Login';
+import Signup from '../pages/Signup';
 
 const authRoutes = [
   {
     path: '/auth',
-    // element: <div>Auth element Placeholder</div>,
-    element: <Navigate to="/auth/login" />,
+    // element: <Navigate to="signup" />,
+    element: (
+          <GuestGuard>
+            <Signup />
+          </GuestGuard>
+        ),
     children: [
       {
         path: 'login',
@@ -21,7 +26,7 @@ const authRoutes = [
         path: 'signup',
         element: (
           <GuestGuard>
-            <div>Signup element Placeholder</div>
+            <Signup />
           </GuestGuard>
         ),
       },
@@ -29,13 +34,9 @@ const authRoutes = [
         path: 'logout',
         element: (
           <AuthGuard>
-            <div>Logout element Placeholder</div>,
+            <div>Logout element Placeholder</div>
           </AuthGuard>
         ),
-      },
-      {
-        path: '*',
-        element: <Navigate to="/auth/login" />, // Chuyển hướng về login nếu không có route nào khác
       },
     ],
   },
