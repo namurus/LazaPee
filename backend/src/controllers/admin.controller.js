@@ -1,4 +1,5 @@
 import db from '@/database';
+import slugify from 'slugify';
 // [POST] /admin/auth/login
 export const login = async (req, res, next) => {
 	try {
@@ -53,12 +54,16 @@ export const register = async (req, res, next) => {
 	}
 };
 
-
 // [POST] /admin/category
 export const createCategory = async (req, res, next) => {
 	try {
-		const { name } = req.body;
-		const category = await db.models.Category.create({ name });
+		const { name, thumbnail } = req.body;
+		const category = await db.models.Category.create({
+			name,
+			thumbnail,
+			slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
+			parentId: req.body.parentId || null,
+		});
 		return res.status(201).json({ code: 201, category });
 	} catch (err) {
 		next(err);

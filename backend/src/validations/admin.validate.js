@@ -12,5 +12,5 @@ export const loginRules = [
 
 export const createCategoryRules = [
 	body('name').exists(),
-	body('thumbnail').optional().isURL(),
+	body('thumbnail').exists().isURL(),
 ]
