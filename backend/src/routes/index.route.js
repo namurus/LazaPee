@@ -3,5 +3,5 @@ import adminRoutes from "./admin.route";
 
 export default (app) => { 
 	app.use("/auth", authRoutes);
-	app.use("/admin/auth", adminRoutes);
+	app.use("/admin", adminRoutes);
 }

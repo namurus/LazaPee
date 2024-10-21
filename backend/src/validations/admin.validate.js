@@ -9,3 +9,8 @@ export const loginRules = [
 	body('username').exists().isLength({ min: 6 }),
 	body('password').isLength({ min: 6 }),
 ]
+
+export const createCategoryRules = [
+	body('name').exists(),
+	body('thumbnail').optional().isURL(),
+]

@@ -25,7 +25,6 @@ module.exports = {
 				allowNull: true,
 				field: 'slug',
 			},
-
 			thumbnail: {
 				type: Sequelize.STRING,
 				allowNull: true,

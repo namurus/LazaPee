@@ -52,3 +52,15 @@ export const register = async (req, res, next) => {
 		next(err);
 	}
 };
+
+
+// [POST] /admin/category
+export const createCategory = async (req, res, next) => {
+	try {
+		const { name } = req.body;
+		const category = await db.models.Category.create({ name });
+		return res.status(201).json({ code: 201, category });
+	} catch (err) {
+		next(err);
+	}
+};

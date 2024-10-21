@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import { login, register } from '../controllers/admin.controller';
+import { login, register, createCategory } from '../controllers/admin.controller';
 
 import validate from '@/middlewares/validation';
-import { loginRules, registerRules } from '@/validations/admin.validate';
+import { loginRules, registerRules,  createCategoryRules} from '@/validations/admin.validate';
 
 const router = Router();
 
-router.post('/login', validate(loginRules), login);
+router.post('/auth/login', validate(loginRules), login);
 
-router.post('/register', validate(registerRules), register);
+router.post('/auth/register', validate(registerRules), register);
+
+router.post('/category', validate(createCategoryRules), createCategory);
 
 export default router;
