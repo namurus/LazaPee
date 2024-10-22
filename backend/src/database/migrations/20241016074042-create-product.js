@@ -1,5 +1,4 @@
 'use strict';
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -13,7 +12,7 @@ module.exports = {
       },
       productName: {
         type: Sequelize.STRING,
-        field: 'full_name',
+        field: 'productName',
       },
       brand: {
         type: Sequelize.STRING,
@@ -21,12 +20,16 @@ module.exports = {
         unique: true,
         field: 'brand',
       },
+      thumbnail: {
+        type: Sequelize.STRING,
+        field: 'thumbnail',
+      },
       image: {
         type: Sequelize.STRING,
         field: 'image',
       },
       price: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         field: 'price',
       },
       stock: {
@@ -45,14 +48,14 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'created_at',
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-        onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'updated_at',
       },
       deletedAt: {

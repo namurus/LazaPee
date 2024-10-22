@@ -2,6 +2,26 @@
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Cart extends Model {
+    getTotal()
+    {
+      let total = 0;
+      for (const item of this.cartItems) {
+        total += item.getTotal();
+      }
+      return total;
+    }
+    getDiscountedTotal()
+    {
+      let discountedTotal = 0;
+      for (const item of this.cartItems) {
+        discountedTotal += item.getDiscountedTotal();
+      }
+      return discountedTotal;
+    }
+    getTotalProducts()
+    {
+      return this.cartItems.length;
+    }
     static associate(models) {
       Cart.belongsTo(models.User, {
         foreignKey: 'userId',
@@ -22,11 +42,6 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         unique: true,
         primaryKey: true,
-      },
-      quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'quantity',
       },
       userId: {
         type: DataTypes.INTEGER,

@@ -2,8 +2,11 @@
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class CartItem extends Model {
-        getTotalPrice() {
+        getTotal() {
             return this.quantity * this.price;
+        }
+        getDiscountedTotal() { 
+            return this.getTotal() - (this.getTotal() * this.discountPercentage / 100);
         }
         static associate(models) {
             CartItem.belongsTo(models.Cart, {
@@ -42,9 +45,15 @@ module.exports = (sequelize, DataTypes) => {
                 field: 'product_id',
             },
             price: {
-                type: DataTypes.DECIMAL,
+                type: DataTypes.FLOAT,
                 allowNull: false,
                 field: 'price',
+            },
+            discountPercentage: {
+                type: DataTypes.FLOAT,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'discount_percentage',
             },
             createdAt: {
                 allowNull: false,

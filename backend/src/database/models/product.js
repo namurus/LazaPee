@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Product.hasMany(models.CartItem, {
+        foreignKey: 'productId',
+        as: 'cartItems',
+      });
     }
 
   }
@@ -25,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       productName: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'full_name',
+        field: 'productName',
       },
       brand: {
         type: DataTypes.STRING,
@@ -33,12 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         field: 'brand',
       },
+      thumbnail: {
+        type: DataTypes.STRING,
+        field: 'thumbnail',
+      },
       image: {
         type: DataTypes.STRING,
         field: 'image',
       },
       price: {
-        type: DataTypes.DECIMAL, // Use DECIMAL for currency, may change to FLOAT in future
+        type: DataTypes.FLOAT, 
         allowNull: false,
         field: 'price',
       },

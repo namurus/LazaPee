@@ -11,11 +11,6 @@ module.exports = {
         unique: true,
         primaryKey: true,
       },
-      quantity: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        field: 'quantity',
-      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
