@@ -45,39 +45,6 @@ const getCategoryTree = async (parentId = null) => {
     }));
 };
 
-// // [GET] /categories
-// export const getAllCategories = async (req, res, next) => {
-//     try {
-//         const categories = await getCategoryTree();
-//         return res.status(200).json({ code: 200, data: categories });
-//     } catch (err) {
-//         next(err); 
-//     }
-// };
-
-
-// // Recursive function to get all parents of a category
-// const getBreadcrumb = async (categoryId) => {
-//     const category = await db.models.Category.findByPk(categoryId);
-//     if (!category || !category.parentId) return [category];
-
-//     const parentCategories = await getBreadcrumb(category.parentId);
-//     return [...parentCategories, category];
-// };
-
-// // [GET] /categories/:id/breadcrumb
-// export const getCategoryBreadcrumb = async (req, res, next) => {
-//     try {
-//         const { id } = req.params;
-//         const breadcrumb = await getBreadcrumb(id);
-
-//         return res.status(200).json({ code: 200, data: breadcrumb });
-//     } catch (err) {
-//         next(err);
-//     }
-// };
-
-// Recursive function to get all parents of a category
 const getBreadcrumb = async (categoryId) => {
     const category = await db.models.Category.findByPk(categoryId);
 
@@ -106,7 +73,7 @@ export const getCategoryBreadcrumb = async (req, res, next) => {
         if (breadcrumb.length === 0) {
             return res.status(404).json({ code: 404, message: 'Category not found' });
         }
-        
+
         return res.status(200).json({ code: 200, data: breadcrumb });
     } catch (err) {
         next(err);
