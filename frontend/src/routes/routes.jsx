@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import App from '../App';
-import { ErrorPage, HomePage } from '../pages';
+import ErrorPage from '../components/pages/ErrorPage';
+import HomePage from '../components/pages/Homepage';
 import userRoutes from './userRoutes';
 import productRoutes from './productRoutes';
 import authRoutes from './authRoutes';
 import cartRoute from './cartRoute';
-import { AuthGuard } from '../guards';
+import AuthGuard from '../guards/AuthGuard';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 const routes = [

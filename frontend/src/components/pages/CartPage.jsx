@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
-import Breadcrumbs from '../components/Breadcrumbs';
+import Breadcrumbs from '../molecules/Breadcrumbs';
 import { FaMinus, FaPlus, FaTrash, FaTag, FaArrowRight } from 'react-icons/fa';
-import { Button } from '../components';
+import Button from '../atoms/Button';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 

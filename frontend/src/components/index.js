@@ -1,14 +1,14 @@
-import BrandShowcase from './BrandShowcase';
+import BrandShowcase from './organisms/BrandShowcase';
 import CategoryShowcase from './CategoryShowcase';
 import CommentShowcase from './CommentShowcase';
 import Hero from './Hero';
 import ProductShowcase from './ProductShowcase';
-import Button from './Button';
+import Button from './atoms/Button';
 import Footer from './Footer';
 import Header from './Header';
-import LoadingSpinner from './LoadingSpinner';
-import SectionHeading from './SectionHeading';
-import StarRating from './StarRating';
+import LoadingSpinner from './atoms/LoadingSpinner';
+import SectionHeading from './atoms/SectionHeading';
+import StarRating from './molecules/StarRating';
 
 export {
   BrandShowcase,

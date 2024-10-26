@@ -10,7 +10,7 @@ const getMe = async () => {
       password: 'emilyspass',
       expiresInMins: 30,
     });
-    throw new Error("Failed to fetch user's data");
+    // throw new Error("Failed to fetch user's data");
     return response;
   } catch (error) {
     console.log(error);

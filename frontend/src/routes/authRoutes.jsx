@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { AuthGuard } from '../guards';
+import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
 
 const authRoutes = [

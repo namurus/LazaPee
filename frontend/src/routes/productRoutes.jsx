@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import ProductPage from '../pages/ProductPage';
-import { getCategoryProducts } from '../api/admin/product';
+import ProductPage from '../components/pages/ProductPage';
+import { getCategoryProducts, getProduct } from '../api/admin/product';
+import ProductDetail from '../components/pages/ProductDetail';
 
 async function categoryLoader({ params, request }) {
   const url = new URL(request.url);
@@ -20,6 +21,12 @@ async function categoryLoader({ params, request }) {
   };
 }
 
+async function productLoader({ params }) {
+  const productID = params.productID;
+  const product = await getProduct(productID);
+  return product;
+}
+
 const productRoutes = [
   {
     path: '/product',
@@ -33,12 +40,17 @@ const productRoutes = [
         path: ':categoryID',
         element: <ProductPage />,
         loader: categoryLoader,
+        handle: {
+          crumb: (data) => [data.categoryID],
+        },
       },
       {
         path: 'details/:productID',
-        element: <div>Product Details element Placeholder</div>,
+        element: <ProductDetail />,
+        loader: productLoader,
         handle: {
-          crumb: (data) => <span>{data.name}</span>,
+          // crumb: (data) => [data.categoryName, data.subCategory, data.name],
+          crumb: (data) => [data.categoryName, 'Đồ gia dụng', data.name],
         },
       },
     ],

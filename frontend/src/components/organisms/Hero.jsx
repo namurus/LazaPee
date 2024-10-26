@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { heroBanner } from '../assets';
+import { heroBanner } from '../../assets';
 import PropTypes from 'prop-types';
-import InverseButton from './InverseButton';
+import InverseButton from '../atoms/InverseButton';
 export default function Hero({ displayTitle, displayText, infoModules }) {
   return (
     <section className='full-screen-section w-full bg-[#F2F0F1]'>

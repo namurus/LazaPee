@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import CurrencyFormatter from '../helpers/CurrencyFormatter';
+import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 
 const RangeSlider = ({ rangeMin, rangeMax, minGap, onChange }) => {
-  const [minValue, setMinValue] = useState((rangeMax - rangeMin) / 4);
-  const [maxValue, setMaxValue] = useState(((rangeMax - rangeMin) / 4) * 3);
+  const [minValue, setMinValue] = useState(rangeMin);
+  const [maxValue, setMaxValue] = useState(rangeMax);
   const [formatedValue, setFormatedValue] = useState({
     min: CurrencyFormatter.formatWithLocaleInfo(minValue * 1000, 'VND'),
     max: CurrencyFormatter.formatWithLocaleInfo(maxValue * 1000, 'VND'),
@@ -66,9 +66,15 @@ const RangeSlider = ({ rangeMin, rangeMax, minGap, onChange }) => {
         />
       </div>
 
-      <div className='mt-4 flex w-full max-w-xl justify-between'>
-        <span className='text-sm'>Min: {formatedValue.min}</span>
-        <span className='text-sm'>Max: {formatedValue.max}</span>
+      <div className='mt-4 grid w-full max-w-xl grid-cols-2 text-sm'>
+        <div>
+          Min:
+          <p>{formatedValue.min}</p>
+        </div>
+        <div>
+          Max:
+          <p>{formatedValue.max}</p>
+        </div>
       </div>
     </div>
   );

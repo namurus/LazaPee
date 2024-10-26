@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import SectionHeading from './SectionHeading';
+import SectionHeading from '../atoms/SectionHeading';
 import PropTypes from 'prop-types';
-import StarRating from './StarRating';
+import StarRating from '../molecules/StarRating';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../atoms/LoadingSpinner';
 
 function CommentCard({ comment }) {
   return (

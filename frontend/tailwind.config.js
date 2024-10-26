@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         display: 'Paytone One',
-        primary: 'Poppins',
+        primary: 'Roboto',
       },
       borderWidth: {
         1: '1px',

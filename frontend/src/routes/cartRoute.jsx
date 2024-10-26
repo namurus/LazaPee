@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { CartPage } from '../pages';
-import { AuthGuard } from '../guards';
+import CartPage from '../components/pages/CartPage';
+import AuthGuard from '../guards/AuthGuard';
 
 const route = {
   path: '/cart',

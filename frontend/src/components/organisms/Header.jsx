@@ -4,8 +4,8 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useAuth } from '../hooks/useAuth';
-import InverseButton from './InverseButton';
+import { useAuth } from '../../hooks/useAuth';
+import InverseButton from '../atoms/InverseButton';
 export default function Header() {
   const { isAuthenticated } = useAuth();
   const navLinks = [

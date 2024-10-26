@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { googleLogo, loginBanner } from '../assets';
+import { googleLogo, loginBanner } from '../../assets';
 
 const Login = () => {
   const [username, setUsername] = useState('');

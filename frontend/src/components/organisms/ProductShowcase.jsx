@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { stringToId } from '../helpers';
-import SectionHeading from './SectionHeading';
-import LoadingSpinner from './LoadingSpinner';
-import Button from './Button';
-import ProductItem from './ProductItem';
+import { stringToId } from '../../helpers';
+import SectionHeading from '../atoms/SectionHeading';
+import LoadingSpinner from '../atoms/LoadingSpinner';
+import Button from '../atoms/Button';
+import ProductItem from '../molecules/ProductItem';
 
 ProductShowcase.propTypes = {
   showcaseTitle: PropTypes.string.isRequired,

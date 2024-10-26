@@ -1,4 +1,4 @@
-import Template from './Template';
+import Template from '../templates/Template';
 
 function ErrorPage() {
   return (

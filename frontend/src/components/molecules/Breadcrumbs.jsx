@@ -16,10 +16,10 @@ function Breadcrumbs() {
         <li className='opacity-60'>Home</li>
       </Link>
       {crumbs.map((crumb) => (
-        <>
-          <li>&gt;</li>
-          <li key={crumb}>{crumb}</li>
-        </>
+        <li key={crumb} className='flex items-center justify-between gap-2'>
+          <span>&gt;</span>
+          <div>{crumb}</div>
+        </li>
       ))}
     </ol>
   );

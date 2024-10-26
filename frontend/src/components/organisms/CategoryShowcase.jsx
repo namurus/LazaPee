@@ -1,8 +1,8 @@
-import SectionHeading from './SectionHeading';
+import SectionHeading from '../atoms/SectionHeading';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { stringToId } from '../helpers';
+import { stringToId } from '../../helpers';
 
 function CategoryCard({ category }) {
   return (

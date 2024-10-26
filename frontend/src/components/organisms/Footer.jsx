@@ -1,4 +1,4 @@
-import SectionHeading from './SectionHeading';
+import SectionHeading from '../atoms/SectionHeading';
 import { CiMail } from 'react-icons/ci';
 import {
   TiSocialTwitter,
@@ -6,7 +6,7 @@ import {
   TiSocialInstagram,
 } from 'react-icons/ti';
 import { FaGithub } from 'react-icons/fa6';
-import InverseButton from './InverseButton';
+import InverseButton from '../atoms/InverseButton';
 
 function IconLinks() {
   return (
