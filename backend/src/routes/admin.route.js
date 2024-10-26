@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, register, createCategory } from '../controllers/admin.controller';
+import { login, register, createCategory, getCategory } from '../controllers/admin.controller';
 
 import validate from '@/middlewares/validation';
 import { loginRules, registerRules, createCategoryRules } from '@/validations/admin.validate';
@@ -15,5 +15,7 @@ router.post('/auth/login', validate(loginRules), login);
 router.post('/auth/register', validate(registerRules), register);
 
 router.post('/category', upload.single("thumbnail"), uploadCloud, createCategory);
+
+router.get('/category/:categoryId', getCategory);
 
 export default router;

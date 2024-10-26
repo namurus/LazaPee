@@ -69,3 +69,17 @@ export const createCategory = async (req, res, next) => {
 		next(err);
 	}
 };
+
+// [GET] /admin/category/:categoryId
+export const getCategory = async (req, res, next) => {
+	try {
+		const { categoryId } = req.params;
+		const category = await db.models.Category.findOne({ where: { id: categoryId } });
+		if (!category) {
+			return res.status(404).json({ code: 404, message: 'Category not found!' });
+		}
+		return res.status(200).json({ code: 200, category });
+	} catch (err) {
+		next(err);
+	}
+};
