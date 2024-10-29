@@ -83,3 +83,31 @@ export const getCategory = async (req, res, next) => {
 		next(err);
 	}
 };
+
+// [PATCH] /admin/category/:categoryId
+export const editCategory = async (req, res, next) => {
+	try {
+		const { categoryId } = req.params;
+		req.body.slug = slugify(req.body.name, { lower: true, remove: /[*+~.()'"!:@]/g });
+		if (!categoryId) {
+			return res.status(400).json({ code: 400, message: 'Category ID is required!' });
+		}
+		await db.models.Category.update(req.body, { where: { id: categoryId } });
+		return res.status(200).json({ code: 200 });
+	} catch (err) {
+		next(err);
+	}
+};
+
+// [GET] /admin/categories
+export const getAllCategories = async (req, res, next) => {
+	try {
+		const categories = await db.models.Category.findAll();
+		if (categories.length === 0) {
+			return res.status(404).json({ code: 404, message: 'No category found!' });
+		}
+		res.status(200).json({ code: 200, categories });
+	} catch (err) {
+		next(err);
+	}
+};
