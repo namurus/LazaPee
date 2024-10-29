@@ -1,77 +1,30 @@
-import db from '@/database';
-
-// [POST] /categories
-export const createCategory = async (req, res, next) => {
-    try {
-        const { name, parentId } = req.body;
-
-        // Check the category already exists
-        const categoryExists = await db.models.Category.findOne({
-            where: {
-                name,
-                parentId: parentId || null,
-            },
-        });
-
-        if (categoryExists) {
-            return res.status(400).json({ code: 400, message: 'Danh mục đã tồn tại!' });
-        }
-
-        // create a new category
-        const newCategory = await db.models.Category.create({
-            name,
-            parentId: parentId || null, // If parentId is null, it's a root category
-        });
-
-        return res.status(201).json({ code: 201, data: newCategory });
-    } catch (err) {
-        next(err); // Handle error
-    }
+import * as categoryHelper from '../helpers/category.helpers';
+  
+export const getAllCategories = async (req, res) => {
+try {
+    const categories = await categoryHelper.getCategoryTree();
+    res.status(200).json({ success: true, data: categories });
+} catch (error) {
+    console.error('Lỗi khi lấy danh mục:', error);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
+}
 };
 
-//Recursive function to get the entire parent of a category
-const getCategoryTree = async (parentId = null) => {
-    const categories = await db.models.Category.findAll({
-        where: { parentId },
-        include: [{
-            model: db.models.Category,
-            as: 'subcategories',
-        }]
-    });
-
-    return Promise.all(categories.map(async (category) => {
-        const subcategories = await getCategoryTree(category.id); // get subcategories of the current category
-        return { ...category.toJSON(), subcategories }; // Include the child category in the parent category
-    }));
-};
-
-const getBreadcrumb = async (categoryId) => {
-    const category = await db.models.Category.findByPk(categoryId);
-
-    // Check if category exists
-    if (!category) return [];
-
-    // If category has no parent, return itself as the only breadcrumb
-    if (!category.parentId) return [category];
-
-    // Recursively fetch the breadcrumb for the parent category
-    const parentCategories = await getBreadcrumb(category.parentId);
-    return [...parentCategories, category];
-};
-
-// [GET] /categories/:id/breadcrumb
-export const getCategoryBreadcrumb = async (req, res, next) => {
+// [GET] parentCategory of a product
+export const getAllParentCategoryOfProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
 
         // Validate id
-        if (!id) return res.status(400).json({ code: 400, message: 'Category ID is required' });
+        if (!id) {
+            return res.status(400).json({ code: 400, message: 'Product ID is required' });
+        }
 
-        const breadcrumb = await getBreadcrumb(id);
+        const breadcrumb = await categoryHelper.getProductBreadcrumb(id);
 
-        // If breadcrumb is empty, category was not found
+        // If breadcrumb is empty, product or category was not found
         if (breadcrumb.length === 0) {
-            return res.status(404).json({ code: 404, message: 'Category not found' });
+            return res.status(404).json({ code: 404, message: 'Product or associated category not found' });
         }
 
         return res.status(200).json({ code: 200, data: breadcrumb });
