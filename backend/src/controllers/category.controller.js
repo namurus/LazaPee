@@ -5,7 +5,6 @@ try {
     const categories = await categoryHelper.getCategoryTree();
     res.status(200).json({ success: true, data: categories });
 } catch (error) {
-    console.error('Lỗi khi lấy danh mục:', error);
     res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
 }
 };
