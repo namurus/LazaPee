@@ -66,7 +66,7 @@ function ProductDetailInfo({ product }) {
       </div>
       <div className='line-below'>
         <h2 className='mb-4 text-sm opacity-60'>Select Colors</h2>
-        <ColorPicker colors={config.colors} />
+        <ColorPicker colors={config.colors} onPickColor={() => {}} />
       </div>
       <div className='line-below'>
         <h2 className='mb-4 text-sm opacity-60'>Choose Size</h2>
