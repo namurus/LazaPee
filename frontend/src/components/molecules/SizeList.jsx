@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 function SizeList({ sizes, pickedSize, onPickSize }) {
+  const [pickSize, setPickSize] = useState(pickedSize);
   return (
     <div className='flex flex-wrap gap-2 text-sm'>
       {sizes.map((size) => {
@@ -9,8 +11,13 @@ function SizeList({ sizes, pickedSize, onPickSize }) {
             key={size}
             onClick={() => {
               onPickSize(size);
+              if (pickSize === size) {
+                setPickSize(null);
+                return;
+              }
+              setPickSize(size);
             }}
-            className={`flex items-center text-nowrap rounded-full px-5 py-3 font-light ${pickedSize === size ? 'bg-accent text-white' : 'bg-neutral text-black'}`}
+            className={`flex items-center text-nowrap rounded-full px-5 py-3 font-light ${pickSize === size ? 'bg-accent text-white' : 'bg-neutral text-black'}`}
           >
             <p>{size}</p>
           </button>

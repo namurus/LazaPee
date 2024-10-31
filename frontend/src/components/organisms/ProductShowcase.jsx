@@ -6,6 +6,7 @@ import SectionHeading from '../atoms/SectionHeading';
 import LoadingSpinner from '../atoms/LoadingSpinner';
 import Button from '../atoms/Button';
 import ProductItem from '../molecules/ProductItem';
+import { getProductsWithLimit } from '../../api/admin/product';
 
 ProductShowcase.propTypes = {
   showcaseTitle: PropTypes.string.isRequired,
@@ -16,17 +17,9 @@ function ProductShowcase({ showcaseTitle }) {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch('https://fakestoreapi.com/products?limit=4');
-      try {
-        if (!response.ok) {
-          throw new Error(`${response.status}`);
-        }
-        const json = await response.json();
-        setCards(json);
-        setLoading(false);
-      } catch (error) {
-        throw new Error('API Broken!' + error);
-      }
+      const json = await getProductsWithLimit(4);
+      setCards(json.products);
+      setLoading(false);
     }
     fetchData();
   }, []);

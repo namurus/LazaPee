@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import App from '../App';
 import ErrorPage from '../components/pages/ErrorPage';
 import HomePage from '../components/pages/Homepage';
@@ -24,9 +23,6 @@ const routes = [
           {
             path: '/shop',
             element: <div>Shop element Placeholder</div>,
-            handle: {
-              crumb: () => <Link to='/shop'>Shop</Link>,
-            },
           },
           ...userRoutes,
           ...productRoutes,

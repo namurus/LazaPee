@@ -9,21 +9,22 @@ async function categoryLoader({ params, request }) {
   const subCategory = url.searchParams.get('subCat');
   const page = url.searchParams.get('page') || 0;
   const sortBy = url.searchParams.get('sort') || 'most-popular';
-  console.log(subCategory, page);
+  console.log(params.categoryID);
   const products = await getCategoryProducts(params.categoryID);
 
   return {
-    products,
+    products: products.products,
     subCategory,
     categoryID: params.categoryID,
     sortBy,
-    page: 0,
+    page,
   };
 }
 
 async function productLoader({ params }) {
   const productID = params.productID;
   const product = await getProduct(productID);
+  console.log(product);
   return product;
 }
 
@@ -41,7 +42,12 @@ const productRoutes = [
         element: <ProductPage />,
         loader: categoryLoader,
         handle: {
-          crumb: (data) => [data.categoryID],
+          crumb: (data) => [
+            {
+              name: data.categoryID,
+              path: `/product/${data.categoryID}`,
+            },
+          ],
         },
       },
       {
@@ -50,7 +56,19 @@ const productRoutes = [
         loader: productLoader,
         handle: {
           // crumb: (data) => [data.categoryName, data.subCategory, data.name],
-          crumb: (data) => [data.categoryName, 'Đồ gia dụng', data.name],
+          crumb: (data) => [
+            {
+              name: data.category,
+              path: `/product/${data.category}`,
+            },
+            {
+              name: 'Đồ gia dụng',
+              path: `/product/${data.category}`,
+            },
+            {
+              name: data.title,
+            },
+          ],
         },
       },
     ],

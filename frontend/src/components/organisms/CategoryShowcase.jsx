@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { stringToId } from '../../helpers';
+import { getCategories } from '../../api/admin/product';
 
 function CategoryCard({ category }) {
   return (
@@ -29,18 +30,15 @@ function CategoryShowcase() {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      const [categoriesResponse, imageResponse] = await Promise.all([
-        fetch('https://fakestoreapi.com/products/categories'),
-        fetch('https://via.assets.so/shoe.png?id=1&q=95&fit=fill'),
-      ]);
+      const imageResponse = await fetch(
+        'https://via.assets.so/shoe.png?id=1&q=95&fit=fill'
+      );
       try {
-        if (
-          [categoriesResponse, imageResponse].some((response) => !response.ok)
-        ) {
-          throw new Error(`${categoriesResponse.status}`);
+        if (!imageResponse.ok) {
+          throw new Error(`${imageResponse.status}`);
         }
-        const json = await categoriesResponse.json();
-        const objectData = json.map((category) => {
+        const json = await getCategories();
+        const objectData = json.slice(0, 4).map((category) => {
           return {
             name: category,
             image: imageResponse.url,

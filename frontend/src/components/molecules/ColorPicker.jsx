@@ -3,7 +3,7 @@ import { FaCheck } from 'react-icons/fa';
 
 function ColorPicker({ colors, pickedColor, onPickColor }) {
   return (
-    <div className='grid grid-cols-7 gap-2 md:grid-cols-5'>
+    <div className='flex flex-wrap gap-2'>
       {colors.map((color) => (
         <button
           key={color}

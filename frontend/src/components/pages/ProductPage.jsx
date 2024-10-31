@@ -51,6 +51,7 @@ function ProductPage() {
     config.priceRange.min,
     config.priceRange.max,
   ]);
+
   const [hideFilter, setHideFilter] = useState(true);
   const [filterList, setFilterList] = useState([]);
   const maxPage = products.length / 9 < 1 ? 1 : Math.ceil(products.length / 9);

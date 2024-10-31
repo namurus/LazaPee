@@ -8,7 +8,7 @@ import Footer from './Footer';
 import Header from './Header';
 import LoadingSpinner from './atoms/LoadingSpinner';
 import SectionHeading from './atoms/SectionHeading';
-import StarRating from './molecules/StarRating';
+import StarRating from './atoms/StarRating';
 
 export {
   BrandShowcase,

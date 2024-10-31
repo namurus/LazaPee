@@ -1,16 +1,12 @@
 import PropTypes from 'prop-types';
-import StarRating from './StarRating';
+import StarRating from '../atoms/StarRating';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
+import ProductImage from '../atoms/ProductImage';
 
 function ProductItem({ product }) {
   return (
     <div className='flex h-full cursor-pointer flex-col transition-all [&>*]:mb-4'>
-      <div className='overflow-hidden rounded-2xl bg-[#F0EEED] p-2'>
-        <img
-          src={product.image}
-          className='aspect-square w-full overflow-hidden bg-[#F0EEED] object-contain'
-        />
-      </div>
+      <ProductImage src={product.thumbnail} alt={product.title} />
       <div className='flex flex-1 flex-col'>
         <div className='flex-1'>
           <h2 className='line-clamp-2 text-balance text-base font-semibold capitalize lg:text-xl'>
@@ -18,13 +14,7 @@ function ProductItem({ product }) {
           </h2>
         </div>
         <div className='flex items-center gap-4'>
-          <StarRating
-            rating={product.rating.rate}
-            name={`${product.id}-product`}
-          />
-          <p className='text-[0.75rem] font-light lg:text-sm'>
-            {product.rating.rate}/5
-          </p>
+          <StarRating rating={product.rating} name={`${product.id}-product`} />
         </div>
         <div className='grid grid-cols-4 gap-x-12 text-xl font-semibold lg:text-2xl'>
           <p className='col-span-4'>

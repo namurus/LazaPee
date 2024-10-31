@@ -1,29 +1,8 @@
 import { useState, useEffect } from 'react';
 import SectionHeading from '../atoms/SectionHeading';
-import PropTypes from 'prop-types';
-import StarRating from '../molecules/StarRating';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import LoadingSpinner from '../atoms/LoadingSpinner';
-
-function CommentCard({ comment }) {
-  return (
-    <div className='rounded-[1.25rem] border-2 p-6 lg:px-8 lg:py-7'>
-      <div className='mb-3'>
-        <StarRating rating={5} name={comment.user.username + comment.id} />
-      </div>
-      <h3 className='mb-2 text-base font-semibold'>{comment.user.fullName}</h3>
-      <p className='text-balance text-sm font-light opacity-60'>
-        &quot;
-        {comment.body}
-        &quot;
-      </p>
-    </div>
-  );
-}
-
-CommentCard.propTypes = {
-  comment: PropTypes.object.isRequired,
-};
+import ReviewCard from '../molecules/ReviewCard';
 
 function CommentShowcase() {
   const [comments, setComments] = useState([]);
@@ -100,7 +79,14 @@ function CommentShowcase() {
           <div className='mobile-view sm:hidden'>
             <div className='grid grid-cols-1 gap-5 lg:grid-cols-3 lg:grid-rows-1'>
               {comments[currentCommentIndex] && (
-                <CommentCard comment={comments[currentCommentIndex]} />
+                <ReviewCard
+                  review={{
+                    reviewerName: comments[currentCommentIndex].user.fullName,
+                    rating: 5,
+                    comment: comments[currentCommentIndex].body,
+                    reviewerEmail: comments[currentCommentIndex].user.username,
+                  }}
+                />
               )}
             </div>
           </div>
@@ -109,7 +95,14 @@ function CommentShowcase() {
             <div className='grid grid-cols-1 gap-5 lg:grid-cols-3 lg:grid-rows-1'>
               {getDesktopComments().map((comment) => (
                 <div key={comment.user.username + comment.id}>
-                  <CommentCard comment={comment} />
+                  <ReviewCard
+                    review={{
+                      reviewerName: comment.user.fullName,
+                      rating: 5,
+                      comment: comment.body,
+                      reviewerEmail: comment.user.username,
+                    }}
+                  />
                 </div>
               ))}
             </div>
