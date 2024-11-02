@@ -1,12 +1,12 @@
 import db from '@/database';
-import createError from 'http-errors';
+import { Op } from 'sequelize';
 // [POST] /auth/login
 export const login = async (req, res, next) => {
 	try {
-		const { email, password } = req.body;
+		const { username, password } = req.body;
 
 		// Find user by email address
-		const user = await db.models.User.findOne({ where: { email } });
+		const user = await db.models.User.findOne({ where: { username } });
 		if (!user) {
 			return res.status(400).json({ code: 400, message: 'There is no user with this email address!' });
 		}
@@ -17,7 +17,8 @@ export const login = async (req, res, next) => {
 		}
 
 		// Generate and return token
-		return res.status(200).json({});
+		const token = user.generateToken();
+		return res.status(200).json({ code: 200, token });
 	} catch (err) {
 		return next(err);
 	}
@@ -26,10 +27,12 @@ export const login = async (req, res, next) => {
 // [POST] /auth/register
 export const register = async (req, res, next) => {
 	try {
-		const { fullName, email, password } = req.body;
+		const { fullName, username, email, password, phone } = req.body;
 		// Check if user exists
 		const userExists = await db.models.User.findOne({
-			where: { email: email },
+			where: {
+				[Op.or]: [{ username: username }, { email: email }],
+			},
 		});
 
 		if (userExists) {
@@ -41,10 +44,13 @@ export const register = async (req, res, next) => {
 			fullName: fullName,
 			email: email,
 			password: password,
+			username: username,
+			phone: phone,
 		});
 
 		// Generate and return tokens
-		res.status(201).json({ user });
+		const token = user.generateToken();
+		return res.status(201).json({ code: 201, token });
 	} catch (err) {
 		next(err);
 	}

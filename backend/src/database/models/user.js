@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 import { compare, hash } from 'bcrypt';
+import * as helpers from '@/helpers/token';
 module.exports = (sequelize, DataTypes) => {
 	class User extends Model {
 		/**
@@ -18,6 +19,18 @@ module.exports = (sequelize, DataTypes) => {
 		validatePassword(plainPassword) {
 			return compare(plainPassword, this.password);
 		}
+		generateToken() {
+			const user = {
+				id: this.id,
+				email: this.email,
+				role: this.role,
+				avatar: this.avatar,
+				fullName: this.fullName,
+				address: this.address,
+			}
+			const token = helpers.generateToken(user);
+			return token;
+		}
 	}
 
 	User.init(
@@ -32,6 +45,12 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				field: 'full_name',
 			},
+			username: {
+				type: DataTypes.STRING,
+				allowNull: 'false',
+				unique: true,
+				field: 'username',
+			},
 			email: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -42,6 +61,10 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 				field: 'password',
+			},
+			phone: {
+				type: DataTypes.STRING,
+				field: 'phone',
 			},
 			avatar: {
 				type: DataTypes.STRING,
@@ -59,14 +82,11 @@ module.exports = (sequelize, DataTypes) => {
 			createdAt: {
 				allowNull: false,
 				type: DataTypes.DATE,
-				defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 				field: 'created_at',
 			},
 			updatedAt: {
 				allowNull: false,
 				type: DataTypes.DATE,
-				defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-				onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
 				field: 'updated_at',
 			},
 			deletedAt: {

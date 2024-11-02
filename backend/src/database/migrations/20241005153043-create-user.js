@@ -19,6 +19,12 @@ module.exports = {
 				unique: true,
 				field: 'email',
 			},
+			username: {
+				type: Sequelize.STRING,
+				allowNull: 'false',
+				unique: true,
+				field: 'username',
+			},
 			password: {
 				type: Sequelize.STRING,
 				field: 'password',
@@ -26,6 +32,10 @@ module.exports = {
 			avatar: {
 				type: Sequelize.STRING,
 				field: 'avatar',
+			},
+			phone: {
+				type: Sequelize.STRING,
+				field: 'phone',
 			},
 			address: {
 				type: Sequelize.STRING,
