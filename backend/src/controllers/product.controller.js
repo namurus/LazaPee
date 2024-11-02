@@ -38,7 +38,7 @@ export const fetchProductById = async (req,res,next) => {
 
 export const createProduct = async (req, res, next) => {
     try {
-        const { id, productName, price } = req.body;
+        const { id, productName, price, brand, description, thumbnail, image } = req.body;
         const productExists = await db.models.Product.findOne({
             where: { id: id },
         });
@@ -51,6 +51,10 @@ export const createProduct = async (req, res, next) => {
             id: id,
             productName: productName,
             price: price,
+            brand: brand,
+            description: description,
+            thumbnail: thumbnail,
+            image: image,
         });
 
         res.status(201).json(product);

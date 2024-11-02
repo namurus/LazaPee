@@ -48,6 +48,24 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         field: 'user_id',
       },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'created_at',
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'updated_at',
+      },
+      deletedAt: {
+        allowNull: true,
+        type: DataTypes.DATE,
+        field: 'deleted_at',
+      },
 
     },
     {

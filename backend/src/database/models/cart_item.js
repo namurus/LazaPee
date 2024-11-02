@@ -3,9 +3,12 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class CartItem extends Model {
         getTotal() {
-            return this.quantity * this.price;
+            return this.quantity * (this.product ? this.product.price : 0);
         }
         getDiscountedTotal() { 
+            if (!this.discountPercentage) {
+                return this.getTotal();
+            }
             return this.getTotal() - (this.getTotal() * this.discountPercentage / 100);
         }
         static associate(models) {
@@ -66,6 +69,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DATE,
                 defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
                 field: 'updated_at',
+            },
+            deletedAt: {
+                allowNull: true,
+                type: DataTypes.DATE,
+                field: 'deleted_at',
             },
         },
 

@@ -3,7 +3,7 @@ import db from '@/database';
 export const fetchAllCartItems = async (req, res, next) => {
     try {
         const cart = await db.models.Cart.findOne({
-            where: { userId: req.user.id },
+            where: { userId: req.user.id }, // 
             attributes: ['id'],
             include: [
                 {
@@ -14,7 +14,7 @@ export const fetchAllCartItems = async (req, res, next) => {
                         {
                             model: db.models.Product,
                             as: 'product',
-                            attributes: ['id', 'productName', 'price', 'description', 'stock', 'category', 'thumbnail'],
+                            attributes: ['id', 'productName', 'price', 'description', 'thumbnail', 'brand'],
                         },
                     ],
                 },
@@ -28,8 +28,7 @@ export const fetchAllCartItems = async (req, res, next) => {
                 productName: cartItem.product.productName,
                 price: cartItem.product.price,
                 description: cartItem.product.description,
-                stock: cartItem.product.stock,
-                category: cartItem.product.category,
+                brand: cartItem.product.brand,
                 thumbnail: cartItem.product.thumbnail,
                 quantity: cartItem.quantity,
                 total: await cartItem.getTotal(),
@@ -80,69 +79,69 @@ export const addCartItem = async (req, res, next) => {
             const [cartItem, created] = await db.models.CartItem.findOrCreate({
                 where: { cartId: cart.id, productId: productId },
                 defaults: { quantity, price: product.price },
-        });
+            });
 
-        res.status(201).json(cartItem);
-        }   
+            res.status(201).json(cartItem);
+        }
     } catch (err) {
-    next(err);
+        next(err);
     }
 }
 
 export const updateCartItem = async (req, res, next) => {
-        try {
-            const { quantity } = req.body
-            const cartItem = await db.models.CartItem.findOne({
-                where: { id: req.body.cartItemId },
-            })
+    try {
+        const { cartItemId, quantity } = req.body
+        const cartItem = await db.models.CartItem.findOne({
+            where: { id: cartItemId },
+        })
 
-            if (!cartItem) {
-                return res.status(404).json({ code: 404, message: 'Cart item not found' })
-            }
-
-            const product = await db.models.Product.findOne({
-                where: { id: cartItem.productId },
-            })
-
-            if (!product) {
-                return res.status(404).json({ code: 404, message: 'Product not found' })
-            }
-
-            if (product.stock < quantity) {
-                return res.status(400).json({ code: 400, message: 'Not enough stock available' })
-            }
-
-            await cartItem.update({ quantity })
-
-            return res.status(200).json(cartItem)
-        } catch (err) {
-            next(err)
+        if (!cartItem) {
+            return res.status(404).json({ code: 404, message: 'Cart item not found' })
         }
-    }
 
-    export const deleteCartItem = async (req, res, next) => {
-        try {
-            const cart = await db.models.Cart.findOne({
-                where: { userId: req.user.id },
-            })
+        const product = await db.models.Product.findOne({
+            where: { id: cartItem.productId },
+        })
 
-            if (!cart) {
-                return res.status(404).json({ code: 404, message: 'Cart not found' })
-            }
-
-            const cartItem = await db.models.CartItem.findOne({
-                where: { id: req.body.cartItemId },
-            })
-
-            if (!cartItem) {
-                return res.status(404).json({ code: 404, message: 'Cart item not found' })
-            }
-
-            await cartItem.destroy()
-
-            return res.status(204).end()
-
-        } catch (err) {
-            next(err)
+        if (!product) {
+            return res.status(404).json({ code: 404, message: 'Product not found' })
         }
+
+        if (product.stock < quantity) {
+            return res.status(400).json({ code: 400, message: 'Not enough stock available' })
+        }
+
+        await cartItem.update({ quantity })
+
+        return res.status(200).json(cartItem)
+    } catch (err) {
+        next(err)
     }
+}
+
+export const deleteCartItem = async (req, res, next) => {
+    try {
+        const cart = await db.models.Cart.findOne({
+            where: { userId: req.user.id },
+        })
+
+        if (!cart) {
+            return res.status(404).json({ code: 404, message: 'Cart not found' })
+        }
+
+        const cartItem = await db.models.CartItem.findOne({
+            where: { id: req.body.cartItemId, cartId: cart.id },
+        })
+
+        if (!cartItem) {
+            return res.status(404).json({ code: 404, message: 'Cart item not found' })
+        }
+
+        await cartItem.destroy()
+
+        return res.status(204).end()
+
+    } catch (err) {
+        next(err)
+    }
+}
