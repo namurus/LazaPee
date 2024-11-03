@@ -1,5 +1,5 @@
-import { Navigate } from 'react-router-dom';
-import { AuthGuard } from '../guards';
+import { Outlet } from 'react-router-dom';
+import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -7,12 +7,11 @@ import Signup from '../pages/Signup';
 const authRoutes = [
   {
     path: '/auth',
-    // element: <Navigate to="signup" />,
     element: (
-          <GuestGuard>
-            <Signup />
-          </GuestGuard>
-        ),
+      <>
+        <Outlet />
+      </>
+    ),
     children: [
       {
         path: 'login',
@@ -34,7 +33,7 @@ const authRoutes = [
         path: 'logout',
         element: (
           <AuthGuard>
-            <div>Logout element Placeholder</div>
+            <div>Logout element Placeholder</div>,
           </AuthGuard>
         ),
       },
