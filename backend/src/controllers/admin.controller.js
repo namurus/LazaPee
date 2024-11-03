@@ -1,5 +1,6 @@
 import db from '@/database';
 import slugify from 'slugify';
+import { Op } from 'sequelize';
 // [POST] /admin/auth/login
 export const login = async (req, res, next) => {
 	try {
@@ -107,6 +108,16 @@ export const getAllCategories = async (req, res, next) => {
 			return res.status(404).json({ code: 404, message: 'No category found!' });
 		}
 		res.status(200).json({ code: 200, categories });
+	} catch (err) {
+		next(err);
+	}
+};
+
+// [DELETE] /admin/category/:categoryId
+export const deleteCategory = async (req, res, next) => {
+	try {
+		await db.models.Category.destroy({ where: { id: req.params.categoryId } });
+		res.status(200).json({ code: 200, message: 'Category deleted!' });
 	} catch (err) {
 		next(err);
 	}

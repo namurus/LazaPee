@@ -6,6 +6,7 @@ import {
 	getCategory,
 	getAllCategories,
 	editCategory,
+	deleteCategory
 } from '../controllers/admin.controller';
 import isAdmin from '@/middlewares/isAdmin';
 import validate from '@/middlewares/validation';
@@ -35,5 +36,7 @@ router.get('/category/:categoryId', isAdmin, getCategory);
 router.get('/categories', isAdmin, getAllCategories);
 
 router.patch('/category/:categoryId', isAdmin, upload.single('thumbnail'), uploadCloud, editCategory);
+
+router.delete('/category/:categoryId', isAdmin, deleteCategory);
 
 export default router;
