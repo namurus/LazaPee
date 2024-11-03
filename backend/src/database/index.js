@@ -2,6 +2,9 @@ import { Sequelize, DataTypes } from 'sequelize';
 import userModel from "./models/user";
 import categoryModel from './models/category';
 import accountModel from './models/account';
+import productModel from "./models/product";
+import cartItemModel from "./models/cart_item";
+import cartModel from "./models/cart";
 
 import * as config from '@/config/sequelize';
 // Configuration
@@ -15,7 +18,10 @@ const modelDefiners = [
 	//Add models
 	userModel,
 	categoryModel,
-	accountModel
+	accountModel,
+	productModel,
+	cartItemModel,
+	cartModel
 ];
 
 for (const modelDefiner of modelDefiners) {

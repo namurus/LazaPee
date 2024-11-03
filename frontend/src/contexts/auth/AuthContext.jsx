@@ -1,8 +1,8 @@
 import { createContext, useEffect, useLayoutEffect, useReducer } from 'react';
-import { initialize, login, logout, reducer } from './reducers';
+import { initialize, logout, reducer } from './reducers';
 import PropTypes from 'prop-types';
 import { initialState } from './constant';
-import { getMe, getRefreshToken } from '../../api/user/auth';
+import { getMe } from '../../api/user/auth';
 import { instance } from '../../api/config';
 
 export const AuthContext = createContext();
@@ -29,29 +29,33 @@ export default function AuthProvider({ children }) {
         state.userAccessToken && !config._retry
           ? `Bearer ${state.userAccessToken}`
           : config.headers.Authorization;
-      console.log('request used');
       return config;
     });
     return () => instance.interceptors.request.eject(interceptor);
   }, [state.userAccessToken]);
 
   useLayoutEffect(() => {
+    /*
+      Using local storage to store the refresh token for now. Will be replaced with a secure cookie in the future.
+    */
     const interceptor = instance.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const originalRequest = error.config;
+        // const originalRequest = error.config;
         if (error.response.status === 401) {
-          try {
-            const refreshToken = await getRefreshToken();
-            dispatch(login({ userAccessToken: refreshToken }));
+          localStorage.removeItem('ACCESS_TOKEN');
+          dispatch(logout());
+          // try {
+          //   const refreshToken = await getRefreshToken();
+          //   dispatch(login({ userAccessToken: refreshToken }));
 
-            originalRequest.headers.Authorization = `Bearer ${refreshToken}`;
-            originalRequest._retry = true;
+          //   originalRequest.headers.Authorization = `Bearer ${refreshToken}`;
+          //   originalRequest._retry = true;
 
-            return instance(originalRequest);
-          } catch {
-            dispatch(logout());
-          }
+          //   return instance(originalRequest);
+          // } catch {
+          //   dispatch(logout());
+          // }
         }
       }
     );

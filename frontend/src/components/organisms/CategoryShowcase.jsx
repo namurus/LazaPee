@@ -1,8 +1,9 @@
-import SectionHeading from './SectionHeading';
+import SectionHeading from '../atoms/SectionHeading';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { stringToId } from '../helpers';
+import { stringToId } from '../../helpers';
+import { getCategories } from '../../api/admin/product';
 
 function CategoryCard({ category }) {
   return (
@@ -11,7 +12,7 @@ function CategoryCard({ category }) {
         <img
           src={category.image}
           alt={category.name}
-          className='aspect-[310/190] max-h-48 w-full bg-white object-contain object-right lg:max-h-[18rem]'
+          className='max-h-48 w-full bg-white object-contain object-right lg:max-h-[18rem]'
         />
       </div>
       <h2 className='absolute left-0 top-0 text-balance px-6 py-3 text-2xl font-semibold capitalize lg:px-9 lg:py-6 lg:text-4xl'>
@@ -29,18 +30,15 @@ function CategoryShowcase() {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      const [categoriesResponse, imageResponse] = await Promise.all([
-        fetch('https://fakestoreapi.com/products/categories'),
-        fetch('https://via.assets.so/shoe.png?id=1&q=95&fit=fill'),
-      ]);
+      const imageResponse = await fetch(
+        'https://via.assets.so/shoe.png?id=1&q=95&fit=fill'
+      );
       try {
-        if (
-          [categoriesResponse, imageResponse].some((response) => !response.ok)
-        ) {
-          throw new Error(`${categoriesResponse.status}`);
+        if (!imageResponse.ok) {
+          throw new Error(`${imageResponse.status}`);
         }
-        const json = await categoriesResponse.json();
-        const objectData = json.map((category) => {
+        const json = await getCategories();
+        const objectData = json.slice(0, 4).map((category) => {
           return {
             name: category,
             image: imageResponse.url,
@@ -66,7 +64,7 @@ function CategoryShowcase() {
                 to={`/product/${stringToId(category.name)}`}
                 key={category.name}
               >
-                <CategoryCard category={category} />;
+                <CategoryCard category={category} />
               </Link>
             );
           })}

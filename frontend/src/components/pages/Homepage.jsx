@@ -1,10 +1,8 @@
-import {
-  Hero,
-  BrandShowcase,
-  ProductShowcase,
-  CategoryShowcase,
-  CommentShowcase,
-} from '../components';
+import Hero from '../organisms/Hero';
+import BrandShowcase from '../organisms/BrandShowcase';
+import ProductShowcase from '../organisms/ProductShowcase';
+import CategoryShowcase from '../organisms/CategoryShowcase';
+import CommentShowcase from '../organisms/CommentShowcase';
 
 function HomePage() {
   const heroInfo = {

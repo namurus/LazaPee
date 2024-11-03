@@ -6,6 +6,8 @@ import adminProductRoutes from "./admin/product.route";
 export default (app) => { 
 	app.use("/auth", authRoutes);
 	app.use("/categories", categoryRoutes);
+	app.use("/products", productRoutes);
+	app.use("/cart", cartRoutes);
 
 
 	//router for admin
@@ -13,6 +15,3 @@ export default (app) => {
 	app.use("/admin/category", adminCategoryRoutes);
 	app.use("/admin/product", adminProductRoutes);
 }
-
-
-
