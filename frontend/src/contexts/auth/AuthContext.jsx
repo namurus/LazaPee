@@ -35,22 +35,26 @@ export default function AuthProvider({ children }) {
   }, [state.userAccessToken]);
 
   useLayoutEffect(() => {
+    /*
+      Using local storage to store the refresh token for now. Will be replaced with a secure cookie in the future.
+    */
     const interceptor = instance.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const originalRequest = error.config;
+        // const originalRequest = error.config;
         if (error.response.status === 401) {
-          try {
-            const refreshToken = await getRefreshToken();
-            dispatch(login({ userAccessToken: refreshToken }));
+          dispatch(logout());
+          // try {
+          //   const refreshToken = await getRefreshToken();
+          //   dispatch(login({ userAccessToken: refreshToken }));
 
-            originalRequest.headers.Authorization = `Bearer ${refreshToken}`;
-            originalRequest._retry = true;
+          //   originalRequest.headers.Authorization = `Bearer ${refreshToken}`;
+          //   originalRequest._retry = true;
 
-            return instance(originalRequest);
-          } catch {
-            dispatch(logout());
-          }
+          //   return instance(originalRequest);
+          // } catch {
+          //   dispatch(logout());
+          // }
         }
       }
     );
