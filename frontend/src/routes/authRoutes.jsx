@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
+import Login from '../components/pages/Login';
 
 const authRoutes = [
   {
@@ -15,7 +16,7 @@ const authRoutes = [
         path: 'login',
         element: (
           <GuestGuard>
-            <div>Login element Placeholder</div>
+            <Login />
           </GuestGuard>
         ),
       },

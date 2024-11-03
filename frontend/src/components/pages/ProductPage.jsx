@@ -41,16 +41,18 @@ const config = {
 };
 
 function ProductPage() {
-  const { products, categoryID, page, sortBy } = useLoaderData();
+  const { products, categoryID } = useLoaderData();
   const subCatagories = ['T-shirts', 'Shorts', 'Shirts', 'Hoodie', 'Jeans'];
 
-  const [searchParams, setSearchParams] = useSearchParams({ page, sortBy });
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pickedColor, setPickedColor] = useState(null);
   const [pickedSize, setPickedSize] = useState(null);
   const [priceRange, setPriceRange] = useState([
     config.priceRange.min,
     config.priceRange.max,
   ]);
+
+  const page = searchParams.get('page') || 0;
 
   const [hideFilter, setHideFilter] = useState(true);
   const [filterList, setFilterList] = useState([]);

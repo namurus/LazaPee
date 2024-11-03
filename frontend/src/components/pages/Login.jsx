@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { googleLogo, loginBanner } from '../../assets';
+import { Link, Navigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { login } from '../../contexts/auth/reducers';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const { dispatch, isAuthenticated } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,12 +26,12 @@ const Login = () => {
           password: password,
           expiresInMins: 30,
         }),
-        credentials: 'include',
       });
 
       if (response.ok) {
         const data = await response.json();
-        setMessage(`Welcome ${data.firstName} ${data.lastName}!`);
+        dispatch(login({ userAccessToken: data.accessToken }));
+        setMessage('Login successful');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');
@@ -35,7 +40,9 @@ const Login = () => {
       setError('An unexpected error occurred. Please try again later.');
     }
   };
-
+  if (isAuthenticated) {
+    <Navigate to='/' />;
+  }
   return (
     <div className='flex min-h-screen flex-col lg:flex-row'>
       <div className='flex w-full flex-col items-center justify-center bg-white p-4 lg:w-1/2 lg:p-10'>
@@ -90,9 +97,9 @@ const Login = () => {
         {message && <p className='mt-4 text-green-500'>{message}</p>}
         <p className='mt-4 text-gray-700'>
           Don&apos;t have an account?{' '}
-          <a href='#' className='text-red-500'>
+          <Link to='../signup' className='text-red-500'>
             Sign up for free!
-          </a>
+          </Link>
         </p>
       </div>
       <div className='flex w-full items-center justify-center bg-gray-100 lg:w-1/2'>

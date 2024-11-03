@@ -1,8 +1,8 @@
 import { createContext, useEffect, useLayoutEffect, useReducer } from 'react';
-import { initialize, login, logout, reducer } from './reducers';
+import { initialize, logout, reducer } from './reducers';
 import PropTypes from 'prop-types';
 import { initialState } from './constant';
-import { getMe, getRefreshToken } from '../../api/user/auth';
+import { getMe } from '../../api/user/auth';
 import { instance } from '../../api/config';
 
 export const AuthContext = createContext();
@@ -43,6 +43,7 @@ export default function AuthProvider({ children }) {
       async (error) => {
         // const originalRequest = error.config;
         if (error.response.status === 401) {
+          localStorage.removeItem('ACCESS_TOKEN');
           dispatch(logout());
           // try {
           //   const refreshToken = await getRefreshToken();

@@ -12,7 +12,7 @@ function CategoryCard({ category }) {
         <img
           src={category.image}
           alt={category.name}
-          className='aspect-[310/190] max-h-48 w-full bg-white object-contain object-right lg:max-h-[18rem]'
+          className='max-h-48 w-full bg-white object-contain object-right lg:max-h-[18rem]'
         />
       </div>
       <h2 className='absolute left-0 top-0 text-balance px-6 py-3 text-2xl font-semibold capitalize lg:px-9 lg:py-6 lg:text-4xl'>
@@ -64,7 +64,7 @@ function CategoryShowcase() {
                 to={`/product/${stringToId(category.name)}`}
                 key={category.name}
               >
-                <CategoryCard category={category} />;
+                <CategoryCard category={category} />
               </Link>
             );
           })}

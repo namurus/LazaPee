@@ -2,6 +2,8 @@
 
 import { post } from '../config';
 
+// import { post } from '../config';
+
 const getMe = async () => {
   //   return get('user/me');
   // try {
@@ -33,4 +35,8 @@ const getRefreshToken = () => {
   });
 };
 
-export { getMe, getRefreshToken };
+const login = async (data) => {
+  return post('auth/login', data);
+};
+
+export { getMe, getRefreshToken, login };

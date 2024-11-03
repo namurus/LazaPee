@@ -23,6 +23,11 @@ function ColorPicker({ colors, pickedColor, onPickColor }) {
           className={`flex h-9 w-9 items-center justify-center rounded-full border border-black border-opacity-20`}
           style={{ backgroundColor: color }}
           onClick={() => {
+            if (selectedColor === color) {
+              setSelectedColor(null);
+              onPickColor(null);
+              return;
+            }
             onPickColor(color);
             setSelectedColor(color);
           }}

@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, redirect } from 'react-router-dom';
 import ProductPage from '../components/pages/ProductPage';
 import { getCategoryProducts, getProduct } from '../api/admin/product';
 import ProductDetail from '../components/pages/ProductDetail';
@@ -8,7 +8,15 @@ async function categoryLoader({ params, request }) {
 
   const subCategory = url.searchParams.get('subCat');
   const page = url.searchParams.get('page') || 0;
-  const sortBy = url.searchParams.get('sort') || 'most-popular';
+  const sortBy = url.searchParams.get('sortBy') || 'most-popular';
+
+  if (!url.searchParams.get('page') || !url.searchParams.get('sortBy')) {
+    url.searchParams.set('page', page);
+    url.searchParams.set('sortBy', sortBy);
+    console.log(url.searchParams.toString());
+    console.log(url.pathname);
+    return redirect(`${url.pathname}?${url.searchParams.toString()}`);
+  }
   console.log(params.categoryID);
   const products = await getCategoryProducts(params.categoryID);
 
@@ -16,8 +24,6 @@ async function categoryLoader({ params, request }) {
     products: products.products,
     subCategory,
     categoryID: params.categoryID,
-    sortBy,
-    page,
   };
 }
 

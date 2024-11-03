@@ -10,11 +10,12 @@ function SizeList({ sizes, pickedSize, onPickSize }) {
           <button
             key={size}
             onClick={() => {
-              onPickSize(size);
               if (pickSize === size) {
                 setPickSize(null);
+                onPickSize(null);
                 return;
               }
+              onPickSize(size);
               setPickSize(size);
             }}
             className={`flex items-center text-nowrap rounded-full px-5 py-3 font-light ${pickSize === size ? 'bg-accent text-white' : 'bg-neutral text-black'}`}
