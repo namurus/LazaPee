@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { googleLogo, signupBanner } from '../assets';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const navigate = useNavigate();
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -45,10 +47,11 @@ const Signup = () => {
         const data = await response.json();
         setMessage(`Welcome! Your account has been created.`);
         setAccessToken(data.accessToken);
-        handleFetchUserData();
+        await handleFetchUserData();
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Signup failed');
+        console.log(errorData);
       }
     } catch {
       setError('An unexpected error occurred. Please try again later.');
@@ -83,6 +86,11 @@ const Signup = () => {
       setError('An unexpected error occurred while fetching user data.');
     }
   };
+
+  // Hàm để điều hướng đến trang login
+  const handleLoginRedirect = () => {
+    navigate('../login');
+  }
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
@@ -150,9 +158,10 @@ const Signup = () => {
         {message && <p className="text-green-500 mt-4">{message}</p>}
         <p className="mt-4 text-gray-700">
           Already have an account?{' '}
-          <a href="#" className="text-red-500">
-            Log in here!
-          </a>
+          
+          <button onClick={handleLoginRedirect} className='text-red-500'>
+            Sign in here!
+          </button>
         </p>
       </div>
 
