@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { googleLogo, loginBanner, signupBanner } from '../assets';
+import { googleLogo, signupBanner } from '../assets';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -8,6 +8,7 @@ const Signup = () => {
   const [step, setStep] = useState(1);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -43,12 +44,43 @@ const Signup = () => {
       if (response.ok) {
         const data = await response.json();
         setMessage(`Welcome! Your account has been created.`);
+        setAccessToken(data.accessToken);
+        handleFetchUserData();
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Signup failed');
       }
     } catch {
       setError('An unexpected error occurred. Please try again later.');
+    }
+  };
+
+  // Hàm để gọi API `/auth/me` sử dụng accessToken đã lưu
+  const handleFetchUserData = async () => {
+    if (!accessToken) {
+      setError("No access token available. Please sign up first.");
+      return;
+    }
+
+    try {
+      const response = await fetch('https://dummyjson.com/auth/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`, // Thêm accessToken vào header
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("User data:", userData);
+        setMessage("User data fetched successfully. Check console for details.");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to fetch user data');
+      }
+    } catch {
+      setError('An unexpected error occurred while fetching user data.');
     }
   };
 

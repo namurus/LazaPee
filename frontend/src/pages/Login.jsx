@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { googleLogo, loginBanner } from '../assets';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +36,10 @@ const Login = () => {
     } catch {
       setError('An unexpected error occurred. Please try again later.');
     }
+  };
+
+  const handleSignupRedirect = () => {
+    navigate('../signup'); // Điều hướng đến trang signup
   };
 
   return (
@@ -86,9 +92,10 @@ const Login = () => {
         {message && <p className="text-green-500 mt-4">{message}</p>}
         <p className="mt-4 text-gray-700">
           Don&apos;t have an account?{' '}
-          <a href="#" className="text-red-500">
+          <button onClick={handleSignupRedirect} className='text-red-500'>
             Sign up for free!
-          </a>
+          </button>
+
         </p>
       </div>
       <div className="w-full lg:w-1/2 bg-gray-100 flex justify-center items-center">
