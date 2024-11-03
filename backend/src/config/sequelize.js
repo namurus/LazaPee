@@ -27,4 +27,3 @@ export const development = {
 	...defaultConfig,
 };
 
-console.log('Database configuration:', development);	
