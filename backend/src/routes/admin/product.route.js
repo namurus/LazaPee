@@ -14,7 +14,7 @@ const router = Router();
 router.post(
 	'/',
 	isAdmin,
-	upload.single('images'),
+	upload.single('image'),
 	uploadCloud,
 	createProduct
 );

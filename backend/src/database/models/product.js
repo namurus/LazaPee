@@ -40,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
 			brand: {
 				type: DataTypes.STRING,
 				allowNull: false,
-				unique: true,
 				field: 'brand',
 			},
 			thumbnail: {
@@ -84,14 +83,11 @@ module.exports = (sequelize, DataTypes) => {
 			createdAt: {
 				allowNull: false,
 				type: DataTypes.DATE,
-				defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
 				field: 'created_at',
 			},
 			updatedAt: {
 				allowNull: false,
 				type: DataTypes.DATE,
-				defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-				onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
 				field: 'updated_at',
 			},
 			deletedAt: {
