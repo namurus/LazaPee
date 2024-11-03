@@ -7,6 +7,7 @@ import cartItemModel from "./models/cart_item";
 import cartModel from "./models/cart";
 
 import * as config from '@/config/sequelize';
+import productImage from './models/product-image';
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -21,7 +22,8 @@ const modelDefiners = [
 	accountModel,
 	productModel,
 	cartItemModel,
-	cartModel
+	cartModel,
+	productImage,
 ];
 
 for (const modelDefiner of modelDefiners) {
