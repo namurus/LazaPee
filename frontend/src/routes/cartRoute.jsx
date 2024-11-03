@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
-import { CartPage } from '../pages';
-import { AuthGuard } from '../guards';
+import CartPage from '../components/pages/CartPage';
+import AuthGuard from '../guards/AuthGuard';
 
 const route = {
   path: '/cart',
@@ -11,7 +10,12 @@ const route = {
   ),
   loader: loader,
   handle: {
-    crumb: () => <Link to='/cart'>Cart</Link>,
+    crumb: () => [
+      {
+        name: 'Cart',
+        path: '/cart',
+      },
+    ],
   },
 };
 

@@ -1,6 +1,6 @@
 import './styles/index.css';
 import { Outlet } from 'react-router-dom';
-import Template from './pages/Template';
+import Template from './components/templates/Template';
 import PropTypes from 'prop-types';
 
 function App() {

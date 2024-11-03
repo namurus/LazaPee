@@ -17,7 +17,7 @@ const getProductsWithSort = (sort) => {
 };
 
 const getCategories = () => {
-  return fetchWithInstance('products/categories');
+  return fetchWithInstance('products/category-list');
 };
 
 const getCategoryProducts = (category) => {

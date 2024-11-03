@@ -1,9 +1,10 @@
 import { useLoaderData } from 'react-router-dom';
-import Breadcrumbs from '../components/Breadcrumbs';
+import Breadcrumbs from '../molecules/Breadcrumbs';
 import { FaMinus, FaPlus, FaTrash, FaTag, FaArrowRight } from 'react-icons/fa';
-import { Button } from '../components';
+import Button from '../atoms/Button';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import QuantitySelector from '../atoms/QuantitySelector';
 
 function CartItem({ item, handleQuantityChange, handleRemoveItem }) {
   const handleAdd = () => {
@@ -52,33 +53,11 @@ function CartItem({ item, handleQuantityChange, handleRemoveItem }) {
         </div>
         <div className='grid grid-cols-2 items-end justify-between gap-4 text-xl font-semibold lg:text-2xl'>
           <h2>${item.price}</h2>
-          <div className='grid h-full max-w-40 grid-cols-3 gap-4 place-self-end rounded-full bg-[#F0F0F0] px-5 py-2 text-sm font-light lg:py-3'>
-            <Button
-              style={'border-0 flex items-center justify-center'}
-              onClick={handleSubtract}
-            >
-              <FaMinus />
-            </Button>
-
-            <input
-              type='number'
-              value={item.quantity}
-              onChange={(e) => {
-                const value = parseInt(e.target.value);
-                if (value < 1) return;
-                handleQuantityChange(item.title, value);
-              }}
-              min={1}
-              className='flex items-center justify-center bg-transparent text-center font-semibold [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
-            />
-
-            <Button
-              style={'border-0 flex items-center justify-center'}
-              onClick={handleAdd}
-            >
-              <FaPlus />
-            </Button>
-          </div>
+          <QuantitySelector
+            defaultQuantity={item.quantity}
+            handleQuantityChange={handleQuantityChange}
+            className='justify-self-end'
+          />
         </div>
       </div>
     </div>
@@ -128,14 +107,20 @@ function CartPage() {
         <h1 className='font-display text-[2rem]'>Your cart</h1>
         <div className='grid grid-cols-1 gap-5 md:grid-cols-3 md:flex-row'>
           <div className='card-list col-span-2 grid max-h-[48rem] overflow-auto rounded-[1.25rem] border p-[0.875rem] lg:px-6 lg:py-5'>
-            {cartItems.map((item) => (
-              <CartItem
-                item={item}
-                key={item.title}
-                handleQuantityChange={handleQuantityChange}
-                handleRemoveItem={handleRemoveItem}
-              />
-            ))}
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <CartItem
+                  item={item}
+                  key={item.title}
+                  handleQuantityChange={(quantity) =>
+                    handleQuantityChange(item.title, quantity)
+                  }
+                  handleRemoveItem={handleRemoveItem}
+                />
+              ))
+            ) : (
+              <p className='text-center'>Your cart is empty</p>
+            )}
           </div>
           <div className='flex h-fit flex-col gap-4 rounded-[1.25rem] border p-5 lg:gap-6 lg:px-6'>
             <h2 className='text-xl font-semibold md:text-2xl'>Order Summary</h2>

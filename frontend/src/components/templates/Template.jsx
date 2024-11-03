@@ -1,5 +1,5 @@
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import Header from '../organisms/Header';
+import Footer from '../organisms/Footer';
 import PropTypes from 'prop-types';
 // import { ErrorContent } from './ErrorPage';
 

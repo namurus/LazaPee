@@ -1,4 +1,4 @@
-import { AuthGuard } from '../guards';
+import AuthGuard from '../guards/AuthGuard';
 
 const userRoutes = [
   {
