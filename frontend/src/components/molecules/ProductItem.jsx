@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import StarRating from '../atoms/StarRating';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 import ProductImage from '../atoms/ProductImage';
+import { Badge } from 'flowbite-react';
 
 function ProductItem({ product }) {
   return (
@@ -13,25 +14,23 @@ function ProductItem({ product }) {
             {product.title}
           </h2>
         </div>
-        <div className='flex items-center gap-4'>
-          <StarRating rating={product.rating} name={`${product.id}-product`} />
-        </div>
-        <div className='grid grid-cols-4 gap-x-12 text-xl font-semibold lg:text-2xl'>
-          <p className='col-span-4'>
+        <StarRating rating={product.rating} name={`${product.id}-product`} />
+        <div className='flex flex-wrap gap-4 text-xl font-semibold lg:text-2xl'>
+          <p>
             {CurrencyFormatter.formatWithLocaleInfo(
               product.price * 25000,
               'VND'
             )}
           </p>
-          <p className='col-span-2 line-through opacity-40'>
+          <p className='line-through opacity-40'>
             {CurrencyFormatter.formatWithLocaleInfo(
               Math.round(product.price * 1.2 * 10 * 25000) / 10,
               'VND'
             )}
           </p>
-          <div className='flex items-center justify-center rounded-xl bg-[#FF3333] bg-opacity-10 px-2 text-[0.625rem] text-[#FF3333] lg:px-4 lg:text-[0.75rem]'>
+          <Badge className='justify-center rounded-full bg-red-400 bg-opacity-10 px-2 py-2 text-sm text-red-500'>
             -20%
-          </div>
+          </Badge>
         </div>
       </div>
     </div>

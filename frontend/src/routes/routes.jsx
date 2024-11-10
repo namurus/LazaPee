@@ -7,12 +7,15 @@ import authRoutes from './authRoutes';
 import cartRoute from './cartRoute';
 import AuthGuard from '../guards/AuthGuard';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
+import { rootAction, rootLoader } from './rootRoutes';
 
 const routes = [
   {
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
+    loader: rootLoader,
+    action: rootAction,
     children: [
       {
         children: [

@@ -15,7 +15,7 @@ function InverseButton({ children, style, switchColor = false, ...rest }) {
       );
   return (
     <button
-      className={style ? twMerge(style, mergedStyle) : mergedStyle}
+      className={style ? twMerge(mergedStyle, style) : mergedStyle}
       {...rest}
     >
       {children}

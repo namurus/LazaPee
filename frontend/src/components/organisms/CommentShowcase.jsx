@@ -1,14 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SectionHeading from '../atoms/SectionHeading';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import LoadingSpinner from '../atoms/LoadingSpinner';
 import ReviewCard from '../molecules/ReviewCard';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
 
 function CommentShowcase() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 640);
+  const [api, setApi] = useState();
+  const [count, setCount] = useState(0);
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     fetch('https://dummyjson.com/comments?limit=10')
@@ -18,30 +24,25 @@ function CommentShowcase() {
         setLoading(false);
       });
   }, []);
+
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  const handleResize = () => {
-    setIsMobileView(window.innerWidth < 640);
-  };
-  const handleNextComment = () => {
-    setCurrentCommentIndex((prev) =>
-      prev + 1 === comments.length ? prev : prev + 1
-    );
-  };
+    if (!api) {
+      return;
+    }
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  });
 
-  const handlePrevComment = () => {
-    setCurrentCommentIndex((prev) => (prev - 1 < 0 ? prev : prev - 1));
-  };
+  const handleNextComment = useCallback(() => {
+    api?.scrollNext();
+  }, [api]);
 
-  const getDesktopComments = () => {
-    if (comments.length === 0) return [];
-    if (comments.length < 3) return comments;
-    if (currentCommentIndex >= comments.length - 2) return comments.slice(-3);
-    return comments.slice(currentCommentIndex, currentCommentIndex + 3);
-  };
-
+  const handlePrevComment = useCallback(() => {
+    api?.scrollPrev();
+  }, [api]);
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -57,57 +58,37 @@ function CommentShowcase() {
           <div className='flex items-center gap-4 [&>*]:h-6 [&>*]:w-6'>
             <button
               onClick={() => handlePrevComment()}
-              disabled={currentCommentIndex === 0}
+              disabled={current === 1}
               className='disabled:opacity-50'
             >
               <FaArrowLeft className='w-full' />
             </button>
             <button
+              id='right'
               onClick={() => handleNextComment()}
-              disabled={
-                isMobileView
-                  ? currentCommentIndex === comments.length - 1
-                  : currentCommentIndex >= comments.length - 3
-              }
+              disabled={current === count}
               className='disabled:opacity-50'
             >
               <FaArrowRight className='w-full' />
             </button>
           </div>
         </div>
-        {isMobileView ? (
-          <div className='mobile-view sm:hidden'>
-            <div className='grid grid-cols-1 gap-5 lg:grid-cols-3 lg:grid-rows-1'>
-              {comments[currentCommentIndex] && (
+        <Carousel setApi={setApi}>
+          <CarouselContent>
+            {comments.map((comment, index) => (
+              <CarouselItem key={index} className='md:basis-1/2 lg:basis-1/3'>
                 <ReviewCard
                   review={{
-                    reviewerName: comments[currentCommentIndex].user.fullName,
+                    reviewerName: comment.user.fullName,
                     rating: 5,
-                    comment: comments[currentCommentIndex].body,
-                    reviewerEmail: comments[currentCommentIndex].user.username,
+                    comment: comment.body,
+                    reviewerEmail: comment.user.username,
                   }}
                 />
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className='desktop-view hidden sm:block'>
-            <div className='grid grid-cols-1 gap-5 lg:grid-cols-3 lg:grid-rows-1'>
-              {getDesktopComments().map((comment) => (
-                <div key={comment.user.username + comment.id}>
-                  <ReviewCard
-                    review={{
-                      reviewerName: comment.user.fullName,
-                      rating: 5,
-                      comment: comment.body,
-                      reviewerEmail: comment.user.username,
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </section>
   );

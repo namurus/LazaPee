@@ -30,7 +30,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        dispatch(login({ userAccessToken: data.accessToken }));
+        dispatch(login({ user: data }));
         setMessage('Login successful');
       } else {
         const errorData = await response.json();

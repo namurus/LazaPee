@@ -1,3 +1,4 @@
+import { Breadcrumb } from 'flowbite-react';
 import { useMatches } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -11,26 +12,16 @@ function Breadcrumbs() {
     .map((match) => match.handle.crumb(match.data));
   crumbs = crumbs.flat();
   return (
-    <ol className='mt-5 flex flex-wrap gap-2 text-sm font-light capitalize transition'>
-      <Link to='/' className='hover:underline'>
-        <li className='opacity-60'>Home</li>
-      </Link>
+    <Breadcrumb className='mt-5 text-sm capitalize'>
+      <Breadcrumb.Item>
+        <Link to='/'>Home</Link>
+      </Breadcrumb.Item>
       {crumbs.map((crumb) => (
-        <li
-          key={crumb.name}
-          className='flex items-center justify-between gap-2'
-        >
-          <span>&gt;</span>
-          {crumb.path ? (
-            <Link to={crumb.path} className='hover:underline'>
-              <span className='opacity-60'>{crumb.name}</span>
-            </Link>
-          ) : (
-            <span>{crumb.name}</span>
-          )}
-        </li>
+        <Breadcrumb.Item key={crumb.name}>
+          {crumb.path ? <Link to={crumb.path}>{crumb.name}</Link> : crumb.name}
+        </Breadcrumb.Item>
       ))}
-    </ol>
+    </Breadcrumb>
   );
 }
 

@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
 import Login from '../components/pages/Login';
+import Logout from '../components/pages/Logout';
 
 const authRoutes = [
   {
@@ -32,7 +33,7 @@ const authRoutes = [
         path: 'logout',
         element: (
           <AuthGuard>
-            <div>Logout element Placeholder</div>,
+            <Logout />
           </AuthGuard>
         ),
       },
