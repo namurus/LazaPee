@@ -1,11 +1,27 @@
+import db from '@/database';
 import * as categoryHelper from '../helpers/category.helpers';
+
   
 export const getAllCategories = async (req, res) => {
 try {
-    const categories = await categoryHelper.getCategoryTree();
-    res.status(200).json({ success: true, data: categories });
+    const categories = await db.models.Category.findAll({
+        order: [['id', 'ASC']],
+        include: [
+            {
+                model: db.models.Category,
+                as: 'subcategories',
+            },
+        ],
+    });
+
+    // if (!categories || categories.length === 0) {
+    //     return res.status(404).json({ message: 'Categories is empty' });
+    // }
+
+    const categoryTree = await categoryHelper.getCategoryTree(categories);
+    res.status(200).json({ message: 'Success', data: categoryTree });
 } catch (error) {
-    res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
+    res.status(500).json({message: 'Failure' });
 }
 };
 

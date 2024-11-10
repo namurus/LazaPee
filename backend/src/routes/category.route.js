@@ -3,8 +3,8 @@ import {  getAllCategories, getAllParentCategoryOfProduct} from '../controllers/
 
 const router = Router();
 
-router.get('/customer/Categories', getAllCategories);
+router.get('/', getAllCategories);
 
-router.get('/:id/parentCategory', getAllParentCategoryOfProduct);
+router.get('/:productid', getAllParentCategoryOfProduct);
 
 export default router;

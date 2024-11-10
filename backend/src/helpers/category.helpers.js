@@ -1,24 +1,22 @@
-import db from '@/database';
+const buildCategoryTree = (categories, parentId = null) => {
+  return categories
+      .filter(category => category.parentId === parentId)
+      .map(category => ({
+          id: category.id,
+          name: category.name,
+          slug: category.slug,            // Thêm trường slug
+          thumbnail: category.thumbnail,  // Thêm trường thumbnail
+          createdAt: category.createdAt,  // Thêm trường createdAt
+          updatedAt: category.updatedAt,  // Thêm trường updatedAt
+          deletedAt: category.deletedAt,  // Thêm trường deletedAt
+          children: buildCategoryTree(categories, category.id) 
+      }));
+};
 
-const getCategoryTree = async (parentId = null) => {
-    const categories = await db.Category.findAll({
-      where: { parentId },
-      include: [
-        {
-          model: db.Category,
-          as: 'subcategories',
-        },
-      ],
-      order: [['id', 'ASC']], // Sắp xếp theo ID nếu cần
-    });
-  
-    return Promise.all(
-      categories.map(async (category) => ({
-        ...category.toJSON(),
-        subcategories: await getCategoryTree(category.id), // Gọi đệ quy
-      }))
-    );
-  };
+export const getCategoryTree = async (categories) => {
+  return buildCategoryTree(categories);
+};
+
 
 // Return parent categories arr of a product
 const getProductBreadcrumb = async (productId) => {
