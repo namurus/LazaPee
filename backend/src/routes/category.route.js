@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import {  getAllCategories, getAllParentCategoryOfProduct} from '../controllers/category.controller';
+import {  getCategoriesForCustomer} from '../controllers/category.controller';
 
 const router = Router();
 
-router.get('/', getAllCategories);
-
-router.get('/:productid', getAllParentCategoryOfProduct);
+router.get('/', getCategoriesForCustomer);
 
 export default router;
