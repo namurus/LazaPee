@@ -47,3 +47,4 @@ export const getAllParentCategoryOfProduct = async (req, res, next) => {
         next(err);
     }
 };
+
