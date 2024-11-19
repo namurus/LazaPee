@@ -16,7 +16,6 @@ module.exports = {
       },
       brand: {
         type: Sequelize.STRING,
-        allowNull: false,
         field: 'brand',
       },
 			image: {

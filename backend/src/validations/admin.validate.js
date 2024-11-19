@@ -15,7 +15,7 @@ export const createCategoryRules = [
 	body('thumbnail').exists().isURL(),
 ]
 export const createProductRules = [ 
-	body('name').exists(),
+	body('productName').exists(),
 	body('price').exists().isNumeric(),
 	body('description').exists(),
 	body('thumbnail').exists().isURL(),
