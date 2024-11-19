@@ -1,34 +1,27 @@
-import * as categoryHelper from '../helpers/category.helpers';
-  
-export const getAllCategories = async (req, res) => {
-try {
-    const categories = await categoryHelper.getCategoryTree();
-    res.status(200).json({ success: true, data: categories });
-} catch (error) {
-    console.error('Lỗi khi lấy danh mục:', error);
-    res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
-}
-};
+import db from '@/database';
 
-// [GET] parentCategory of a product
-export const getAllParentCategoryOfProduct = async (req, res, next) => {
-    try {
-        const { id } = req.params;
+export const getCategoriesForCustomer = async (req, res) => {
+  try {
+    const categories = await db.models.Category.findAll();
 
-        // Validate id
-        if (!id) {
-            return res.status(400).json({ code: 400, message: 'Product ID is required' });
-        }
+    const buildTreeCategory = (parentId = null) => {
+      return categories
+        .filter(category => category.parentId === parentId)
+        .map(category => ({
+          ...category.dataValues,
+          subCategories: buildTreeCategory(category.id),
+        }));
+    };
 
-        const breadcrumb = await categoryHelper.getProductBreadcrumb(id);
+    const categoryTree = buildTreeCategory();
 
-        // If breadcrumb is empty, product or category was not found
-        if (breadcrumb.length === 0) {
-            return res.status(404).json({ code: 404, message: 'Product or associated category not found' });
-        }
-
-        return res.status(200).json({ code: 200, data: breadcrumb });
-    } catch (err) {
-        next(err);
+    if (categoryTree.length === 0) {
+      return res.status(404).json({ message: 'No categories found' });
     }
+
+    res.status(200).json({ code: 200, categories: categoryTree });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };

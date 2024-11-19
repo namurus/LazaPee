@@ -19,6 +19,10 @@ module.exports = {
 				type: Sequelize.INTEGER,
 				allowNull: true,
 				field: 'parent_id',
+				references: {
+					model: 'category',
+					key: 'id',       
+				},
 			},
 			slug: {
 				type: Sequelize.STRING,
