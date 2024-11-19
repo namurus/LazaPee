@@ -48,8 +48,24 @@ export const getAlProducts = async (req, res, next) => {
 			perPage,
 			page,
 			total: count,
-			totalPage: count % perPage === 0 ? count / perPage : Math.ceil(count / perPage),
+			totalPage: Math.ceil(count / perPage),
 		});
+	} catch (err) {
+		next(err);
+	}
+};
+// [DELETE] /admin/product/:productId
+export const deleteProduct = async (req, res, next) => {
+	try {
+		const { productId } = req.params;		
+		if (!productId) {
+			return res.status(400).json({ code: 400, message: 'productId is required' });
+		}
+		const row = await db.models.Product.destroy({ where: { id: productId } });
+		if (!row) {
+			return res.status(404).json({ code: 404, message: 'Product not found!' });
+		}
+		return res.status(200).json({ code: 200, message: 'Product deleted!' });
 	} catch (err) {
 		next(err);
 	}

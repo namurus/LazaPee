@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
 	createProduct,
 	getProduct,
-	getAlProducts
+	getAlProducts,
+	deleteProduct,
 } from '@/controllers/admin/product.controller';
 import isAdmin from '@/middlewares/isAdmin';
 import validate from '@/middlewares/validation';
@@ -28,6 +29,6 @@ router.get('/', isAdmin, getAlProducts);
 
 // router.patch('/:productId', isAdmin, upload.single('thumbnail'), uploadCloud, );
 
-// router.delete('/:productId', isAdmin, );
+router.delete('/:productId', isAdmin, deleteProduct);
 
 export default router;
