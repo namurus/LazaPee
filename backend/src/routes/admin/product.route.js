@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import {
-	createProduct
+	createProduct,
+	getProduct,
+	getAlProducts
 } from '@/controllers/admin/product.controller';
 import isAdmin from '@/middlewares/isAdmin';
 import validate from '@/middlewares/validation';
@@ -20,9 +22,9 @@ router.post(
 	createProduct
 );
 
-// router.get('/:productId', isAdmin, );
+router.get('/:productId', isAdmin, getProduct);
 
-// router.get('/', isAdmin, );
+router.get('/', isAdmin, getAlProducts);
 
 // router.patch('/:productId', isAdmin, upload.single('thumbnail'), uploadCloud, );
 
