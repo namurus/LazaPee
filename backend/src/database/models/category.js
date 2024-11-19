@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
 			Category.belongsTo(models.Category, {
 				foreignKey: 'parentId',
 				as: 'parentCategory',
+			Category.hasMany(models.Product, {
+				foreignKey: 'categoryId',
+				as: 'products',
 			});
 		}
 	}

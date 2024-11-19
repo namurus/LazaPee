@@ -5,6 +5,8 @@ import productRoutes from './product.route';
 import cartRoutes from './cart.route'; 
 import adminCAuthRoutes from "./admin/auth.route";
 import adminProductRoutes from "./admin/product.route";
+import productRoutes from "./product.route";
+import cartRoutes from "./cart.route";
 export default (app) => { 
 	app.use("/auth", authRoutes);
 	app.use("/products", productRoutes);
