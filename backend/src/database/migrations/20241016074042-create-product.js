@@ -16,18 +16,28 @@ module.exports = {
       },
       brand: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
         field: 'brand',
       },
+			image: {
+				type: Sequelize.STRING,
+				field: 'image',
+			},
       thumbnail: {
         type: Sequelize.STRING,
         field: 'thumbnail',
       },
-      image: {
-        type: Sequelize.STRING,
-        field: 'image',
-      },
+      slug: {
+				type: Sequelize.STRING,
+				field: 'slug',
+			},
+			discountPercentage: {
+				type: Sequelize.INTEGER,
+				field: 'discount_percentage',
+			},
+			categoryId: {
+				type: Sequelize.INTEGER,
+				field: 'category_id',
+			},
       price: {
         type: Sequelize.FLOAT,
         field: 'price',
