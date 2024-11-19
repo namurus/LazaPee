@@ -16,19 +16,18 @@ const router = Router();
 
 router.post(
 	'/',
-	isAdmin,
 	upload.single('thumbnail'),
 	uploadCloud,
 	validate(createProductRules),
 	createProduct
 );
 
-router.get('/:productId', isAdmin, getProduct);
+router.get('/:productId', getProduct);
 
-router.get('/', isAdmin, getAlProducts);
+router.get('/', getAlProducts);
 
-// router.patch('/:productId', isAdmin, upload.single('thumbnail'), uploadCloud, );
+// router.patch('/:productId', upload.single('thumbnail'), uploadCloud, );
 
-router.delete('/:productId', isAdmin, deleteProduct);
+router.delete('/:productId', deleteProduct);
 
 export default router;
