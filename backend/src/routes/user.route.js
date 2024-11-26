@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getMe } from '@/controllers/user.controller';
-import { authenticate } from '@/middlewares/authentication';
+import { getMe, updateMe } from '@/controllers/user.controller';
 const router = Router();
 
-router.get('/me', authenticate, getMe);
+router.get('/profile', getMe);
+router.post('/update', updateMe);
 
 export default router;

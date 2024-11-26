@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import db from '@/database';
-export const authenticate = async (req, res, next) => {
+export default async (req, res, next) => {
 	const authorization = req.headers.authorization;
 	if (!authorization) {
 		return res.status(401).json({ code: 401, message: 'Unauthorized' });
@@ -21,7 +21,7 @@ export const authenticate = async (req, res, next) => {
 			return res.status(401).json({ code: 401, message: 'Unauthorized' });
 		}
 		req.user = user;
-
+		
 		next();
 	} catch (err) {
 		return res.status(401).json({ code: 401, message: 'Unauthorized' });

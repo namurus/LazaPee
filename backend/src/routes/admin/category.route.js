@@ -6,7 +6,6 @@ import {
 	editCategory,
 	deleteCategory,
 } from '@/controllers/admin/category.controller';
-import isAdmin from '@/middlewares/isAdmin';
 import validate from '@/middlewares/validation';
 import { createCategoryRules } from '@/validations/admin.validate';
 import multer from 'multer';
@@ -16,21 +15,14 @@ const upload = multer();
 
 const router = Router();
 
-router.post(
-	'/',
-	isAdmin,
-	upload.single('thumbnail'),
-	uploadCloud,
-	validate(createCategoryRules),
-	createCategory
-);
+router.post('/', upload.single('thumbnail'), uploadCloud, validate(createCategoryRules), createCategory);
 
-router.get('/:categoryId', isAdmin, getCategory);
+router.get('/:categoryId', getCategory);
 
-router.get('/', isAdmin, getAllCategories);
+router.get('/', getAllCategories);
 
-router.patch('/:categoryId', isAdmin, upload.single('thumbnail'), uploadCloud, editCategory);
+router.patch('/:categoryId', upload.single('thumbnail'), uploadCloud, editCategory);
 
-router.delete('/:categoryId', isAdmin, deleteCategory);
+router.delete('/:categoryId', deleteCategory);
 
 export default router;
