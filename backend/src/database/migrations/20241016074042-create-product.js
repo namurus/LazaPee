@@ -11,7 +11,7 @@ module.exports = {
         primaryKey: true,
       },
       productName: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         field: 'productName',
       },
       brand: {
@@ -29,13 +29,13 @@ module.exports = {
         field: 'image',
       },
       price: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         field: 'price',
       },
       stock: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.JSON,
         field: 'stock',
-        defaultValue: 0,
+        defaultValue: {},
       },
       description: {
         type: Sequelize.TEXT,
@@ -44,6 +44,11 @@ module.exports = {
       status: {
         type: Sequelize.ENUM('available', 'out of stock'),
         field: 'status',
+      },
+      soldQuantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import { fetchAllCartItems, addCartItem, updateCartItem, deleteCartItem } from '../controllers/cart.controller';
+import authenticate from '@/middlewares/authentication';
 
 const router = Router();
 
-router.get('/', fetchAllCartItems);
+router.get('/', authenticate, fetchAllCartItems);
 
-router.post('/add', addCartItem);
+router.post('/add', authenticate, addCartItem);
 
-router.delete('/remove', deleteCartItem);
+router.delete('/remove', authenticate, deleteCartItem);
 
-router.put('/update', updateCartItem);
+router.put('/update', authenticate, updateCartItem);
 
 export default router;

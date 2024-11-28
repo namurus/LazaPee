@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       productName: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
         field: 'productName',
       },
@@ -45,14 +45,14 @@ module.exports = (sequelize, DataTypes) => {
         field: 'image',
       },
       price: {
-        type: DataTypes.FLOAT, 
+        type: DataTypes.DECIMAL(10, 3), 
         allowNull: false,
         field: 'price',
       },
       stock: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.JSON,
         field: 'stock',
-        defaultValue: 0,
+        defaultValue: {},
       },
       description: {
         type: DataTypes.TEXT,
@@ -61,6 +61,11 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.ENUM('available', 'out of stock'),
         field: 'status',
+      },
+      soldQuantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

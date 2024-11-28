@@ -27,7 +27,7 @@ module.exports = {
         field: 'product_id',
       },
       price: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false,
         field: 'price',
       },
