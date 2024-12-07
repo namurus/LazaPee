@@ -2,7 +2,7 @@ import db from '@/database';
 
 export const searchProducts = async (req, res, next) => {
     try {
-        const { facet, keyword, maxPrice, minPrice, noCorrection, page } = req.query;
+        const { facet, keyword, maxPrice, minPrice, page, colors, brands } = req.query;
 
         if (!keyword) {
             return res.status(400).json({ code: 400, message: 'Keyword is required' });
@@ -32,6 +32,22 @@ export const searchProducts = async (req, res, next) => {
         if (minPrice) {
             whereClause[db.Sequelize.Op.and].push({
                 price: { [db.Sequelize.Op.gte]: minPrice }
+            });
+        }
+
+        if (colors) {
+            const colorArray = colors.split(',');
+            colorArray.forEach(color => {
+                whereClause[db.Sequelize.Op.and].push({
+                    stock: { [db.Sequelize.Op.contains]: { [color]: { [db.Sequelize.Op.gt]: 0 } } }
+                });
+            });
+        }
+
+        if (brands) {
+            const brandArray = brands.split(',');
+            whereClause[db.Sequelize.Op.and].push({
+                brand: { [db.Sequelize.Op.in]: brandArray }
             });
         }
 
