@@ -1,7 +1,7 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { AuthGuard } from '../guards';
+import { Outlet } from 'react-router-dom';
+import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
-import Login from '../pages/Login';
+import Login from '../components/pages/Login';
 
 const authRoutes = [
   {
@@ -35,10 +35,6 @@ const authRoutes = [
             <div>Logout element Placeholder</div>,
           </AuthGuard>
         ),
-      },
-      {
-        path: '*',
-        element: <Navigate to='/auth/login' />, // Chuyển hướng về login nếu không có route nào khác
       },
     ],
   },
