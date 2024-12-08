@@ -1,9 +1,10 @@
 import { IoFilterSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import ProductItem from '../molecules/ProductItem';
-import { Pagination } from 'flowbite-react';
+
 import PropTypes from 'prop-types';
 import NoItemListNotification from '../molecules/NoItemListNotification';
+import Pagination from '../molecules/Pagination';
 
 ProductListPanel.propTypes = {
   listTitle: PropTypes.string.isRequired,
@@ -76,6 +77,21 @@ function ProductListPanel({
         totalPages={totalPages}
         onPageChange={onPageChange}
       />
+      {/* <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious onClick={onPageChange(currentPage - 1)} />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <PaginationItem key={i}>
+              <Button onClick={() => onPageChange(i)}>{i + 1}</Button>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext onClick={onPageChange(currentPage + 1)} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination> */}
     </div>
   );
 }

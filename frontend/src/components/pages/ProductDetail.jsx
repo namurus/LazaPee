@@ -2,24 +2,32 @@ import { useLoaderData } from 'react-router-dom';
 import ProductInforSection from '../organisms/ProductInfoSection';
 import MainLayout from '../templates/MainLayout';
 
-import { Tabs } from 'flowbite-react';
-import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import ProductReviewSection from '../organisms/ProductReviewSection';
 import ShopInfoSection from '../organisms/ShopInfoSection';
 
 function ProductDetail() {
   const product = useLoaderData();
-  const [activeTab, setActiveTab] = useState(0);
   return (
     <MainLayout>
       <ProductInforSection product={product} />
       <Tabs
         aria-label='Tabs with icons'
-        variant='underline'
-        onActiveTabChange={(tab) => setActiveTab(tab)}
-        className='mt-6 justify-center text-black first:text-xl [&>*]:first:flex-1 [&>*]:first:[&>*]:text-xl [&>*]:first:[&>*]:leading-[1.1] [&>*]:first:ring-0'
+        defaultValue='details'
+        className='mt-6 justify-center text-black'
       >
-        <Tabs.Item active title='Details' color='red'>
+        <TabsList className='flex justify-center bg-neutral-50'>
+          <TabsTrigger className='px-4 py-2 text-xl' value='details'>
+            Details
+          </TabsTrigger>
+          <TabsTrigger className='px-4 py-2 text-xl' value='rating-review'>
+            Rating & Review
+          </TabsTrigger>
+          <TabsTrigger className='px-4 py-2 text-xl' value='shop'>
+            Shop
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent className='mt-4' value='details'>
           <p className='font-light'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
             nesciunt accusantium repellat obcaecati laudantium ullam est dolore
@@ -35,13 +43,13 @@ function ProductDetail() {
             necessitatibus odit explicabo. Molestiae cumque animi iusto
             recusandae voluptatum.
           </p>
-        </Tabs.Item>
-        <Tabs.Item title='Rating & Review'>
+        </TabsContent>
+        <TabsContent className='mt-4' value='rating-review'>
           <ProductReviewSection reviews={product.reviews} />
-        </Tabs.Item>
-        <Tabs.Item title='Shop'>
+        </TabsContent>
+        <TabsContent className='mt-4' value='shop'>
           <ShopInfoSection product={product} />
-        </Tabs.Item>
+        </TabsContent>
       </Tabs>
     </MainLayout>
   );

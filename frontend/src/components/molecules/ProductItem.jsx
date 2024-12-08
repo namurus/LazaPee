@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import StarRating from '../atoms/StarRating';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 import ProductImage from '../atoms/ProductImage';
-import { Badge } from 'flowbite-react';
+import { Badge } from '../ui/badge';
 
 function ProductItem({ product }) {
   return (

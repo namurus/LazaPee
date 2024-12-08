@@ -1,6 +1,13 @@
-import { Breadcrumb } from 'flowbite-react';
 import { useMatches } from 'react-router';
 import { Link } from 'react-router-dom';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '../ui/breadcrumb';
 
 function Breadcrumbs() {
   let matches = useMatches();
@@ -13,14 +20,24 @@ function Breadcrumbs() {
   crumbs = crumbs.flat();
   return (
     <Breadcrumb className='mt-5 text-sm capitalize'>
-      <Breadcrumb.Item>
-        <Link to='/'>Home</Link>
-      </Breadcrumb.Item>
-      {crumbs.map((crumb) => (
-        <Breadcrumb.Item key={crumb.name}>
-          {crumb.path ? <Link to={crumb.path}>{crumb.name}</Link> : crumb.name}
-        </Breadcrumb.Item>
-      ))}
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+        </BreadcrumbItem>
+
+        {crumbs.map((crumb) => (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem key={crumb.name}>
+              {crumb.path ? (
+                <Link to={crumb.path}>{crumb.name}</Link>
+              ) : (
+                <BreadcrumbPage>{crumb.name}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </>
+        ))}
+      </BreadcrumbList>
     </Breadcrumb>
   );
 }

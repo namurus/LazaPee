@@ -5,7 +5,15 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 import { twMerge } from 'tailwind-merge';
 import { useAuth } from '../../hooks/useAuth';
 import InverseButton from '../atoms/InverseButton';
-import { Avatar, Dropdown } from 'flowbite-react';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 export default function Header() {
   const { isAuthenticated, user } = useAuth();
   const navLinks = [
@@ -80,36 +88,34 @@ export default function Header() {
           <FaShoppingCart className='h-6 w-6' />
         </Link>
         {isAuthenticated ? (
-          <Dropdown
-            label={
-              <Avatar
-                img={`https://i.pinimg.com/originals/c7/ae/40/c7ae40f6a425e144f7dd8cee87128aed.jpg`}
-                alt={user.firstName}
-                size='sm'
-                rounded
-                color='gray'
-              />
-            }
-            arrowIcon={false}
-            inline
-            className='bg-transparent'
-          >
-            <Dropdown.Header>
-              <span className='block text-sm'>{user.firstName}</span>
-              <span className='block truncate text-sm font-medium'>
-                {user.email}
-              </span>
-            </Dropdown.Header>
-            {userOptions.map((option) => (
-              <Dropdown.Item key={option}>
-                <Link to={`/user/${option.toLowerCase()}`}>{option}</Link>
-              </Dropdown.Item>
-            ))}
-            <Dropdown.Divider />
-            <Dropdown.Item>
-              <Link to={`/auth/logout`}>Logout</Link>
-            </Dropdown.Item>
-          </Dropdown>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar alt={user.firstName} size='sm' rounded color='gray'>
+                <AvatarImage
+                  src={`https://i.pinimg.com/originals/c7/ae/40/c7ae40f6a425e144f7dd8cee87128aed.jpg`}
+                />
+                <AvatarFallback>{user.firstName[0]}</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>
+                <span className='block text-sm'>{user.firstName}</span>
+                <span className='block truncate text-sm font-medium'>
+                  {user.email}
+                </span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {userOptions.map((option) => (
+                <DropdownMenuItem key={option}>
+                  <Link to={`/user/${option.toLowerCase()}`}>{option}</Link>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link to={`/auth/logout`}>Logout</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Link to='/auth/login'>
             <InverseButton style={'px-4 py-2 rounded-full font-bold uppercase'}>

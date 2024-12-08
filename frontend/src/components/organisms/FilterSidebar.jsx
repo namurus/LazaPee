@@ -1,14 +1,8 @@
 import { twMerge } from 'tailwind-merge';
 import PropTypes from 'prop-types';
 import { FaXmark } from 'react-icons/fa6';
-import { Drawer } from 'flowbite-react';
 
-function FilterSidebar({
-  children,
-  className,
-  isOpenDrawer,
-  onFilterButtonClick,
-}) {
+function FilterSidebar({ children, className, onFilterButtonClick }) {
   return (
     <>
       <div
@@ -28,14 +22,6 @@ function FilterSidebar({
         </div>
         {children}
       </div>
-      <Drawer
-        open={isOpenDrawer}
-        onClose={onFilterButtonClick}
-        position='bottom'
-      >
-        <Drawer.Header title='Filters' />
-        <Drawer.Items>{children}</Drawer.Items>
-      </Drawer>
     </>
   );
 }
@@ -43,7 +29,6 @@ function FilterSidebar({
 FilterSidebar.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  isOpenDrawer: PropTypes.bool,
   onFilterButtonClick: PropTypes.func,
 };
 
