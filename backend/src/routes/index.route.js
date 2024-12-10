@@ -5,6 +5,7 @@ import cartRoutes from './cart.route';
 import adminCAuthRoutes from "./admin/auth.route";
 import adminProductRoutes from "./admin/product.route";
 import productRoutes from "./product.route";
+import orderRoutes from "./order.route";
 export default (app) => { 
 	app.use("/auth", authRoutes);
 	app.use("/products", productRoutes);
@@ -17,4 +18,6 @@ export default (app) => {
 	app.use("/admin/product", adminProductRoutes);
 
 	app.use("/category", customerCategoryRoutes);
+
+	app.use("/checkout", orderRoutes);
 }

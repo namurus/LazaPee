@@ -26,11 +26,11 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
-      Cart.belongsTo(models.User, {
+      Order.belongsTo(models.User, {
         foreignKey: 'userId',
         as: 'user',
       })
-      Cart.hasMany(models.CartItem, {
+      Order.hasMany(models.OrderItem, {
         foreignKey: 'OrderId',
         as: 'OrderItems',
         })
