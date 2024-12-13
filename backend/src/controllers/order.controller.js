@@ -2,57 +2,58 @@ import db from '@/database';
 
 export const checkout = async (req, res, next) => {
     try {
-        const { userId, address, paymentMethod, cartItems } = req.body;
+        const { cartItems } = req.body;
 
         // Validate input
-        if (!userId || !address || !paymentMethod || !cartItems || !cartItems.length) {
+        // Check if cartItems exists and contains at least one item
+        if (!cartItems || !cartItems.length) {
             return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
         }
 
-        // Store created orders and order items for the response
-        const orders = [];
+        const productDetails = [];
 
-        // Loop through each cart item and create a separate order
+        // Loop through each cart item and fetch product details
         for (const item of cartItems) {
             console.log('Searching for product with ID:', item.productId);
-            const product = await db.models.Product.findByPk(item.productId);
 
+            // Query product details along with associated product images
+            const product = await db.models.Product.findByPk(item.productId, {
+                include: [
+                    {
+                        model: db.models.ProductImage,
+                        as: 'images',
+                        attributes: ['id', 'url'],
+                    },
+                ],
+            });
+
+            // Check if the product exists
             if (!product) {
                 return res.status(404).json({ message: `Product with ID ${item.productId} does not exist!` });
-                
             }
 
+            // Check if the requested quantity exceeds available stock
             if (product.stock < item.quantity) {
                 return res.status(400).json({ message: `Product with ID ${item.productId} is out of stock!` });
             }
 
-            // Create a new order for the product
-            const newOrder = await db.models.Order.create({
-                userId,
-                status: 'Pending',
-            });
+            const productData = product.toJSON();
 
-            // Create the order item for the product
-            const orderItem = await db.models.OrderItem.create({
-                orderId: newOrder.id,
-                productId: item.productId,
+            // Add product details to the result, including quantity and stock remaining
+            productDetails.push({
+                ...productData, 
                 quantity: item.quantity,
-                price: product.price,
-            });
-
-            // Add the order and its item to the response data
-            orders.push({
-                order: newOrder,
-                orderItem,
+                stockRemaining: product.stock - item.quantity,
             });
         }
 
-        return res.status(201).json({
-            message: 'Orders placed successfully!',
-            orders,
+        return res.status(200).json({
+            message: 'Products retrieved successfully!',
+            products: productDetails,
         });
     } catch (error) {
-        console.error('Error creating order:', error);
-        next(error); // Pass error to the error handling middleware
+
+        console.error('Error retrieving product details:', error);
+        next(error);
     }
 };

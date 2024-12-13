@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
-        field: 'order_id',
+        field: 'order_id',  
       },
       productId: {
         type: Sequelize.INTEGER,
