@@ -237,4 +237,36 @@ export const updateOrderByID = async (req, res, next) => {
   }
 };
 
+// Controller to delete an order by ID
+export const deleteOrderByID = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    // Validate if the order ID is missing
+    if (!id) {
+      return res.status(400).json({ message: 'Order ID is required.' });
+    }
+
+    // Find the order by its ID
+    const order = await db.models.Order.findByPk(id);
+
+    // Check if the order exists
+    if (!order) {
+      return res.status(404).json({ message: `Order with ID ${id} not found.` });
+    }
+
+    // Delete the order
+    await db.models.Order.destroy({
+      where: { id: id },
+  });
+
+    return res.status(200).json({
+      message: `Order with ID ${id} deleted successfully.`,
+    });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    next(error); // Pass the error to the error-handling middleware
+  }
+};
+
 
