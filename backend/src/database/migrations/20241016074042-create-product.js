@@ -18,39 +18,26 @@ module.exports = {
         type: Sequelize.STRING,
         field: 'brand',
       },
+      thumbnail: {
+        type: Sequelize.STRING,
+        field: 'thumbnail',
+      },
 			image: {
 				type: Sequelize.STRING,
 				field: 'image',
 			},
-      thumbnail: {
-        type: Sequelize.STRING,
-        field: 'thumbnail',
+      description: {
+        type: Sequelize.TEXT,
+        field: 'description',
       },
       slug: {
 				type: Sequelize.STRING,
 				field: 'slug',
 			},
-			discountPercentage: {
-				type: Sequelize.INTEGER,
-				field: 'discount_percentage',
-			},
 			categoryId: {
 				type: Sequelize.INTEGER,
 				field: 'category_id',
 			},
-      price: {
-        type: Sequelize.DECIMAL(10, 3),
-        field: 'price',
-      },
-      stock: {
-        type: Sequelize.JSON,
-        field: 'stock',
-        defaultValue: {},
-      },
-      description: {
-        type: Sequelize.TEXT,
-        field: 'description',
-      },
       status: {
         type: Sequelize.ENUM('available', 'out of stock'),
         field: 'status',

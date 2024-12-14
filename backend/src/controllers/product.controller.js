@@ -14,16 +14,38 @@ export const fetchAllProducts = async (req, res, next) => {
     }
 };
 
-export const fetchProductById = async (req,res,next) => {
-    try {
-        const id = req.params.id;
+import db from '@/database';
 
-        if(!id) {
+export const fetchProductById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
             return res.status(400).json({ code: 400, message: 'Product ID is required' });
         }
 
         const product = await db.models.Product.findOne({
-            where: { id: id },
+            where: { id },
+            include: [
+                {
+                    model: db.models.Skus,
+                    as: 'skus',
+                    attributes: ['price', 'stock_quantity'],
+                    include: [
+                        {
+                            model: db.models.SkuAttribute,
+                            as: 'skuAttributes',
+                            include: [
+                                {
+                                    model: db.models.Attribute,
+                                    as: 'attribute',
+                                    attributes: ['name'], 
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
         });
 
         if (product) {
@@ -32,9 +54,9 @@ export const fetchProductById = async (req,res,next) => {
             return res.status(404).json({ code: 404, message: 'Product not found' });
         }
     } catch (err) {
-        return next(err)
+        return next(err);
     }
-}
+};
 
 export const createProduct = async (req, res, next) => {
     try {

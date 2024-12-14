@@ -35,15 +35,6 @@ export const searchProducts = async (req, res, next) => {
             });
         }
 
-        if (colors) {
-            const colorArray = colors.split(',');
-            colorArray.forEach(color => {
-                whereClause[db.Sequelize.Op.and].push({
-                    stock: { [db.Sequelize.Op.contains]: { [color]: { [db.Sequelize.Op.gt]: 0 } } }
-                });
-            });
-        }
-
         if (brands) {
             const brandArray = brands.split(',');
             whereClause[db.Sequelize.Op.and].push({
