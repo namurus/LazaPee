@@ -1,11 +1,14 @@
 import { Router } from 'express';
-import {addProductToOrderCheckout, createOrders} from '../controllers/order.controller';
+import {addProductToOrderCheckout,
+        createOrders,
+        getOrderDetailsById
+    }from '../controllers/order.controller';
 
 const router = Router();
 
 router.post('/addItem', addProductToOrderCheckout);
 router.post('/', createOrders);
-// router.get('/:id', getOrderDetailsById);
+router.get('/:id', getOrderDetailsById);
 // router.patch('/:id', updateOrderByID);
 //router.delete('/:id', deleteOrderByID);
 //router.get('/', getUserOrders);

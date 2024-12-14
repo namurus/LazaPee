@@ -6,7 +6,6 @@ export const addProductToOrderCheckout = async (req, res, next) => {
         const { cartItems } = req.body;
         
         // Validate input
-        // Check if cartItems exists and contains at least one item
         if (!cartItems || !cartItems.length) {
             return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
         }
@@ -122,6 +121,60 @@ export const createOrders = async (req, res) => {
   } catch (error) {
     console.error('Error creating order:', error);
     return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+// Controller to get order details by ID
+export const getOrderDetailsById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    // Validate that the order ID is provided
+    if (!id) {
+      return res.status(400).json({ message: 'Order ID is required.' });
+    }
+
+    // Find the order by its ID and include related information
+    const order = await db.models.Order.findByPk(id, {
+      include: [
+        {
+          model: db.models.OrderItem,
+          as: 'OrderItems',
+          include: [
+            {
+              model: db.models.Product,
+              as: 'product',
+              include: [
+                {
+                  model: db.models.ProductImage,
+                  as: 'images',
+                  attributes: ['id', 'url'],
+                },
+              ],
+              
+            },
+          ],
+        },
+        {
+          model: db.models.User,
+          as: 'user',
+        },
+      ],
+    });
+
+    // Check if the order exists
+    if (!order) {
+      return res.status(404).json({ message: `Order with ID ${id} not found.` });
+    }
+
+    // Return the order details in the response
+    return res.status(200).json({
+      message: 'Order details retrieved successfully.',
+      order,
+    });
+  } catch (error) {
+    console.error('Error retrieving order details:', error);
+    next(error);
   }
 };
 
