@@ -178,3 +178,63 @@ export const getOrderDetailsById = async (req, res, next) => {
   }
 };
 
+// Controller to update an order by ID
+export const updateOrderByID = async (req, res, next) => {
+  const { id } = req.params;
+  const { status, shippingAddress, paymentMethod, shippingCompany } = req.body;
+
+  try {
+    // Validate if the order ID is missing
+    if (!id) {
+      return res.status(400).json({ message: 'Order ID is required.' });
+    }
+
+    // Find the order by its ID
+    const order = await db.models.Order.findByPk(id);
+
+    // Check if the order exists
+    if (!order) {
+      return res.status(404).json({ message: `Order with ID ${id} not found.` });
+    }
+
+    // Update the order fields if they are provided in the request body
+    await order.update({
+      ...(status && { status }),
+      ...(shippingAddress && { shippingAddress }),
+      ...(paymentMethod && { paymentMethod }),
+      ...(shippingCompany && { shippingCompany }),
+    });
+
+    // Fetch the updated order details, including associated items and product data
+    const updatedOrder = await db.models.Order.findByPk(id, {
+      include: [
+        {
+          model: db.models.OrderItem,
+          as: 'OrderItems',
+          include: [
+            {
+              model: db.models.Product,
+              as: 'product',
+              include: [
+                {
+                  model: db.models.ProductImage,
+                  as: 'images',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json({
+      message: 'Order updated successfully.',
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error('Error updating order:', error);
+    next(error); // Pass the error to the error-handling middleware
+  }
+};
+
+
