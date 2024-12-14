@@ -7,13 +7,12 @@ import adminProductRoutes from './admin/product.route';
 import cartRoutes from './cart.route';
 import userRoutes from './user.route';
 import isAdmin from '@/middlewares/isAdmin';
-import authenticate from '@/middlewares/authentication';
 
 export default (app) => {
 	app.use('/auth', authRoutes);
 	app.use('/products', productRoutes);
 	app.use('/cart', cartRoutes);
-	app.use('/user', authenticate, userRoutes);
+	app.use('/user', userRoutes);
 
 	//router for admin
 	app.use('/admin/auth', adminCAuthRoutes);
