@@ -269,4 +269,57 @@ export const deleteOrderByID = async (req, res, next) => {
   }
 };
 
+// Controller to retrieve all orders for a specific user
+export const getUserOrders = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    // Validate if userId is provided
+    if (!id) {
+      return res.status(400).json({ message: 'User ID is required.' });
+    }
+
+    // Fetch all orders for the given userId
+    const orders = await db.models.Order.findAll({
+      where: { userId: id },
+      include: [
+        {
+          model: db.models.OrderItem,
+          as: 'OrderItems',
+          include: [
+            {
+              model: db.models.Product,
+              as: 'product',
+              include: [
+                {
+                  model: db.models.ProductImage,
+                  as: 'images',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      paranoid: false,
+      order: [['createdAt', 'DESC']],
+    });
+
+    // Check if no orders are found for the user
+    if (!orders.length) {
+      return res.status(404).json({ message: `No orders found for user with ID ${id}.` });
+    }
+
+    // Return the list of orders
+    return res.status(200).json({
+      message: 'User orders retrieved successfully.',
+      orders,
+    });
+  } catch (error) {
+    console.error('Error retrieving user orders:', error);
+    next(error); // Pass error to the error-handling middleware
+  }
+};
+
+
+
 
