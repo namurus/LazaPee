@@ -1,11 +1,13 @@
+import flowbite from 'flowbite-react/tailwind';
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', flowbite.content()],
   theme: {
     extend: {
       fontFamily: {
         display: 'Paytone One',
-        primary: 'Poppins',
+        primary: ['Poppins', 'sans-serif'],
       },
       borderWidth: {
         1: '1px',
@@ -31,5 +33,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [flowbite.plugin()],
 };

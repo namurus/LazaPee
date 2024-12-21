@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
-import Login from '../pages/Login';
-import Signup from '../pages/Signup';
+import Login from '../components/pages/Login';
+import Signup from '../components/pages/Signup';
 
 const authRoutes = [
   {

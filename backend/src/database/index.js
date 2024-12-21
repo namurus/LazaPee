@@ -1,6 +1,13 @@
 import { Sequelize, DataTypes } from 'sequelize';
+import userModel from "./models/user";
+import categoryModel from './models/category';
+import accountModel from './models/account';
+import productModel from "./models/product";
+import cartItemModel from "./models/cart_item";
+import cartModel from "./models/cart";
 
 import * as config from '@/config/sequelize';
+import productImage from './models/product-image';
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -10,6 +17,13 @@ const sequelize = new Sequelize(sequelizeConfig);
 const modelDefiners = [
 	// ....
 	//Add models
+	userModel,
+	categoryModel,
+	accountModel,
+	productModel,
+	cartItemModel,
+	cartModel,
+	productImage,
 ];
 
 for (const modelDefiner of modelDefiners) {
