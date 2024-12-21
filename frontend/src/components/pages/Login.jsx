@@ -30,8 +30,24 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
+
         dispatch(login({ userAccessToken: data.accessToken }));
+        
+        // Optionally, save user information in context or state
+        dispatch({
+          type: 'SET_USER_INFO',
+          payload: {
+            username: data.username,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            gender: data.gender,
+            image: data.image,
+          },
+        });
+
         setMessage('Login successful');
+
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');

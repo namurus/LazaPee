@@ -1,12 +1,14 @@
 import AuthGuard from '../guards/AuthGuard';
+import Profile from '../components/pages/Profile';
 
 const userRoutes = [
   {
     path: '/user',
     element: (
-      <AuthGuard>
-        <div>User element Placeholder</div>,
-      </AuthGuard>
+      // <AuthGuard>
+      //   <div>User element Placeholder</div>,
+      // </AuthGuard>
+      <Profile />
     ),
     children: [
       {
