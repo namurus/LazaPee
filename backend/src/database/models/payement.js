@@ -1,68 +1,56 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class shop extends Model {
+  class Payment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-    }
+      static associate(models) {
+        // define association here
+      }
   }
-  Shop.init(
+
+  Payment.init(
     {
-      shopId: {
+      id: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         autoIncrement: true,
-        allowNull: false,
         primaryKey: true,
-        field: 'shop_id',
       },
-      shopName: {
-        type: DataTypes.STRING,
+      customerId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'shop_name',
+        field: 'customer_id',
       },
-      revenue: {
+      amount: {
         type: DataTypes.FLOAT,
         allowNull: false,
-        defaultValue: 0,
-        field: 'revenue',
+        field: 'amount',
       },
-      status: {
+      paymentMethod: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'status',
+        field: 'payment_method',
       },
-      creationDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        field: 'creation_date',
-      },
-      location: {
+      orderId: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'location',
-      },
-      reviewRating: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'review_rating',
+        field: 'order_id',
       },
       description: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
+        allowNull: true,
         field: 'description',
       },
-      productNumber: {
-        type: DataTypes.INTEGER,
+      status: {
+        type: DataTypes.ENUM('pending', 'completed', 'failed'),
+        defaultValue: 'pending',
         allowNull: false,
-        defaultValue: 0,
-        field: 'product_number',
+        field: 'status',
       },
       createdAt: {
         allowNull: false,
@@ -85,14 +73,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Shop',
-      tableName: 'shops',
-      paranoid: true, 
-      timestamps: true, 
+      modelName: 'Payment',
+      tableName: 'payements', // Tên bảng trong database
+      timestamps: true, // Bật timestamps cho createdAt và updatedAt
+      paranoid: true, // Bật soft delete (sử dụng deletedAt)
     }
-
-
   );
 
-  return Shop;
+  return Payment;
 };
