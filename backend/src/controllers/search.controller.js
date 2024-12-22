@@ -10,9 +10,14 @@ export const searchProducts = async (req, res, next) => {
 
         const whereClause = {
             [db.Sequelize.Op.and]: [
-                db.Sequelize.literal(`MATCH (productName) AGAINST (:keyword IN NATURAL LANGUAGE MODE)`)
+                db.Sequelize.literal(`MATCH (productName) AGAINST (:keyword IN BOOLEAN MODE)`)
             ]
         };
+        // const whereClause = {
+        //     [db.Sequelize.Op.and]: [
+        //         db.Sequelize.literal(`MATCH (productName) AGAINST (:keyword IN NATURAL LANGUAGE MODE)`)
+        //     ]
+        // };
 
         const replacements = { keyword };
 

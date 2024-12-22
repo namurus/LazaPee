@@ -14,14 +14,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Product',
+          model: 'product',
           key: 'id'
         },
-        onDelete: 'CASCADE'
-      },
-      skuCode: {
-        type: Sequelize.STRING(50),
-        allowNull: false
       },
       price: {
         type: Sequelize.DECIMAL(10, 0),
@@ -31,16 +26,30 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      attributeName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        references: {
+          model: 'attribute',
+          key: 'name'
+        },
+      },
+      value: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'created_at'
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        onUpdate: Sequelize.literal('CURRENT_TIMESTAMP')
+        onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'updated_at'
       }
     });
   },

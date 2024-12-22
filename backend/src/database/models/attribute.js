@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     class Attribute extends Model {
         static associate(models) {
             // define association here
-            Attribute.hasMany(models.SkuAttribute, {
-                foreignKey: 'attributeId',
+            Attribute.hasMany(models.Skus, {
+                foreignKey: 'attributeName',
                 onDelete: 'CASCADE',
             });
         }
@@ -14,14 +14,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Attribute.init(
         {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: DataTypes.INTEGER,
-            },
             name: {
                 type: DataTypes.STRING,
+                primaryKey: true,
                 allowNull: false,
             },
             createdAt: {

@@ -25,6 +25,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         field: 'product_id',
+        references: {
+          model: 'product',
+          key: 'id',
+        },
       },
       price: {
         type: Sequelize.DECIMAL(10, 3),

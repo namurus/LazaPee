@@ -14,8 +14,6 @@ export const fetchAllProducts = async (req, res, next) => {
     }
 };
 
-import db from '@/database';
-
 export const fetchProductById = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -30,20 +28,8 @@ export const fetchProductById = async (req, res, next) => {
                 {
                     model: db.models.Skus,
                     as: 'skus',
-                    attributes: ['price', 'stock_quantity'],
-                    include: [
-                        {
-                            model: db.models.SkuAttribute,
-                            as: 'skuAttributes',
-                            include: [
-                                {
-                                    model: db.models.Attribute,
-                                    as: 'attribute',
-                                    attributes: ['name'], 
-                                },
-                            ],
-                        },
-                    ],
+                    attributes: ['price', 'stock_quantity','attributeName' ,'value'],
+                    
                 },
             ],
         });
@@ -60,30 +46,33 @@ export const fetchProductById = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
     try {
-        const { id, productName, price, brand, description, thumbnail, image } = req.body;
-        const productExists = await db.models.Product.findOne({
-            where: { id: id },
-        });
 
-        if (productExists) {
-            return res.status(400).json({ code: 400, message: 'Product already exists!' });
-        }
-
+        const { productName, price, brand, description, thumbnail, image, attributeName, attributeValue } = req.body;
         const product = await db.models.Product.create({
-            id: id,
-            productName: productName,
-            price: price,
-            brand: brand,
-            description: description,
-            thumbnail: thumbnail,
-            image: image,
+            productName,
+            brand,
+            description,
+            thumbnail,
+            image,
         });
 
-        res.status(201).json(product);
+        const attribute = await db.models.Attribute.findOne({
+            where: { name: attributeName },
+        });
+
+        const sku = await db.models.Skus.create({
+            price,
+            stock_quantity: 0,
+            productId: product.id,
+            attributeName: attribute.name,
+            value: attributeValue,
+        });
+
     } catch (err) {
         next(err);
     }
 };
+
 
 export const deleteProduct = async (req, res, next) => {
     try {

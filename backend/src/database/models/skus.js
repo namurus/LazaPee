@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'productId',
                 onDelete: 'CASCADE',
             });
-            Skus.hasMany(models.SkuAttribute, {
-                foreignKey: 'skuId',
+            Skus.belongsTo(models.Attribute, {
+                foreignKey: 'attributeName',
                 onDelete: 'CASCADE',
             });
         }
@@ -32,10 +32,6 @@ module.exports = (sequelize, DataTypes) => {
                 },
                 onDelete: 'CASCADE',
             },
-            skuCode: {
-                type: DataTypes.STRING(50),
-                allowNull: false,
-            },
             price: {
                 type: DataTypes.DECIMAL(10, 0),
                 allowNull: false,
@@ -44,12 +40,25 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 defaultValue: 0,
             },
-            created_at: {
+            attributeName: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                references: {
+                    model: 'Attribute',
+                    key: 'name',
+                },
+                onDelete: 'CASCADE',
+            },
+            value: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            createdAt: {
                 allowNull: false,
                 type: DataTypes.DATE,
                 defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
             },
-            updated_at: {
+            updatedAt: {
                 allowNull: false,
                 type: DataTypes.DATE,
                 defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
