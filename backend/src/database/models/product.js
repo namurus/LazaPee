@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'productId',
 				as: 'images',
 			});
+			Product.hasMany(models.Skus, {
+				foreignKey: 'productId',
+				as: 'skus',
+			});
 		}
 	}
 
@@ -33,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
 				primaryKey: true,
 			},
 			productName: {
-				type: DataTypes.STRING,
+				type: DataTypes.TEXT,
 				allowNull: false,
 				field: 'productName',
 			},
@@ -49,16 +53,6 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				field: 'image',
 			},
-			price: {
-				type: DataTypes.FLOAT,
-				allowNull: false,
-				field: 'price',
-			},
-			stock: {
-				type: DataTypes.INTEGER,
-				field: 'stock',
-				defaultValue: 0,
-			},
 			description: {
 				type: DataTypes.TEXT,
 				field: 'description',
@@ -67,10 +61,6 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				field: 'slug',
 			},
-			discountPercentage: {
-				type: DataTypes.INTEGER,
-				field: 'discount_percentage',
-			},
 			categoryId: {
 				type: DataTypes.INTEGER,
 				field: 'category_id',
@@ -78,6 +68,11 @@ module.exports = (sequelize, DataTypes) => {
 			status: {
 				type: DataTypes.ENUM('available', 'out of stock'),
 				field: 'status',
+			},
+			soldQuantity: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				defaultValue: 0,
 			},
 			createdAt: {
 				allowNull: false,
