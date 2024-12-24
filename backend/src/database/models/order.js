@@ -3,30 +3,10 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
-    getTotal() {
-      let total = 0;
-      for (const item of this.OrderItems) {
-        total += item.getTotal();
-      }
-      return total;
-    }
-
-    getDiscountedTotal() {
-      let discountedTotal = 0;
-      for (const item of this.OrderItems) {
-        discountedTotal += item.getDiscountedTotal();
-      }
-      return discountedTotal;
-    }
-
-    getTotalProducts() {
-      return this.OrderItems.length;
-    }
-
     static associate(models) {
       Order.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'user',
+        foreignKey: 'customerId',
+        as: 'customer',
       });
       Order.hasMany(models.OrderItem, {
         foreignKey: 'orderId',
@@ -38,33 +18,52 @@ module.exports = (sequelize, DataTypes) => {
   Order.init(
     {
       id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+       field: 'id',
       },
-      userId: {
+      customerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'user_id',
+        field: 'customer_id',
       },
       status: {
         type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'pending',
+        field: 'status',
+      },
+      phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'phone_number',
       },
       shippingAddress: {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'shipping_address',
       },
-      paymentMethod: {
-        type: DataTypes.STRING,
+      totalAmount: {
+        type: DataTypes.FLOAT,
         allowNull: false,
-        field: 'payment_method',
+        field: 'total_amount',
+      },
+      orderNote: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'order_note',
       },
       shippingCompany: {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'shipping_company',
+      },
+      shippingFee: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        field: 'shipping_fee',
       },
       createdAt: {
         allowNull: false,

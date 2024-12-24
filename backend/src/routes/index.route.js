@@ -7,6 +7,7 @@ import adminProductRoutes from "./admin/product.route";
 import productRoutes from "./product.route";
 import orderRoutes from "./order.route";
 import authentication from "@/middlewares/authentication";
+import paymentRoutes from "./payment.route";
 export default (app) => { 
 	app.use("/auth", authRoutes);
 	app.use("/products", productRoutes);
@@ -21,4 +22,6 @@ export default (app) => {
 	app.use("/category", customerCategoryRoutes);
 
 	app.use("/order", authentication, orderRoutes);
+
+	app.use("/payment", authentication, paymentRoutes);
 }

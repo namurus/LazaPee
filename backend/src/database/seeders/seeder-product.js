@@ -65,6 +65,31 @@ module.exports = {
 					created_at: new Date(),
 					updated_at: new Date(),
 				},
+				{
+					productName: "LapTop Accer 1000",
+					brand: "Accer",
+					thumbnail: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fhacom.vn%2Flaptop-acer-gaming-predator-helios-300-ph315-55-751d-nhqftsv002-win-11-den&psig=AOvVaw16XayxgZp4FhyMjhmHGkSb&ust=1734870624210000&source=images",
+					image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fhacom.vn%2Flaptop-acer-gaming-predator-helios-300-ph315-55-751d-nhqftsv002-win-11-den&psig=AOvVaw16XayxgZp4FhyMjhmHGkSb&ust=1734870624210000&source=images",
+					price: 500,
+					stock: 10,
+					description: "Thông số sản phẩmCPU: Intel Core i7-12700H (14 nhân, 20 luồng, 3.5GHz upto 4.7GHz, 24MB)",
+					status: "available",
+					created_at: new Date(),
+					updated_at: new Date(),
+				},
+				{
+					"productName": "Áo thun nam",
+					"brand": "SaiGonnese",
+					"thumbnail": "https://product.hstatic.net/200000404243/product/a2mn438r2-cnma",
+					"image": "https://product.hstatic.net/200000404243/product/a2mn438r2-cnma",
+					"price": 25,
+					"stock": 50,
+					"description": "Form Regular, lai bằng Chất liệu: 59% Polyester - 35% Recycle S.Cafe Poly - 6% Spandex",
+					"status": "available",
+					"deleted_at": null,
+					created_at: new Date(),
+					updated_at: new Date(),
+				}
 			],
 			{}
 		);

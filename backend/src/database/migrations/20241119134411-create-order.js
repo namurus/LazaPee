@@ -9,28 +9,46 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
+      customerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        field: 'user_id',
+        field: 'customer_id',
       },
       status: {
         type: Sequelize.STRING,
+        allowNull: false,
+        default: 'pending',
+        field: 'status',
+      },
+      phoneNumber: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'phone_number',
       },
       shippingAddress: {
         type: Sequelize.STRING,
         allowNull: false,
-        field: 'shipping_address', // Tên trường trong cơ sở dữ liệu
+        field: 'shipping_address', 
       },
-      paymentMethod: {
-        type: Sequelize.STRING,
+      totalAmount: {
+        type: Sequelize.FLOAT,
         allowNull: false,
-        field: 'payment_method', // Tên trường trong cơ sở dữ liệu
+        field: 'total_amount',
+      },
+      orderNote: {
+        type: Sequelize.STRING,
+        allowNull: true, 
+        field: 'order_note',
       },
       shippingCompany: {
         type: Sequelize.STRING,
-        allowNull: true, // Có thể null vì không phải lúc nào cũng cần
-        field: 'shipping_company', // Tên trường trong cơ sở dữ liệu
+        allowNull: false, 
+        field: 'shipping_company',
+      },
+      shipingFee: {
+        type: Sequelize.FLOAT,
+        allowNull: false, 
+        field: 'shipping_fee',
       },
       createdAt: {
         allowNull: false,
