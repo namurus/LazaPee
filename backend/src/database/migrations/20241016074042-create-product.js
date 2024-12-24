@@ -11,7 +11,7 @@ module.exports = {
         primaryKey: true,
       },
       productName: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         field: 'productName',
       },
       brand: {
@@ -25,25 +25,29 @@ module.exports = {
         field: 'thumbnail',
       },
       image: {
-        type: Sequelize.STRING,
-        field: 'image',
-      },
-      price: {
-        type: Sequelize.FLOAT,
-        field: 'price',
-      },
-      stock: {
-        type: Sequelize.INTEGER,
-        field: 'stock',
-        defaultValue: 0,
-      },
+				type: Sequelize.STRING,
+				field: 'image',
+			},
       description: {
         type: Sequelize.TEXT,
         field: 'description',
       },
+      slug: {
+				type: Sequelize.STRING,
+				field: 'slug',
+			},
+			categoryId: {
+				type: Sequelize.INTEGER,
+				field: 'category_id',
+			},
       status: {
         type: Sequelize.ENUM('available', 'out of stock'),
         field: 'status',
+      },
+      soldQuantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,
@@ -61,7 +65,7 @@ module.exports = {
       deletedAt: {
         allowNull: true,
         type: Sequelize.DATE,
-        field: 'deleted_at',
+        field: 'deleted_at',  
       },
 
     });

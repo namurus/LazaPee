@@ -7,6 +7,8 @@ import cartItemModel from "./models/cart_item";
 import cartModel from "./models/cart";
 import orderModel from "./models/order";
 import orderItemModel from "./models/order_item";
+import skusModel from './models/skus';
+import attributeModel from './models/attribute';
 
 import * as config from '@/config/sequelize';
 import productImage from './models/product-image';
@@ -29,7 +31,9 @@ const modelDefiners = [
 	productImage,
 	orderModel,
 	orderItemModel,
-	payment
+	payment,
+	skusModel,
+	attributeModel,
 ];
 
 for (const modelDefiner of modelDefiners) {
