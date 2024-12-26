@@ -27,7 +27,7 @@ const modelDefiners = [
 	cartItemModel,
 	cartModel,
 	productImage,
-	forgotPassword
+	forgotPassword,
 	skusModel,
 	attributeModel,
 ];
