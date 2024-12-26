@@ -49,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
-			modelName: 'user-voucher',
-			tableName: 'UserVoucher',
+			modelName: 'UserVoucher',
+			tableName: 'user-vouchers',
 			paranoid: true,
 		}
 	);

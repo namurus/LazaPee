@@ -25,6 +25,7 @@ export const getAllVouchers = async (req, res) => {
 			data: unusedVouchers,
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			code: 500,
 			message: error.message,
@@ -35,7 +36,7 @@ export const getAllVouchers = async (req, res) => {
 // [GET] /voucher/check
 export const checkVoucher = async (req, res) => {
 	try {
-		const { code } = req.query;
+		const { code } = req.body;
 		const user = req.user;
 		const voucher = await db.models.Voucher.findOne({ where: { code } });
 		if (!voucher) {
@@ -59,7 +60,12 @@ export const checkVoucher = async (req, res) => {
 			message: 'Voucher is available',
 			data: voucher,
 		});
-	} catch (error) {}
+	} catch (error) {
+		return res.status(500).json({
+			code: 500,
+			message: error.message,
+		});
+	}
 };
 
 // [POST] /voucher/apply
@@ -97,5 +103,10 @@ export const applyVoucher = async (req, res) => {
 			code: 200,
 			message: 'Voucher applied successfully',
 		});
-	} catch (error) {}
+	} catch (error) {
+		return res.status(500).json({
+			code: 500,
+			message: error.message,
+		});
+	}
 };
