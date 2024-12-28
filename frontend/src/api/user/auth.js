@@ -26,6 +26,9 @@ const getMe = async () => {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
       });
+      if (!user) {
+        return Promise.reject(new Error('Failed to fetch user data'));
+      }
       return Promise.resolve(user);
     } catch (error) {
       return Promise.reject(new Error('Failed to fetch user data'));

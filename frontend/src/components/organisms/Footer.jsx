@@ -1,13 +1,7 @@
 import SectionHeading from '../atoms/SectionHeading';
-import { CiMail } from 'react-icons/ci';
-import {
-  TiSocialTwitter,
-  TiSocialFacebook,
-  TiSocialInstagram,
-} from 'react-icons/ti';
-import { FaGithub } from 'react-icons/fa6';
-import InverseButton from '../atoms/InverseButton';
+import { Mail } from 'lucide-react';
 import LinkWithIcon from '../atoms/LinkWithIcon';
+import { Button } from '../ui/button';
 
 export default function Footer() {
   const navLinks = [
@@ -44,7 +38,7 @@ export default function Footer() {
         />
         <div className='w-full justify-self-end text-sm lg:max-w-[350px] lg:text-base'>
           <div className='mb-3 flex items-center gap-3 rounded-full bg-white px-5 py-3 text-black'>
-            <CiMail className='h-5 w-5' />
+            <Mail className='h-5 w-5' />
             <input
               type='email'
               placeholder='Enter your email address'
@@ -52,12 +46,18 @@ export default function Footer() {
             />
           </div>
 
-          <InverseButton
+          {/* <InverseButton
             switchColor={true}
             style={'rounded-full px-4 py-3 hover:text-white'}
           >
             Subscribe to Newsletter
-          </InverseButton>
+          </InverseButton> */}
+          <Button
+            variant='outline'
+            className='w-full rounded-full px-4 py-3 text-black'
+          >
+            Subscribe to Newsletters
+          </Button>
         </div>
       </div>
       <div className='bg-[#F0F0F0] p-4 pt-36 text-left text-black lg:pt-28'>
@@ -76,19 +76,19 @@ export default function Footer() {
                   {[
                     {
                       href: 'https://x.com/',
-                      icon: <TiSocialTwitter />,
+                      icon: <img src='/twitter.svg' alt='twitter' />,
                     },
                     {
                       href: 'https://facebook.com/',
-                      icon: <TiSocialFacebook />,
+                      icon: <img src='/facebook.svg' alt='facebook' />,
                     },
                     {
                       href: 'https://instagram.com/',
-                      icon: <TiSocialInstagram />,
+                      icon: <img src='/instagram.svg' alt='instagram' />,
                     },
                     {
                       href: 'https://github.com/',
-                      icon: <FaGithub />,
+                      icon: <img src='/github.svg' alt='github' />,
                     },
                   ].map((link) => (
                     <LinkWithIcon

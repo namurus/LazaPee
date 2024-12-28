@@ -1,7 +1,7 @@
 import PropsType from 'prop-types';
 import { useEffect, useState } from 'react';
 import ProductImage from '../atoms/ProductImage';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../lib/utils';
 import {
   Carousel,
   CarouselItem,
@@ -28,10 +28,11 @@ function ProductDetailImageGrid({ images, ...rest }) {
   const classStyling = rest.className ? rest.className : '';
   return (
     <div
-      className={`${twMerge('mt-5 flex flex-col gap-3 lg:flex-row', classStyling)}`}
+      className={`${cn('mt-5 flex flex-col gap-3 lg:flex-row', classStyling)}`}
     >
       <ProductImage
         src={images[activeImageIndex]}
+        alt={`product-${activeImageIndex}`}
         className='h-full flex-1 p-4 lg:order-last'
       />
       <Carousel

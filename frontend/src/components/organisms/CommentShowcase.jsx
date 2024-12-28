@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import SectionHeading from '../atoms/SectionHeading';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import LoadingSpinner from '../atoms/LoadingSpinner';
 import ReviewCard from '../molecules/ReviewCard';
 import {
@@ -8,6 +7,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
+
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 function CommentShowcase() {
   const [comments, setComments] = useState([]);
@@ -34,7 +35,7 @@ function CommentShowcase() {
     api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
-  });
+  }, [api]);
 
   const handleNextComment = useCallback(() => {
     api?.scrollNext();
@@ -61,7 +62,7 @@ function CommentShowcase() {
               disabled={current === 1}
               className='disabled:opacity-50'
             >
-              <FaArrowLeft className='w-full' />
+              <ChevronLeft className='w-full' />
             </button>
             <button
               id='right'
@@ -69,7 +70,7 @@ function CommentShowcase() {
               disabled={current === count}
               className='disabled:opacity-50'
             >
-              <FaArrowRight className='w-full' />
+              <ChevronRight className='w-full' />
             </button>
           </div>
         </div>

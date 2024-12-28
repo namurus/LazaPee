@@ -1,5 +1,5 @@
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
   return (
@@ -10,7 +10,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
           onPageChange(currentPage - 1);
         }}
       >
-        <FaAngleLeft className='mr-2' />
+        <ChevronLeft className='mr-2' />
         Previous
       </button>
       <div className='flex flex-1 justify-evenly'>
@@ -33,7 +33,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         }}
       >
         Next
-        <FaAngleRight className='ml-2' />
+        <ChevronRight className='ml-2' />
       </button>
     </div>
   );

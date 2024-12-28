@@ -1,8 +1,6 @@
 import { Form, Link, NavLink, useMatches } from 'react-router-dom';
-import { IoSearchSharp } from 'react-icons/io5';
-import { FaShoppingCart } from 'react-icons/fa';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { twMerge } from 'tailwind-merge';
+import { Menu, Search, ShoppingCart } from 'lucide-react';
+import { cn } from '../../lib/utils';
 import { useAuth } from '../../hooks/useAuth';
 import InverseButton from '../atoms/InverseButton';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -14,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+
 export default function Header() {
   const { isAuthenticated, user } = useAuth();
   const navLinks = [
@@ -45,13 +44,10 @@ export default function Header() {
       className={
         isHome
           ? defaultClassname
-          : twMerge(
-              'border-b-1 border-black border-opacity-10',
-              defaultClassname
-            )
+          : cn('border-b-1 border-black border-opacity-10', defaultClassname)
       }
     >
-      <GiHamburgerMenu className='h-6 w-6 lg:hidden' />
+      <Menu className='h-6 w-6 lg:hidden' />
       <Link to='/' className='flex-1 md:flex-grow-0'>
         <h1 className='font-display text-2xl font-bold lg:text-[2rem]'>
           LAZAPEE
@@ -74,7 +70,7 @@ export default function Header() {
           method='post'
         >
           <button type='submit' className='cursor-pointer'>
-            <IoSearchSharp className='h-6 w-6 fill-black md:opacity-40' />
+            <Search className='h-6 w-6 fill-black md:opacity-40' />
           </button>
           <input
             type='text'
@@ -85,7 +81,7 @@ export default function Header() {
         </Form>
         <div></div>
         <Link to='/cart' className='lg:ml-4'>
-          <FaShoppingCart className='h-6 w-6' />
+          <ShoppingCart className='h-6 w-6' />
         </Link>
         {isAuthenticated ? (
           <DropdownMenu>

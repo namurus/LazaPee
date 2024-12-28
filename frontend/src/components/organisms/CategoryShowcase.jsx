@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { stringToId } from '../../helpers';
 import { getCategories } from '../../api/admin/product';
+import Image from '../atoms/Image';
 
 function CategoryCard({ category }) {
   return (
     <div className='relative cursor-pointer items-center justify-center transition-all hover:-translate-y-1'>
       <div className='overflow-hidden rounded-[1.25rem]'>
-        <img
+        <Image
           src={category.image}
           alt={category.name}
           className='max-h-48 w-full bg-white object-contain object-right lg:max-h-[18rem]'
@@ -38,6 +39,9 @@ function CategoryShowcase() {
           throw new Error(`${imageResponse.status}`);
         }
         const json = await getCategories();
+        if (!json) {
+          throw new Error('No categories found');
+        }
         const objectData = json.slice(0, 4).map((category) => {
           return {
             name: category,
@@ -46,7 +50,8 @@ function CategoryShowcase() {
         });
         setCategories(objectData);
       } catch (error) {
-        throw new Error('API Broken!' + error);
+        console.log('Error fetching categories:', error);
+        setCategories([]);
       }
     }
     fetchData();

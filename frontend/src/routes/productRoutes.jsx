@@ -31,7 +31,7 @@ async function productLoader({ params }) {
   const productID = params.productID;
   const product = await getProduct(productID);
   console.log(product);
-  return product;
+  return product.data;
 }
 
 const productRoutes = [

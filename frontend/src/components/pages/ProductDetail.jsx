@@ -45,7 +45,7 @@ function ProductDetail() {
           </p>
         </TabsContent>
         <TabsContent className='mt-4' value='rating-review'>
-          <ProductReviewSection reviews={product.reviews} />
+          <ProductReviewSection productID={product.id} limit={4} />
         </TabsContent>
         <TabsContent className='mt-4' value='shop'>
           <ShopInfoSection product={product} />

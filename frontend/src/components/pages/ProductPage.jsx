@@ -1,5 +1,4 @@
 import { useLoaderData, useSearchParams } from 'react-router-dom';
-import { FaAngleRight, FaXmark } from 'react-icons/fa6';
 import RangeSlider from '../molecules/RangeSlider';
 import { useState } from 'react';
 import CloseableFilterSection from '../molecules/CloseableFilterSection';
@@ -19,6 +18,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '../ui/drawer';
+import { ChevronRight, X } from 'lucide-react';
 
 const config = {
   priceRange: {
@@ -94,7 +94,7 @@ function ProductPage() {
   };
 
   const onFilterButtonClick = () => {
-    searchParams.set('color', pickedColor);
+    searchParams.set('color', pickedColor.text);
     searchParams.set('size', pickedSize);
     searchParams.set('priceMin', priceRange[0]);
     searchParams.set('priceMax', priceRange[1]);
@@ -116,7 +116,7 @@ function ProductPage() {
               <DrawerHeader>
                 <DrawerTitle>Filter</DrawerTitle>
                 <DrawerClose asChild>
-                  <FaXmark className='h-full opacity-40 md:hidden' />
+                  <X className='h-full opacity-40 md:hidden' />
                 </DrawerClose>
               </DrawerHeader>
               <div className='line-below grid gap-5 pb-6 pt-5 text-base'>
@@ -131,7 +131,7 @@ function ProductPage() {
                     className='flex w-full items-center font-light opacity-60'
                   >
                     <p>{subCategory}</p>
-                    <FaAngleRight className='ml-auto' />
+                    <ChevronRight className='ml-auto' />
                   </button>
                 ))}
               </div>
@@ -147,7 +147,6 @@ function ProductPage() {
               </CloseableFilterSection>
               <CloseableFilterSection title='Color'>
                 <ColorPicker
-                  colors={config.colors}
                   pickedColor={pickedColor}
                   onPickColor={pickColorHandler}
                 />
@@ -189,7 +188,7 @@ function ProductPage() {
                   className='flex w-full items-center font-light opacity-60'
                 >
                   <p>{subCategory}</p>
-                  <FaAngleRight className='ml-auto' />
+                  <ChevronRight className='ml-auto' />
                 </button>
               ))}
             </div>
@@ -205,7 +204,6 @@ function ProductPage() {
             </CloseableFilterSection>
             <CloseableFilterSection title='Color'>
               <ColorPicker
-                colors={config.colors}
                 pickedColor={pickedColor}
                 onPickColor={pickColorHandler}
               />

@@ -94,7 +94,7 @@ function ShopSidebar({ ...props }) {
           <SidebarMenu className='gap-2'>
             {data.navMain.map((item) => (
               <Collapsible key={item.title} asChild>
-                <SidebarMenuItem>
+                <SidebarMenuItem className='bg-white'>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton tooltip={item.title} className='group'>
                       {item.icon && <item.icon />}

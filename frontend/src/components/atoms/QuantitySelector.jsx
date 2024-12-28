@@ -1,8 +1,7 @@
-import Button from './Button';
-import { FaMinus, FaPlus } from 'react-icons/fa';
+import { Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../lib/utils';
 
 function QuantitySelector({ defaultQuantity, handleQuantityChange, ...rest }) {
   const [quantity, setQuantity] = useState(defaultQuantity);
@@ -28,7 +27,7 @@ function QuantitySelector({ defaultQuantity, handleQuantityChange, ...rest }) {
   const modifyClassName = rest.className ? rest.className : '';
   rest = {
     ...rest,
-    className: twMerge(
+    className: cn(
       'grid h-full max-w-40 max-w-48 grid-cols-3 gap-4 rounded-full bg-[#F0F0F0] px-5 py-2 text-sm font-light lg:py-3 content-center',
       modifyClassName
     ),
@@ -36,12 +35,12 @@ function QuantitySelector({ defaultQuantity, handleQuantityChange, ...rest }) {
 
   return (
     <div {...rest}>
-      <Button
-        style={'border-0 flex items-center justify-center'}
+      <button
+        className={'flex items-center justify-center border-0'}
         onClick={handleSubtract}
       >
-        <FaMinus />
-      </Button>
+        <Minus />
+      </button>
 
       <input
         type='number'
@@ -51,12 +50,12 @@ function QuantitySelector({ defaultQuantity, handleQuantityChange, ...rest }) {
         className='flex items-center justify-center border-none bg-transparent text-center font-semibold [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
       />
 
-      <Button
-        style={'border-0 flex items-center justify-center'}
+      <button
+        className={'flex items-center justify-center border-0'}
         onClick={handleAdd}
       >
-        <FaPlus />
-      </Button>
+        <Plus />
+      </button>
     </div>
   );
 }

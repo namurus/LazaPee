@@ -9,6 +9,7 @@ import AuthGuard from '../guards/AuthGuard';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 import { rootAction, rootLoader } from './rootRoutes';
 import ShopPage from '../components/pages/ShopPage';
+import shopRoutes from './shopRoutes';
 
 const routes = [
   {
@@ -44,10 +45,7 @@ const routes = [
       },
     ],
   },
-  {
-    path: 'shop',
-    element: <ShopPage />,
-  },
+  ...shopRoutes,
 ];
 
 export default routes;

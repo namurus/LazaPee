@@ -1,9 +1,7 @@
-import { HiAdjustments } from 'react-icons/hi';
 import PropTypes from 'prop-types';
 import InverseButton from './../atoms/InverseButton';
 import ReviewCard from '../molecules/ReviewCard';
-import Button from '../atoms/Button';
-import { useReducer } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -16,48 +14,53 @@ import {
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
-function reducer(state, action) {
-  if (action.type === 'LOAD_MORE_REVIEWS') {
-    return {
-      ...state,
-      numReviewsShown: state.numReviewsShown + 3,
-    };
-  }
-}
+import LoadingSpinner from '../atoms/LoadingSpinner';
+import { SlidersHorizontal } from 'lucide-react';
 
-function ProductReviewSection({ reviews }) {
-  const mockReviews = [
-    {
-      rating: 5,
-      reviewerName: 'John Doe',
-      reviewerEmail: 'sdw@gmail.com',
-      comment: 'This is a great product. I love it!',
-      date: new Date(),
-    },
-    {
-      rating: 4,
-      reviewerName: 'Jane Doe',
-      reviewerEmail: 'janedoe@mail.com',
-      comment: 'This is a great product. I love it!',
-      date: new Date(),
-    },
-    {
-      rating: 3,
-      reviewerName: 'John Doe',
-      reviewerEmail: 'doe@mail.com',
-      comment: 'This is a great product. I love it!',
-      date: new Date(),
-    },
-  ];
-  const [state, dispatch] = useReducer(reducer, {
-    numReviewsShown: 4,
-  });
-  reviews = reviews.concat(mockReviews);
-  const showReviews = reviews
-    .concat(mockReviews)
-    .slice(0, state.numReviewsShown);
+function ProductReviewSection({ productID, limit = 4 }) {
+  const [reviews, setReviews] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [haveMoreReviews] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // productID will be used to fetch reviews for a specific product
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        `https://dummyjson.com/comments?limit=${limit}&skip=${skip}&id=${productID}`
+      );
+      if (!response.ok) {
+        return;
+      }
+      const data = await response.json();
+      setReviews((r) => [
+        ...r,
+        ...data.comments
+          .filter((d) => {
+            if (r.find((review) => review.id === d.id)) {
+              return false;
+            }
+            return true;
+          })
+          .map((d) => {
+            return {
+              rating: Math.floor(Math.random() * 5) + 1,
+              reviewerEmail: d.user.username + '@gmail.com',
+              id: d.id,
+              comment: d.body,
+              date: new Date(),
+            };
+          }),
+      ]);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [limit, skip, productID]);
+
   const handleLoadMoreReviews = () => {
-    dispatch({ type: 'LOAD_MORE_REVIEWS' });
+    setIsLoading(true);
+    setSkip((s) => s + limit);
   };
   return (
     <Dialog>
@@ -104,11 +107,13 @@ function ProductReviewSection({ reviews }) {
           </Label>
         </div>
         <DialogFooter>
-          <Button style='rounded-full px-4 py-3 font-semibold'>
+          <button className='rounded-full px-4 py-3 font-semibold'>
             Submit Review
-          </Button>
+          </button>
           <DialogClose asChild>
-            <Button style='rounded-full px-4 py-3 font-semibold'>Cancel</Button>
+            <button className='rounded-full px-4 py-3 font-semibold'>
+              Cancel
+            </button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
@@ -119,7 +124,7 @@ function ProductReviewSection({ reviews }) {
         </div>
         <div className='flex gap-2'>
           <div className='w-[2.5rem] rounded-full bg-neutral-200 p-3'>
-            <HiAdjustments className='aspect-square h-full' />
+            <SlidersHorizontal className='aspect-square h-full' />
           </div>
           <DialogTrigger asChild>
             <InverseButton
@@ -130,19 +135,22 @@ function ProductReviewSection({ reviews }) {
           </DialogTrigger>
         </div>
       </div>
-      <div className='grid grid-cols-1 gap-4 py-5 md:grid-cols-2'>
-        {showReviews.map((review) => (
-          <ReviewCard key={review.reviewerEmail} review={review} />
+      <div className='grid grid-cols-1 gap-4 py-5 md:grid-cols-2 lg:grid-cols-2'>
+        {reviews.map((review) => (
+          <ReviewCard key={review.id} review={review} />
         ))}
       </div>
+      <div className='w-full justify-center'>
+        {isLoading && <LoadingSpinner />}
+      </div>
       <div className='flex items-center'>
-        {state.numReviewsShown < reviews.length && (
-          <Button
-            style={`rounded-full w-fit px-9 py-[0.875rem] capitalize border font-normal mx-auto`}
+        {haveMoreReviews && (
+          <button
+            className={`mx-auto w-fit rounded-full border px-9 py-[0.875rem] font-normal capitalize`}
             onClick={handleLoadMoreReviews}
           >
             Load More Reviews
-          </Button>
+          </button>
         )}
       </div>
     </Dialog>
@@ -150,6 +158,8 @@ function ProductReviewSection({ reviews }) {
 }
 
 ProductReviewSection.propTypes = {
+  productID: PropTypes.string.isRequired,
+  limit: PropTypes.number,
   reviews: PropTypes.array.isRequired,
 };
 

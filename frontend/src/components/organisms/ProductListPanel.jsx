@@ -1,10 +1,10 @@
-import { IoFilterSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import ProductItem from '../molecules/ProductItem';
 
 import PropTypes from 'prop-types';
 import NoItemListNotification from '../molecules/NoItemListNotification';
 import Pagination from '../molecules/Pagination';
+import { Search } from 'lucide-react';
 
 ProductListPanel.propTypes = {
   listTitle: PropTypes.string.isRequired,
@@ -40,7 +40,7 @@ function ProductListPanel({
           <div
             className={'ml-auto w-fit rounded-full bg-neutral p-2 md:hidden'}
           >
-            <IoFilterSharp className='h-4 w-4' onClick={onFilterIconClick} />
+            <Search className='h-4 w-4' onClick={onFilterIconClick} />
           </div>
 
           <div className='hidden md:block'>
@@ -77,21 +77,6 @@ function ProductListPanel({
         totalPages={totalPages}
         onPageChange={onPageChange}
       />
-      {/* <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious onClick={onPageChange(currentPage - 1)} />
-          </PaginationItem>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <PaginationItem key={i}>
-              <Button onClick={() => onPageChange(i)}>{i + 1}</Button>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext onClick={onPageChange(currentPage + 1)} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination> */}
     </div>
   );
 }
