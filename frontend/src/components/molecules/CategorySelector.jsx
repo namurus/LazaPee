@@ -1,4 +1,5 @@
 import { SelectValue } from '@radix-ui/react-select';
+import PropTypes from 'prop-types';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select';
 import ColorBadge from './ColorBadge';
 import { useState } from 'react';
@@ -19,15 +20,16 @@ import ColorPicker from './ColorPicker';
 import { cn } from '../../lib/utils';
 import SizeList from './SizeList';
 
-function CategorySelector({ onCategorySelect }) {
+function CategorySelector({ onCategorySelect, notAllowedOptions }) {
   const [items, setItems] = useState([]);
   const [isColor, setIsColor] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-
   const handleSelect = (value) => {
     if (value === 'color') {
+      onCategorySelect({ type: 'Màu sắc' });
       setIsColor(true);
     } else {
+      onCategorySelect({ type: 'Kích thước' });
       setIsColor(false);
     }
     setItems([]);
@@ -35,6 +37,7 @@ function CategorySelector({ onCategorySelect }) {
   };
   const handleDelete = (index) => {
     setItems(items.filter((_, i) => i !== index));
+    onCategorySelect({ items: items.filter((_, i) => i !== index) });
   };
 
   const handlePickItem = (item) => {
@@ -53,6 +56,7 @@ function CategorySelector({ onCategorySelect }) {
       return;
     }
     setItems([...items, selectedItem]);
+    onCategorySelect({ items: [...items, selectedItem] });
     setSelectedItem(null);
   };
   return (
@@ -63,8 +67,18 @@ function CategorySelector({ onCategorySelect }) {
             <SelectValue placeholder='Chọn 1 phân loại' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='size'>Kích thước</SelectItem>
-            <SelectItem value='color'>Màu sắc</SelectItem>
+            <SelectItem
+              value='size'
+              disabled={notAllowedOptions.includes('size')}
+            >
+              Kích thước
+            </SelectItem>
+            <SelectItem
+              value='color'
+              disabled={notAllowedOptions.includes('color')}
+            >
+              Màu sắc
+            </SelectItem>
           </SelectContent>
         </Select>
         <div className='flex min-h-16 flex-wrap items-center gap-4 rounded-md border border-zinc-500 p-2'>
@@ -146,5 +160,8 @@ function CategorySelector({ onCategorySelect }) {
     </Dialog>
   );
 }
+CategorySelector.propTypes = {
+  onCategorySelect: PropTypes.func.isRequired,
+};
 
 export default CategorySelector;

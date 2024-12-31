@@ -1,3 +1,4 @@
+import { redirect } from 'react-router-dom';
 import AddProductForm from '../components/organisms/AddProductForm';
 import ShopPage from '../components/pages/ShopPage';
 const shopRoutes = [
@@ -10,7 +11,10 @@ const shopRoutes = [
         element: <AddProductForm />,
         action: async ({ request }) => {
           let formData = await request.formData();
-          console.log(formData);
+          formData.keys().forEach((key) => {
+            console.log(key, formData.get(key));
+          });
+          return {};
         },
         handle: {
           crumb: () => ({

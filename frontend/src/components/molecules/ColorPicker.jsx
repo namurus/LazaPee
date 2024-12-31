@@ -47,7 +47,7 @@ function ColorPicker({ pickedColor, onPickColor }) {
 }
 
 ColorPicker.propTypes = {
-  pickedColor: PropTypes.string,
+  pickedColor: PropTypes.object,
   onPickColor: PropTypes.func,
 };
 

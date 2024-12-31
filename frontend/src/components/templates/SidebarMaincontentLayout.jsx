@@ -11,6 +11,7 @@ import { Separator } from '../ui/separator';
 import { SidebarInset, SidebarTrigger } from '../ui/sidebar';
 
 import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 
 function SidebarMaincontentLayout({ children }) {
   const matches = useMatches();
@@ -29,14 +30,14 @@ function SidebarMaincontentLayout({ children }) {
                 return index === breadcrumbItems.length - 1 ? (
                   <BreadcrumbPage key={item.name}>{item.name}</BreadcrumbPage>
                 ) : (
-                  <>
-                    <BreadcrumbItem key={item.name}>
+                  <Fragment key={item.name}>
+                    <BreadcrumbItem>
                       <BreadcrumbLink href={item.path}>
                         {item.name}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className='hidden md:block' />
-                  </>
+                  </Fragment>
                 );
               })}
             </BreadcrumbList>

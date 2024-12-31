@@ -4,7 +4,7 @@ import ImagePreviewGrid from './ImagePreviewGrid';
 
 import PropTypes from 'prop-types';
 
-function ImageInput({ maxImages, ...props }) {
+function ImageInput({ maxImages, onSetFiles, ...props }) {
   const [images, setImages] = useState([]);
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -12,12 +12,16 @@ function ImageInput({ maxImages, ...props }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImages([...images, reader.result]);
+        onSetFiles((prevFiles) => [...prevFiles, file]);
       };
       reader.readAsDataURL(file);
     }
   };
   const handleRemoveImage = (indexToRemove) => {
     setImages(images.filter((_, index) => index !== indexToRemove));
+    onSetFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   return (
