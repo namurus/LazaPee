@@ -1,4 +1,3 @@
-import { redirect } from 'react-router-dom';
 import AddProductForm from '../components/organisms/AddProductForm';
 import ShopPage from '../components/pages/ShopPage';
 const shopRoutes = [

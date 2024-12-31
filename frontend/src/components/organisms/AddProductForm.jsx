@@ -1,4 +1,4 @@
-import { useFetcher, useSubmit } from 'react-router-dom';
+import { useSubmit } from 'react-router-dom';
 import InputField from '../molecules/InputField';
 import LargeTextInputField from '../atoms/LargeTextInputField';
 
