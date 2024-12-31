@@ -9,8 +9,6 @@ module.exports = {
                 brand: 'BrandX',
                 thumbnail: 'https://example.com/images/a1_thumbnail.jpg',
                 image: 'https://example.com/images/a1.jpg',
-                price: 299.99,
-                stock: 50,
                 description: 'A high-quality smartphone with excellent features.',
                 status: 'available',
                 created_at: new Date(),
@@ -22,8 +20,6 @@ module.exports = {
                 brand: 'BrandY',
                 thumbnail: 'https://example.com/images/z5_thumbnail.jpg',
                 image: 'https://example.com/images/z5.jpg',
-                price: 999.99,
-                stock: 30,
                 description: 'A powerful laptop designed for productivity.',
                 status: 'available',
                 created_at: new Date(),
@@ -35,8 +31,6 @@ module.exports = {
                 brand: 'BrandZ',
                 thumbnail: 'https://example.com/images/headphones_thumbnail.jpg',
                 image: 'https://example.com/images/headphones.jpg',
-                price: 199.99,
-                stock: 100,
                 description: 'Noise-cancelling headphones with immersive sound quality.',
                 status: 'available',
                 created_at: new Date(),
@@ -48,8 +42,6 @@ module.exports = {
                 brand: 'BrandA',
                 thumbnail: 'https://example.com/images/s3_thumbnail.jpg',
                 image: 'https://example.com/images/s3.jpg',
-                price: 149.99,
-                stock: 75,
                 description: 'Smartwatch with health monitoring and notifications.',
                 status: 'available',
                 created_at: new Date(),
@@ -61,8 +53,17 @@ module.exports = {
                 brand: 'BrandB',
                 thumbnail: 'https://example.com/images/t10_thumbnail.jpg',
                 image: 'https://example.com/images/t10.jpg',
-                price: 399.99,
-                stock: 40,
+                description: 'Versatile tablet for work and entertainment.',
+                status: 'out of stock',
+                created_at: new Date(),
+                updated_at: new Date()
+            },
+            {
+                id: 6,
+                productName: 'Điện thoại A1',
+                brand: 'BrandD',
+                thumbnail: 'https://example.com/images/t10_thumbnail.jpg',
+                image: 'https://example.com/images/t10.jpg',
                 description: 'Versatile tablet for work and entertainment.',
                 status: 'out of stock',
                 created_at: new Date(),
@@ -71,7 +72,7 @@ module.exports = {
         ], {});
     },
 
-    down: async (queryInterface, Sequelize) => {
-        await queryInterface.bulkDelete('product', null, {});
-    }
+	down: async (queryInterface, Sequelize) => {
+		await queryInterface.bulkDelete('product', null, {});
+	},
 };

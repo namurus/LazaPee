@@ -10,22 +10,16 @@ export default async (req, res, next) => {
 	}
 	try {
 		const token = authorization.split(' ')[1];
+		console.log(token);
+		
 		const tokenDecoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-		const user = await db.models.User.findOne({
-			where: { id: tokenDecoded.id },
-			attributes: {
-				exclude: ['password'],
-			},
-		});
-		if (!user) {
+		const admin = await db.models.Account.findOne({ where: { id: tokenDecoded.id } });
+		if (!admin) {
 			return res.status(401).json({ code: 401, message: 'Unauthorized' });
 		}
-		req.user = user;
-		
+		req.admin = admin;
 		next();
 	} catch (err) {
 		return res.status(401).json({ code: 401, message: 'Unauthorized' });
 	}
 };
-
-export default authenticate;

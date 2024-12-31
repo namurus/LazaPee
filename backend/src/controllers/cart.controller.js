@@ -3,7 +3,7 @@ import db from '@/database';
 export const fetchAllCartItems = async (req, res, next) => {
     try {
         const cart = await db.models.Cart.findOne({
-            where: { userId: req.user.id }, // 
+            where: { userId: req.user.id }, 
             attributes: ['id'],
             include: [
                 {

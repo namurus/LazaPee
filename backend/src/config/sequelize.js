@@ -1,5 +1,5 @@
 import 'dotenv/config';
-const { DB_HOST, DB_PORT = 23332, DB_DATABASE, DB_USER, DB_PASSWORD, DB_SSL = 'false' } = process.env;
+const { DB_HOST, DB_PORT = 3306, DB_DATABASE, DB_USER, DB_PASSWORD, DB_SSL = 'false' } = process.env;
 
 const defaultConfig = {
 	dialect: 'mysql',
@@ -26,3 +26,4 @@ if (DB_SSL == 'true') {
 export const development = {
 	...defaultConfig,
 };
+

@@ -25,9 +25,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         field: 'product_id',
+        references: {
+          model: 'product',
+          key: 'id',
+        },
       },
       price: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false,
         field: 'price',
       },
