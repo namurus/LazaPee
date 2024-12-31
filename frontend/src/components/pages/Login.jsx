@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { googleLogo, loginBanner } from '../../assets';
+import { loginBanner } from '../../assets';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { login } from '../../contexts/auth/reducers';
@@ -91,7 +91,7 @@ const Login = () => {
           </button>
           <button className='flex w-full items-center justify-center rounded-lg border py-2 shadow-md hover:bg-gray-100'>
             <Image
-              src={googleLogo}
+              src='/google_logo.png'
               alt='Google logo'
               className='mr-2 h-6 w-6'
             />
