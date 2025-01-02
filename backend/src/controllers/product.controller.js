@@ -2,7 +2,17 @@ import db from '@/database';
 
 export const fetchAllProducts = async (req, res, next) => {
     try {
-        const products = await db.models.Product.findAll();
+        const products = await db.models.Product.findAll(
+            {
+                include: [
+                    {
+                        model: db.models.Skus,
+                        as: 'skus',
+                        attributes: ['price', 'stock_quantity','attributeName' ,'value'],
+                    },
+                ],
+            }
+        );
 
         if (products.length > 0) {
             return res.status(200).json({ code: 200, data: products });
