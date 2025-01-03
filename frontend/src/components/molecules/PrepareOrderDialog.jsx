@@ -1,15 +1,7 @@
 import { Edit, Milestone, Package2 } from 'lucide-react';
 import IconCircle from '../atoms/IconCircle';
 import { Button } from '../ui/button';
-import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { DialogFooter } from '../ui/dialog';
 import {
   Command,
   CommandEmpty,
