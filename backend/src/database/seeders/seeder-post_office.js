@@ -65,15 +65,8 @@ module.exports = {
             },
         ];
 
-        // Gán thêm timestamps (nếu cần) để tránh lỗi
-        const timestampedData = data.map((item) => ({
-            ...item,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        }));
-
         // Insert dữ liệu
-        await queryInterface.bulkInsert('post_office', timestampedData, {});
+        await queryInterface.bulkInsert('post_office', data, {});
     },
 
     async down(queryInterface, Sequelize) {

@@ -1,14 +1,18 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import config from '../../config/config';
 
-function SizeList({ sizes, pickedSize, onPickSize }) {
+const sizes = Object.values(config.sizes);
+
+function SizeList({ pickedSize, onPickSize }) {
   const [pickSize, setPickSize] = useState(pickedSize);
   return (
     <div className='flex flex-wrap gap-2 text-sm'>
       {sizes.map((size) => {
         return (
           <button
-            key={size}
+            key={size.value}
+            type='button'
             onClick={() => {
               if (pickSize === size) {
                 setPickSize(null);
@@ -20,7 +24,7 @@ function SizeList({ sizes, pickedSize, onPickSize }) {
             }}
             className={`flex items-center text-nowrap rounded-full px-5 py-3 font-light ${pickSize === size ? 'bg-accent text-white' : 'bg-neutral text-black'}`}
           >
-            <p>{size}</p>
+            <p>{size.text}</p>
           </button>
         );
       })}
@@ -29,7 +33,6 @@ function SizeList({ sizes, pickedSize, onPickSize }) {
 }
 
 SizeList.propTypes = {
-  sizes: PropTypes.arrayOf(PropTypes.string).isRequired,
   pickedSize: PropTypes.string,
   onPickSize: PropTypes.func,
 };

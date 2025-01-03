@@ -1,51 +1,7 @@
 import SectionHeading from '../atoms/SectionHeading';
-import { CiMail } from 'react-icons/ci';
-import {
-  TiSocialTwitter,
-  TiSocialFacebook,
-  TiSocialInstagram,
-} from 'react-icons/ti';
-import { FaGithub } from 'react-icons/fa6';
-import InverseButton from '../atoms/InverseButton';
-
-function IconLinks() {
-  return (
-    <div className='space-x-3'>
-      <a
-        href='https://x.com/'
-        target='_blank'
-        rel='noreferrer'
-        className='inline-block h-7 w-7 rounded-full border-1 border-black border-opacity-20 p-1 focus-within:bg-black focus-within:fill-white hover:bg-black hover:fill-white'
-      >
-        <TiSocialTwitter className='h-full w-full fill-inherit' />
-      </a>
-      <a
-        href='https://facebook.com/'
-        target='_blank'
-        rel='noreferrer'
-        className='inline-block h-7 w-7 rounded-full border-1 border-black border-opacity-20 p-1 transition-colors focus-within:bg-black focus-within:fill-white hover:bg-black hover:fill-white'
-      >
-        <TiSocialFacebook className='h-full w-full fill-inherit' />
-      </a>
-      <a
-        href='https://instagram.com/'
-        target='_blank'
-        rel='noreferrer'
-        className='inline-block h-7 w-7 rounded-full border-1 border-black border-opacity-20 p-1 transition-colors focus-within:bg-black focus-within:fill-white hover:bg-black hover:fill-white'
-      >
-        <TiSocialInstagram className='h-full w-full fill-inherit' />
-      </a>
-      <a
-        href='https://github.com/'
-        target='_blank'
-        rel='noreferrer'
-        className='inline-block h-7 w-7 rounded-full border-1 border-black border-opacity-20 p-1 transition-colors hover:bg-black hover:fill-white'
-      >
-        <FaGithub className='h-full w-full fill-inherit' />
-      </a>
-    </div>
-  );
-}
+import { Mail } from 'lucide-react';
+import LinkWithIcon from '../atoms/LinkWithIcon';
+import { Button } from '../ui/button';
 
 export default function Footer() {
   const navLinks = [
@@ -81,8 +37,8 @@ export default function Footer() {
           }
         />
         <div className='w-full justify-self-end text-sm lg:max-w-[350px] lg:text-base'>
-          <div className='mb-3 flex items-center rounded-full bg-white px-4 py-3 text-black'>
-            <CiMail className='mr-3 h-5 w-5' />
+          <div className='mb-3 flex items-center gap-3 rounded-full bg-white px-5 py-3 text-black'>
+            <Mail className='h-5 w-5' />
             <input
               type='email'
               placeholder='Enter your email address'
@@ -90,12 +46,18 @@ export default function Footer() {
             />
           </div>
 
-          <InverseButton
+          {/* <InverseButton
             switchColor={true}
-            style={'rounded-full px-4 py-3 hover:text-inherit'}
+            style={'rounded-full px-4 py-3 hover:text-white'}
           >
             Subscribe to Newsletter
-          </InverseButton>
+          </InverseButton> */}
+          <Button
+            variant='outline'
+            className='w-full rounded-full px-4 py-3 text-black'
+          >
+            Subscribe to Newsletters
+          </Button>
         </div>
       </div>
       <div className='bg-[#F0F0F0] p-4 pt-36 text-left text-black lg:pt-28'>
@@ -110,7 +72,32 @@ export default function Footer() {
                   We have clothes that suits your style and which you&apos;re
                   proud to wear. From women to men.
                 </p>
-                <IconLinks />
+                <div className='space-x-3'>
+                  {[
+                    {
+                      href: 'https://x.com/',
+                      icon: <img src='/twitter.svg' alt='twitter' />,
+                    },
+                    {
+                      href: 'https://facebook.com/',
+                      icon: <img src='/facebook.svg' alt='facebook' />,
+                    },
+                    {
+                      href: 'https://instagram.com/',
+                      icon: <img src='/instagram.svg' alt='instagram' />,
+                    },
+                    {
+                      href: 'https://github.com/',
+                      icon: <img src='/github.svg' alt='github' />,
+                    },
+                  ].map((link) => (
+                    <LinkWithIcon
+                      key={link.href}
+                      href={link.href}
+                      icon={link.icon}
+                    />
+                  ))}
+                </div>
               </div>
               {navLinks.map((navLink) => {
                 return (

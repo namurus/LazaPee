@@ -1,6 +1,6 @@
 // import { fetchWithInstance } from '../config';
 
-import { post } from '../config';
+import { fetchWithInstance, post } from '../config';
 
 // import { post } from '../config';
 
@@ -18,9 +18,21 @@ const getMe = async () => {
   //   console.log(error);
   // }
   if (localStorage.getItem('ACCESS_TOKEN')) {
-    return Promise.resolve({
-      accessToken: localStorage.getItem('ACCESS_TOKEN'),
-    });
+    // Validate the token
+    try {
+      const user = await fetchWithInstance('auth/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      });
+      if (!user) {
+        return Promise.reject(new Error('Failed to fetch user data'));
+      }
+      return Promise.resolve(user);
+    } catch (error) {
+      return Promise.reject(new Error('Failed to fetch user data'));
+    }
   } else {
     return Promise.reject(new Error('Failed to fetch user data'));
   }

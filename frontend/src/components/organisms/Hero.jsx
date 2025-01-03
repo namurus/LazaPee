@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { heroBanner } from '../../assets';
 import PropTypes from 'prop-types';
 import InverseButton from '../atoms/InverseButton';
+import Image from '../atoms/Image';
 export default function Hero({ displayTitle, displayText, infoModules }) {
   return (
     <section className='full-screen-section w-full bg-[#F2F0F1]'>
@@ -14,7 +15,7 @@ export default function Hero({ displayTitle, displayText, infoModules }) {
             <p className='text-balance font-primary text-base font-light opacity-60 md:text-sm'>
               {displayText}
             </p>
-            <Link to='/shop'>
+            <Link to='/product'>
               <InverseButton style={'mt-5 px-16 py-4 lg:w-auto rounded-full'}>
                 SHOP NOW
               </InverseButton>
@@ -38,7 +39,7 @@ export default function Hero({ displayTitle, displayText, infoModules }) {
             })}
           </div>
         </div>
-        <img
+        <Image
           src={heroBanner}
           alt='hero-banner'
           className='h-full w-full object-cover object-right'

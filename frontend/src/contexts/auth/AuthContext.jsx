@@ -12,12 +12,11 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const { accessToken } = await getMe();
-        dispatch(
-          initialize({ isAuthenticated: true, userAccessToken: accessToken })
-        );
+        const user = await getMe();
+        console.log(user);
+        dispatch(initialize({ isAuthenticated: true, user: user }));
       } catch {
-        dispatch(initialize({ isAuthenticated: false, userAccessToken: null }));
+        dispatch(initialize({ isAuthenticated: false, user: null }));
       }
     };
     fetchMe();
@@ -26,13 +25,13 @@ export default function AuthProvider({ children }) {
   useLayoutEffect(() => {
     const interceptor = instance.interceptors.request.use((config) => {
       config.headers.Authorization =
-        state.userAccessToken && !config._retry
-          ? `Bearer ${state.userAccessToken}`
+        state.user && state.user.accessToken && !config._retry
+          ? `Bearer ${state.user.accessToken}`
           : config.headers.Authorization;
       return config;
     });
     return () => instance.interceptors.request.eject(interceptor);
-  }, [state.userAccessToken]);
+  }, [state.user]);
 
   useLayoutEffect(() => {
     /*

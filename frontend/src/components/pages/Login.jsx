@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { googleLogo, loginBanner } from '../../assets';
+import { loginBanner } from '../../assets';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { login } from '../../contexts/auth/reducers';
+import Image from '../atoms/Image';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -30,7 +31,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        dispatch(login({ userAccessToken: data.accessToken }));
+        dispatch(login({ user: data }));
         setMessage('Login successful');
       } else {
         const errorData = await response.json();
@@ -89,7 +90,11 @@ const Login = () => {
             Sign in
           </button>
           <button className='flex w-full items-center justify-center rounded-lg border py-2 shadow-md hover:bg-gray-100'>
-            <img src={googleLogo} alt='Google logo' className='mr-2 h-6 w-6' />
+            <Image
+              src='/google_logo.png'
+              alt='Google logo'
+              className='mr-2 h-6 w-6'
+            />
             Sign in with Google
           </button>
         </form>
@@ -103,7 +108,7 @@ const Login = () => {
         </p>
       </div>
       <div className='flex w-full items-center justify-center bg-gray-100 lg:w-1/2'>
-        <img
+        <Image
           src={loginBanner}
           alt='Son Tung M-TP'
           className='h-full w-full object-cover'

@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 
 function StarRating({ rating, name }) {
+  if (!rating) {
+    rating = 0;
+  }
   return (
     <div className='flex gap-2'>
       <div className='flex gap-1'>

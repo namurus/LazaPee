@@ -2,27 +2,29 @@ import { AuthActionType } from './constant';
 
 const reducerHandlers = {
   [AuthActionType.INITIALIZE]: (state, action) => {
-    const { isAuthenticated, userAccessToken } = action.payload;
+    const { isAuthenticated, user } = action.payload;
     return {
       ...state,
       isAuthenticated,
-      userAccessToken,
+      user,
       isInitialized: true,
     };
   },
   [AuthActionType.LOGIN]: (state, action) => {
-    const { userAccessToken } = action.payload;
+    const { user } = action.payload;
+    localStorage.setItem('ACCESS_TOKEN', user.accessToken);
     return {
       ...state,
       isAuthenticated: true,
-      userAccessToken,
+      user,
     };
   },
   [AuthActionType.LOGOUT]: (state) => {
+    localStorage.removeItem('ACCESS_TOKEN');
     return {
       ...state,
       isAuthenticated: false,
-      userAccessToken: null,
+      user: null,
     };
   },
 };

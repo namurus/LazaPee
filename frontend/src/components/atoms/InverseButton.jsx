@@ -1,23 +1,20 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../lib/utils';
 import PropType from 'prop-types';
 
 function InverseButton({ children, style, switchColor = false, ...rest }) {
   const defaultStyle =
     'hover:bg-transparent w-full outline outline-2 transition-all';
   const mergedStyle = switchColor
-    ? twMerge(
+    ? cn(
         defaultStyle,
         'bg-neutral-900 text-accent hover:text-neutral-900 outline-neutral-900'
       )
-    : twMerge(
+    : cn(
         defaultStyle,
         'bg-accent text-neutral-900 hover:text-accent outline-accent'
       );
   return (
-    <button
-      className={style ? twMerge(style, mergedStyle) : mergedStyle}
-      {...rest}
-    >
+    <button className={style ? cn(mergedStyle, style) : mergedStyle} {...rest}>
       {children}
     </button>
   );
