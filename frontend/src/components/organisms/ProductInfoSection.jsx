@@ -2,6 +2,7 @@ import ProductDetailImageGrid from '../molecules/ProductDetailImageGrid';
 import { useEffect, useState } from 'react';
 import ProductDetailInfo from './../molecules/ProductDetailInfo';
 import PropTypes from 'prop-types';
+import LoadingSpinner from '../atoms/LoadingSpinner';
 
 function ProductInforSection({ product }) {
   const [images, setImages] = useState([]);
@@ -20,7 +21,11 @@ function ProductInforSection({ product }) {
   }, []);
   return (
     <div className='grid grid-cols-1 gap-10 *:flex-1 md:grid-cols-2'>
-      <ProductDetailImageGrid images={images} />
+      {images.length == 0 ? (
+        <LoadingSpinner />
+      ) : (
+        <ProductDetailImageGrid images={images} />
+      )}
       <ProductDetailInfo product={product} />
     </div>
   );

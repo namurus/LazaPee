@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
-
+import { Check } from 'lucide-react';
+import config from '../../config/config';
 function getBrightness(hex) {
   if (hex.length === 4) {
     hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
@@ -13,15 +13,18 @@ function getBrightness(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000;
 }
 
-function ColorPicker({ colors, pickedColor, onPickColor }) {
+const colors = Object.values(config.colors);
+
+function ColorPicker({ pickedColor, onPickColor }) {
   const [selectedColor, setSelectedColor] = useState(pickedColor);
   return (
     <div className='flex flex-wrap gap-2'>
       {colors.map((color) => (
         <button
-          key={color}
+          key={color.text}
+          type='button'
           className={`flex h-9 w-9 items-center justify-center rounded-full border border-black border-opacity-20`}
-          style={{ backgroundColor: color }}
+          style={{ backgroundColor: color.hex }}
           onClick={() => {
             if (selectedColor === color) {
               setSelectedColor(null);
@@ -33,8 +36,8 @@ function ColorPicker({ colors, pickedColor, onPickColor }) {
           }}
         >
           {selectedColor === color && (
-            <FaCheck
-              className={`w-1/2 ${getBrightness(color) < 128 ? 'text-white' : 'text-black'}`}
+            <Check
+              className={`w-1/2 ${getBrightness(color.hex) < 128 ? 'text-white' : 'text-black'}`}
             />
           )}
         </button>
@@ -44,8 +47,7 @@ function ColorPicker({ colors, pickedColor, onPickColor }) {
 }
 
 ColorPicker.propTypes = {
-  colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-  pickedColor: PropTypes.string,
+  pickedColor: PropTypes.object,
   onPickColor: PropTypes.func,
 };
 

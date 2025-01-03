@@ -1,11 +1,4 @@
-import axios from 'axios';
-
-const instance = axios.create({
-  baseURL: 'https://dummyjson.com',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+import instance from '../lib/axios';
 
 const fetchWithInstance = async (endPoint, options) => {
   try {
@@ -13,9 +6,14 @@ const fetchWithInstance = async (endPoint, options) => {
       url: endPoint,
       ...options,
     });
+    if (!response) {
+      console.error(`Undefined response fetching api from ${endPoint}`);
+      return null;
+    }
     return response.data;
   } catch (error) {
-    throw new Error(`${error.response.status}`);
+    console.log('Error fetching data:', error);
+    // throw new Error(`${error.response.status}`);
   }
 };
 

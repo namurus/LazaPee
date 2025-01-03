@@ -1,5 +1,13 @@
 import { useMatches } from 'react-router';
 import { Link } from 'react-router-dom';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '../ui/breadcrumb';
 
 function Breadcrumbs() {
   let matches = useMatches();
@@ -11,26 +19,26 @@ function Breadcrumbs() {
     .map((match) => match.handle.crumb(match.data));
   crumbs = crumbs.flat();
   return (
-    <ol className='mt-5 flex flex-wrap gap-2 text-sm font-light capitalize transition'>
-      <Link to='/' className='hover:underline'>
-        <li className='opacity-60'>Home</li>
-      </Link>
-      {crumbs.map((crumb) => (
-        <li
-          key={crumb.name}
-          className='flex items-center justify-between gap-2'
-        >
-          <span>&gt;</span>
-          {crumb.path ? (
-            <Link to={crumb.path} className='hover:underline'>
-              <span className='opacity-60'>{crumb.name}</span>
-            </Link>
-          ) : (
-            <span>{crumb.name}</span>
-          )}
-        </li>
-      ))}
-    </ol>
+    <Breadcrumb className='mt-5 text-sm capitalize'>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+        </BreadcrumbItem>
+
+        {crumbs.map((crumb) => (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem key={crumb.name}>
+              {crumb.path ? (
+                <Link to={crumb.path}>{crumb.name}</Link>
+              ) : (
+                <BreadcrumbPage>{crumb.name}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }
 
