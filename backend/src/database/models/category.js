@@ -93,13 +93,6 @@ module.exports = (sequelize, DataTypes) => {
 			},
 		}
 	);
-	
-	Category.addHook("beforeSave", async (category) => { 
-		if (category.changed("name")) { 
-			category.slug = await createUniqueSlug(category.name); 
-		} 
-	});
-
 	// Function to create a unique slug for a category
 	async function createUniqueSlug(name) {
 		let slug = slugify(name, { lower: true, strict: true });

@@ -106,5 +106,8 @@ module.exports = (sequelize, DataTypes) => {
 			tableName: 'product',
 		}
 	);
+	Product.addHook('beforeSave', async (instance) => {
+		instance.slug = instance.productName.toLowerCase().replace(/\s+/g, '-');
+	});
 	return Product;
 };
