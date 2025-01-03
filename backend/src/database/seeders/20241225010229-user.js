@@ -53,6 +53,19 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+			// Người dùng mới thứ 2
+      {
+        full_name: 'Shop Owner',
+        email: 'shop@example.com',
+        username: 'shopowner',
+        password: 'hashed_password_321', 
+        avatar: 'https://example.com/avatar4.png',
+        phone: '5566778899',
+        address: '101 High Hill, Riverside',
+        role: 'shop',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

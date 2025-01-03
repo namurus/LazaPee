@@ -27,7 +27,7 @@ export const login = async (req, res, next) => {
 // [POST] /auth/register
 export const register = async (req, res, next) => {
 	try {
-		const { fullName, username, email, password, phone } = req.body;
+		const { fullName, username, email, password, phone, role } = req.body;
 		// Check if user exists
 		const userExists = await db.models.User.findOne({
 			where: {
@@ -46,6 +46,7 @@ export const register = async (req, res, next) => {
 			password: password,
 			username: username,
 			phone: phone,
+			role: role,
 		});
 
 		// Generate and return tokens
