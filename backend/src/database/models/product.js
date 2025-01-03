@@ -25,10 +25,9 @@ module.exports = (sequelize, DataTypes) => {
 				as: 'skus',
 			});
 			Product.belongsTo(models.Shop, {
-                foreignKey: 'shopId',
-                as: 'shop',
+				foreignKey: 'shopId',
+				as: 'shop',
 			});
-			  
 		}
 	}
 
@@ -47,14 +46,14 @@ module.exports = (sequelize, DataTypes) => {
 				field: 'productName',
 			},
 			shopId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'shops',
-                    key: 'shop_id',
-                },
-                field: 'shop_id',
-            },
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				references: {
+					model: 'shops',
+					key: 'shop_id',
+				},
+				field: 'shop_id',
+			},
 			brand: {
 				type: DataTypes.STRING,
 				field: 'brand',
@@ -62,10 +61,6 @@ module.exports = (sequelize, DataTypes) => {
 			thumbnail: {
 				type: DataTypes.STRING,
 				field: 'thumbnail',
-			},
-			image: {
-				type: DataTypes.STRING,
-				field: 'image',
 			},
 			description: {
 				type: DataTypes.TEXT,
@@ -111,5 +106,5 @@ module.exports = (sequelize, DataTypes) => {
 			tableName: 'product',
 		}
 	);
-  return Product;
+	return Product;
 };
