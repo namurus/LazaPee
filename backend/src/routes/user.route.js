@@ -10,7 +10,6 @@ const router = Router();
 
 router.get('/profile', authenticate, getMe);
 router.patch('/update', authenticate, upload.single('avatar'), uploadCloud, updateMe);
-router.post('/register-shop', authenticate, updateMe);
 
 router.post('/password/forgot', forgotPassword);
 router.post('/password/otp', otp);

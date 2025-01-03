@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
+			background: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				field: 'background',
+			},
       status: {
         type: DataTypes.STRING,
         allowNull: false,

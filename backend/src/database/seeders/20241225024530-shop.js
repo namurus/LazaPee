@@ -45,7 +45,7 @@ module.exports = {
 				{
 					shop_id: 4,
 					shop_name: 'Book Haven',
-					owner_id: 5,
+					owner_id: 4,
 					status: 'off',
 					description: 'A paradise for book lovers with a wide range of genres.',
 					temporary_closure_period: 30,
