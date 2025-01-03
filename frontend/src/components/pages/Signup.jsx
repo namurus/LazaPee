@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { signupBanner } from '../../assets';
 import { useNavigate } from 'react-router-dom';
+import { signup as signupAPI } from '../../api/user/auth';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [fullname, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [step, setStep] = useState(1);
@@ -18,7 +20,6 @@ const Signup = () => {
     e.preventDefault();
     setError(null);
 
-    // Validate email format
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/;
     if (!emailRegex || !emailRegex.test(email)) {
       setError('Please enter a valid email.');
@@ -39,15 +40,12 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('https://dummyjson.com/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          username: username,
-          phoneNumber: phoneNumber,
-          password: password,
-        }),
+      const response = await signupAPI({
+        email: email,
+        username: username,
+        fullname: fullname,
+        phone: phoneNumber,
+        password: password,
       });
 
       if (response.ok) {
@@ -145,6 +143,16 @@ const Signup = () => {
                   placeholder='Enter your username'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  className='w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='mb-2 block text-gray-700'>Full Name</label>
+                <input
+                  type='text'
+                  placeholder='Enter your phone number'
+                  value={fullname}
+                  onChange={(e) => setFullName(e.target.value)}
                   className='w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500'
                 />
               </div>

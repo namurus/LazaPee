@@ -3,6 +3,7 @@ import { loginBanner } from '../../assets';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { login } from '../../contexts/auth/reducers';
+import {login as loginAPI} from '../../api/user/auth';
 import Image from '../atoms/Image';
 
 const Login = () => {
@@ -17,18 +18,9 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     setMessage(null);
-
+    
     try {
-      const response = await fetch('https://dummyjson.com/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-          expiresInMins: 30,
-        }),
-      });
-
+      const response = await loginAPI({ username: username, password:password });
       if (response.ok) {
         const data = await response.json();
         dispatch(login({ user: data }));
@@ -38,8 +30,9 @@ const Login = () => {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');
       }
-    } catch {
-      setError('An unexpected error occurred. Please try again later.');
+    } catch(error) {
+      // console.error();
+      setError(error.response.data.message);
     }
   };
   if (isAuthenticated) {

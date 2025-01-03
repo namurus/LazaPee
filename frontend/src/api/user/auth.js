@@ -30,7 +30,7 @@ const getMe = async () => {
         return Promise.reject(new Error('Failed to fetch user data'));
       }
       return Promise.resolve(user);
-    } catch (error) {
+    } catch {
       return Promise.reject(new Error('Failed to fetch user data'));
     }
   } else {
@@ -51,4 +51,8 @@ const login = async (data) => {
   return post('auth/login', data);
 };
 
-export { getMe, getRefreshToken, login };
+const signup = async (data) => {
+  return post('auth/register', data);
+};
+
+export { getMe, getRefreshToken, login, signup };
