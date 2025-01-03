@@ -24,12 +24,12 @@ import { Link } from 'react-router-dom';
 const data = {
   navMain: [
     {
-      title: 'Orders',
+      title: 'Quản lý đơn hàng',
       url: 'orders',
       icon: ShoppingCart,
       items: [
         {
-          title: 'All Orders',
+          title: 'Danh sách đơn hàng',
           url: '#',
         },
         {
@@ -109,10 +109,7 @@ function ShopSidebar({ ...props }) {
                       <SidebarMenuSub className='ml-0 border-l-0 px-1.5'>
                         {item.items.map((subitem) => (
                           <SidebarMenuSubItem key={subitem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={subitem.isActive}
-                            >
+                            <SidebarMenuSubButton asChild>
                               <Link to={`${item.url}/${subitem.url}`}>
                                 {subitem.title}
                               </Link>

@@ -1,4 +1,5 @@
 import AddProductForm from '../components/organisms/AddProductForm';
+import OrderManagement from '../components/organisms/OrderManagement';
 import ShopPage from '../components/pages/ShopPage';
 const shopRoutes = [
   {
@@ -26,9 +27,19 @@ const shopRoutes = [
         path: 'products',
         element: <div>Product placeholder</div>,
         handle: {
-          crumbs: () => ({
+          crumb: () => ({
             path: '/shop/products',
             name: 'Quản lý sản phẩm',
+          }),
+        },
+      },
+      {
+        path: 'orders',
+        element: <OrderManagement />,
+        handle: {
+          crumb: () => ({
+            path: '/shop/orders',
+            name: 'Quản lý đơn hàng',
           }),
         },
       },
