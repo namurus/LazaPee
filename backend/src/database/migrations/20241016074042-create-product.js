@@ -14,15 +14,26 @@ module.exports = {
         type: Sequelize.TEXT,
         field: 'productName',
       },
+      shopId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'shops',
+          key: 'shop_id',
+        },
+        field: 'shop_id',
+      },
       brand: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
         field: 'brand',
       },
       thumbnail: {
         type: Sequelize.STRING,
         field: 'thumbnail',
       },
-			image: {
+      image: {
 				type: Sequelize.STRING,
 				field: 'image',
 			},
@@ -63,7 +74,7 @@ module.exports = {
       deletedAt: {
         allowNull: true,
         type: Sequelize.DATE,
-        field: 'deleted_at',
+        field: 'deleted_at',  
       },
 
     });

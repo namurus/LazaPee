@@ -61,7 +61,7 @@ export const createProduct = async (req, res, next) => {
 
         const { productName, price, brand, description, thumbnail, image, skus } = req.body;
         const product = await db.models.Product.create({
-            productName,
+            productName,    
             brand,
             description,
             thumbnail,
