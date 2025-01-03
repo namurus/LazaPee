@@ -13,7 +13,10 @@ function ShopProfile() {
     shopName: 'Shop của tôi',
     shopImage: 'https://via.placeholder.com/150',
     joinDate: '01/01/2021',
-    state: 'active',
+    state: {
+      active: false,
+      returnDate: '01/01/2022',
+    },
   });
   const [open, setOpen] = useState(false);
   return (
@@ -45,13 +48,19 @@ function ShopProfile() {
         </ShopTitleSection>
       </form>
       <ShopTitleSection title={'Trạng thái hoạt động'}>
-        <p className='font-semibold'>
+        <p className='font-medium'>
           Trạng thái:{' '}
           <span
-            className={`${shopInfo.state === 'active' ? 'text-green-500' : 'text-red-500'}`}
+            className={`${shopInfo.state.active ? 'text-green-500' : 'text-red-500'}`}
           >
-            {shopInfo.state === 'active' ? 'Đang hoạt động' : 'Tạm nghỉ'}
+            {shopInfo.state.active ? 'Đang hoạt động' : 'Tạm nghỉ'}
           </span>
+          {<br />}
+          {!shopInfo.state.active && (
+            <span>
+              Shop sẽ hoạt động trở lại vào ngày {shopInfo.state.returnDate}
+            </span>
+          )}
         </p>
         <TemporaryClosureDialog
           open={open}

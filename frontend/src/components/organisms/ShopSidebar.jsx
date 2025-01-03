@@ -67,6 +67,10 @@ const data = {
           title: 'Shop Decoration',
           url: 'decoration',
         },
+        {
+          title: 'Thống kê',
+          url: 'statistics',
+        },
       ],
     },
   ],
