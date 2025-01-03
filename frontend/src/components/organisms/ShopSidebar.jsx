@@ -39,28 +39,28 @@ const data = {
       ],
     },
     {
-      title: 'Products',
+      title: 'Quản lý sản phẩm',
       url: 'products',
       icon: ShoppingBag,
       items: [
         {
-          title: 'All Products',
+          title: 'Danh sách sản phẩm',
           url: '#',
           isActive: true,
         },
         {
-          title: 'Add a Product',
+          title: 'Thêm sản phẩm mới',
           url: 'new',
         },
       ],
     },
     {
-      title: 'Shop Management',
+      title: 'Quản lý shop',
       url: 'shop-management',
       icon: Store,
       items: [
         {
-          title: 'Shop Profile',
+          title: 'Hồ sơ shop',
           url: 'profile',
         },
         {

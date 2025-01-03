@@ -14,7 +14,7 @@ import { useState } from 'react';
 import AddressTag from './AddressTag';
 import { toast } from 'sonner';
 
-export function SelectDelivery({ onConfirm, onCancel }) {
+function SelectDelivery({ onConfirm, onCancel }) {
   const [open, setOpen] = useState(false);
   const [selectedShippingUnit, setSelectedShippingUnit] = useState(null);
   const handleConfirm = () => {
@@ -147,3 +147,4 @@ function PrepareOrderDialog({ onConfirmOption }) {
 }
 
 export default PrepareOrderDialog;
+export { SelectDelivery };
