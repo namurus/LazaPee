@@ -27,5 +27,3 @@ export default async (req, res, next) => {
 		return res.status(401).json({ code: 401, message: 'Unauthorized' });
 	}
 };
-
-

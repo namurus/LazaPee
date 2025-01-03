@@ -12,6 +12,8 @@ import postOfficeModel from './models/post_office';
 import * as config from '@/config/sequelize';
 import productImage from './models/product-image';
 import forgotPassword from './models/forgot-password';
+import voucherModel from './models/voucher';
+import userVoucherModel from './models/user-voucher';
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -32,6 +34,8 @@ const modelDefiners = [
 	skusModel,
 	attributeModel,
 	postOfficeModel
+	voucherModel,
+	userVoucherModel
 ];
 
 for (const modelDefiner of modelDefiners) {
