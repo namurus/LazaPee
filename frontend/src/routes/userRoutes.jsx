@@ -5,9 +5,6 @@ const userRoutes = [
   {
     path: '/user',
     element: (
-      // <AuthGuard>
-      //   <div>User element Placeholder</div>,
-      // </AuthGuard>
       <Profile />
     ),
     children: [
@@ -16,8 +13,16 @@ const userRoutes = [
         element: <div>Account element Placeholder</div>,
         children: [
           {
+            index: true,
+            element: <Profile />,
+          },
+          {
             path: 'profile',
-            element: <div>Profile element Placeholder</div>,
+            elenment: (
+              <AuthGuard>
+                <Profile />
+              </AuthGuard>
+            )
           },
           {
             path: 'address',

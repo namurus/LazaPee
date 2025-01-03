@@ -33,9 +33,8 @@ const Login = () => {
 
         dispatch(login({ userAccessToken: data.accessToken }));
         
-        // Optionally, save user information in context or state
         dispatch({
-          type: 'SET_USER_INFO',
+          type: 'LOGIN',
           payload: {
             username: data.username,
             firstName: data.firstName,
