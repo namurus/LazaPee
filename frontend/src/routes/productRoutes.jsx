@@ -2,6 +2,7 @@ import { Outlet, redirect } from 'react-router-dom';
 import ProductPage from '../components/pages/ProductPage';
 import { getCategoryProducts, getProduct } from '../api/admin/product';
 import ProductDetail from '../components/pages/ProductDetail';
+import AuthGuard from '../guards/AuthGuard';
 
 async function categoryLoader({ params, request }) {
   const url = new URL(request.url);
@@ -13,11 +14,10 @@ async function categoryLoader({ params, request }) {
   if (!url.searchParams.get('page') || !url.searchParams.get('sortBy')) {
     url.searchParams.set('page', page);
     url.searchParams.set('sortBy', sortBy);
-    console.log(url.searchParams.toString());
-    console.log(url.pathname);
+
     return redirect(`${url.pathname}?${url.searchParams.toString()}`);
   }
-  console.log(params.categoryID);
+
   const products = await getCategoryProducts(params.categoryID);
 
   return {
@@ -31,7 +31,7 @@ async function productLoader({ params }) {
   const productID = params.productID;
   const product = await getProduct(productID);
   console.log(product);
-  return product;
+  return product.data;
 }
 
 const productRoutes = [
@@ -58,7 +58,11 @@ const productRoutes = [
       },
       {
         path: 'details/:productID',
-        element: <ProductDetail />,
+        element: (
+          <AuthGuard>
+            <ProductDetail />
+          </AuthGuard>
+        ),
         loader: productLoader,
         handle: {
           // crumb: (data) => [data.categoryName, data.subCategory, data.name],

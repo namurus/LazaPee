@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { stringToId } from '../../helpers';
 import SectionHeading from '../atoms/SectionHeading';
 import LoadingSpinner from '../atoms/LoadingSpinner';
-import Button from '../atoms/Button';
 import ProductItem from '../molecules/ProductItem';
 import { getProductsWithLimit } from '../../api/admin/product';
 
@@ -18,7 +17,12 @@ function ProductShowcase({ showcaseTitle }) {
   useEffect(() => {
     async function fetchData() {
       const json = await getProductsWithLimit(4);
-      setCards(json.products);
+      const data = json.data;
+      if (data.length > 4) {
+        setCards(data.slice(0, 4));
+      } else {
+        setCards(json.data);
+      }
       setLoading(false);
     }
     fetchData();
@@ -42,11 +46,13 @@ function ProductShowcase({ showcaseTitle }) {
         to={`/product/${stringToId(showcaseTitle)}`}
         className='flex w-full items-center justify-center rounded-full border-2 px-14 py-4 shadow-lg drop-shadow-lg transition-all hover:border-black hover:underline lg:mx-auto lg:w-max'
       >
-        <Button
-          style={'flex-1 text-nowrap capitalize lg:w-[100px] lg:flex-grow-0'}
+        <button
+          className={
+            'flex-1 text-nowrap capitalize lg:w-[100px] lg:flex-grow-0'
+          }
         >
           view all
-        </Button>
+        </button>
       </Link>
     </div>
   );

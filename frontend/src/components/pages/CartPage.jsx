@@ -1,10 +1,11 @@
 import { useLoaderData } from 'react-router-dom';
 import Breadcrumbs from '../molecules/Breadcrumbs';
-import { FaMinus, FaPlus, FaTrash, FaTag, FaArrowRight } from 'react-icons/fa';
 import Button from '../atoms/Button';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import QuantitySelector from '../atoms/QuantitySelector';
+import Image from '../atoms/Image';
+import { ArrowRight, Tag, Trash2 } from 'lucide-react';
 
 function CartItem({ item, handleQuantityChange, handleRemoveItem }) {
   const handleAdd = () => {
@@ -19,7 +20,7 @@ function CartItem({ item, handleQuantityChange, handleRemoveItem }) {
   return (
     <div className='cart-item flex gap-[0.875rem] border-b-1 border-black border-opacity-10 py-4 first:pt-0 last:border-b-0 last:pb-0 md:gap-4 lg:py-6'>
       <div className='flex aspect-square w-1/3 items-center justify-center rounded-lg bg-[#F0EEED] lg:max-h-32 lg:w-auto'>
-        <img
+        <Image
           src={item.thumbnail}
           alt={`${item.title} image`}
           className='h-full object-cover object-center'
@@ -33,7 +34,7 @@ function CartItem({ item, handleQuantityChange, handleRemoveItem }) {
               style={'text-red-600 text-sm font-light'}
               onClick={() => handleRemoveItem(item.title)}
             >
-              <FaTrash />
+              <Trash2 />
             </Button>
           </div>
           <div className='text-[0.75rem] font-light lg:text-sm'>
@@ -144,7 +145,7 @@ function CartPage() {
             </div>
             <div className='flex items-center justify-between text-sm lg:text-base'>
               <div className='flex-1 rounded-full bg-[#F0F0F0] px-4 py-3 font-light'>
-                <FaTag className='mr-[0.625rem] inline-block opacity-60 lg:mr-3' />
+                <Tag className='mr-[0.625rem] inline-block opacity-60 lg:mr-3' />
                 <input
                   type='text'
                   className='bg-transparent outline-none'
@@ -164,7 +165,7 @@ function CartPage() {
                 'rounded-full bg-black text-white px-4 py-3 mt-5 font-light hover:bg-transparent hover:text-black border-2 border-black transition-colors hover:font-normal'
               }
             >
-              Go to Checkout <FaArrowRight className='ml-2 inline' />
+              Go to Checkout <ArrowRight className='ml-2 inline' />
             </Button>
           </div>
         </div>
