@@ -29,7 +29,7 @@ module.exports = {
 				type: Sequelize.FLOAT,
 				allowNull: false,
 			},
-			review: {
+			content: {
 				type: Sequelize.TEXT,
 				allowNull: false,
 			},
