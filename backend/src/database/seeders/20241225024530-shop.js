@@ -58,7 +58,7 @@ module.exports = {
       {
           shop_id: 4,
           shop_name: 'Book Haven',
-          owner_id: 4,
+          owner_id: 5,
           revenue: 20000,
           status: 'off',
           creation_date: new Date('2018-03-01'),

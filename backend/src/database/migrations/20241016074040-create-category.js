@@ -15,6 +15,11 @@ module.exports = {
 				allowNull: false,
 				field: 'name',
 			},
+			description: { 
+				type: Sequelize.STRING,
+				allowNull: true,
+				field: 'description',
+			},
 			parentId: {
 				type: Sequelize.INTEGER,
 				allowNull: true,

@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				field: 'name',
 			},
+			description: {
+				type: DataTypes.TEXT,
+				allowNull: true,
+				field: 'description',
+			},
 			parentId: {
 				type: DataTypes.INTEGER,
 				allowNull: true,
@@ -89,6 +94,12 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
 	
+	Category.addHook("beforeSave", async (category) => { 
+		if (category.changed("name")) { 
+			category.slug = await createUniqueSlug(category.name); 
+		} 
+	});
+
 	// Function to create a unique slug for a category
 	async function createUniqueSlug(name) {
 		let slug = slugify(name, { lower: true, strict: true });
