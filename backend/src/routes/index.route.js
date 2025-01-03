@@ -9,6 +9,7 @@ import isAdmin from '@/middlewares/isAdmin';
 import adminCategoryRoutes from "./admin/category.route";
 import adminVoucherRoutes from "./admin/voucher.route";
 import searchRoutes from "./search.route";
+import shopShipmentRoutes from "./shipment.route";
 import voucherRoutes from './voucher.route';
 
 export default (app) => { 
@@ -16,6 +17,8 @@ export default (app) => {
 	app.use("/products", productRoutes);
 	app.use("/cart", cartRoutes);
 	app.use("/search", searchRoutes);
+	//router for shop
+	app.use("/shop/shipment",shopShipmentRoutes);
   app.use('/user', userRoutes);
 	app.use("/voucher", voucherRoutes)
 

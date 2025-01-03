@@ -3,7 +3,7 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class CartItem extends Model {
         getTotal() {
-            return this.quantity * (this.product ? this.product.price : 0);
+            return this.quantity * (this.skus ? this.skus.price : 0);
         }
         getDiscountedTotal() { 
             if (!this.discountPercentage) {
@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'cartId',
                 as: 'cart',
             })
-            CartItem.belongsTo(models.Product, {
-                foreignKey: 'productId',
-                as: 'product',
+            CartItem.belongsTo(models.Skus, {
+                foreignKey: 'skusId',
+                as: 'skus',
             })
         }
     }
@@ -42,10 +42,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 field: 'cart_id',
             },
-            productId: {
+            skusId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                field: 'product_id',
+                field: 'skus_id',
             },
             price: {
                 type: DataTypes.DECIMAL(10, 3),
