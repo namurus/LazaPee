@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Shop.belongsTo(models.User, {
         foreignKey: 'ownerId',
-        as: 'owner',          
+        as: 'owner',       
       });
     }
   }
@@ -41,42 +41,14 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      revenue: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'revenue',
-      },
       status: {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'status',
       },
-      creationDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        field: 'creation_date',
-      },
-      location: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        field: 'location',
-      },
-      reviewRating: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'review_rating',
-      },
       description: {
         type: DataTypes.TEXT,
         field: 'description',
-      },
-      productNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'product_number',
       },
       temporaryClosurePeriod: {
         type: DataTypes.INTEGER,
@@ -87,6 +59,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'temporary_closure_reason',
+      },
+      dateClosed: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'date_closed',
       },
       createdAt: {
         allowNull: false,

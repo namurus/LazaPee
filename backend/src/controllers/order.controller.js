@@ -85,125 +85,28 @@ export const addProductToOrderCheckout = async (req, res, next) => {
   }
 };
 
-// // Controller for creating orders
-// export const createOrders = async (req, res) => {
-//   const { paymentMethod, shippingAddress, shippingCompany, phoneNumber, shippingFee, selectItems } = req.body;
-
-//   try {
-//     // Validate input
-//     if (!paymentMethod || !shippingAddress || !selectItems || selectItems.length === 0) {
-//       return res.status(400).json({ message: 'Invalid input. Please provide all required information.' });
-//     }
-
-//     const createdOrders = [];
-
-//     for (const item of selectItems) {
-//       // Find SKU
-//       const sku = await db.models.Skus.findByPk(item.skusId, {
-//         attributes: ['id', 'stock_quantity', 'price'],
-//         include: [
-//           {
-//             model: db.models.Product,
-//             as: 'product',
-//             attributes: ['id'],
-//             include: [
-//               {
-//                 model: db.models.Shop,
-//                 as: 'shop',
-//                 attributes: ['shop_id', 'status'],
-//               },
-//             ],
-//           },
-//         ],
-//       });
-
-//       if (!sku) {
-//         createdOrders.push({
-//           skusId: item.skusId,
-//           message: `SKU with ID ${item.skusId} not found.`
-//         });
-//         continue;
-//       }
-
-//       // Check if shop exists and is active
-//       if (!sku.product?.shop || sku.product.shop.status !== 'on') {
-//         createdOrders.push({
-//           skusId: item.skusId,
-//           message: `Shop for SKU ID ${item.skusId} (${sku.product?.shop?.shopName || 'Unknown'}) is currently off.`
-//         });
-//         continue;
-//       }
-
-//       // Check stock availability
-//       if (sku.stock_quantity < item.quantity) {
-//         createdOrders.push({
-//           skusId: item.skusId,
-//           message: `SKU with ID ${item.skusId} does not have enough stock.`
-//         });
-//         continue;
-//       }
-
-//       // Create order
-//       const order = await db.models.Order.create({
-//         customerId: req.user.id,
-//         paymentMethod,
-//         shippingAddress,
-//         shippingCompany,
-//         phoneNumber: phoneNumber,
-//         shippingFee: shippingFee,
-//         status: 'pending',
-//         totalAmount: sku.price * item.quantity,
-//       });
-
-//       // Create order item
-//       await db.models.OrderItem.create({
-//         orderId: order.id,
-//         skusId: item.skusId,
-//         quantity: item.quantity,
-//         price: sku.price * item.quantity,
-//       });
-
-//       // Update SKU stock
-//       await sku.update({
-//         stock_quantity: sku.stock_quantity - item.quantity,
-//       });
-
-//       // Add order to response
-//       createdOrders.push({
-//         orderId: order.id,
-//         skusId: item.skusId,
-//         productId: sku.product.id,
-//         quantity: item.quantity,
-//         totalPrice: sku.price * item.quantity,
-//         status: order.status,
-//         shippingAddress: order.shippingAddress,
-//         paymentMethod: order.paymentMethod,
-//         shippingCompany: order.shippingCompany,
-//       });
-//     }
-
-//     if (paymentMethod === 'COD') {
-//       return res.status(201).json({
-//           message: 'Order created successfully with COD payment.',
-//           order: createdOrders,
-//       });
-//     }
-//     return res.status(201).json({
-//       message: 'Order created successfully. Please proceed with bank transfer payment.',
-//       order: createdOrders,
-//     });
-//   } catch (error) {
-//     console.error('Error creating order:', error);
-//     return res.status(500).json({ message: 'Internal server error.' });
-//   }
-// };
 
 export const createOrders = async (req, res, next) => {
   try {
     const { shippingAddress, shippingCompany, phoneNumber, paymentMethod, shippingFee, selectItems, voucherId } = req.body;
 
+     // Fetch user's cart
+     const cart = await db.models.Cart.findOne({
+      where: { userId: req.user.id },
+      include: {
+        model: db.models.CartItem,
+        as: 'cartItems',
+      },
+    });
+
+    if (!cart || !cart.cartItems.length) {
+      return res.status(400).json({ message: 'Your cart is empty!' });
+    }
+    
     // Map items by shopId
     const shopOrders = {};
+    const itemsToRemove = [];
+    
     for (const item of selectItems) {
       const sku = await db.models.Skus.findOne({ where: { id: item.skusId } });
 
@@ -222,9 +125,15 @@ export const createOrders = async (req, res, next) => {
 
       // Deduct stock quantity
       sku.stock_quantity -= item.quantity;
-      await sku.save();
+      await sku.save(); 
 
       shopOrders[product.shopId].push({ sku, quantity: item.quantity, price: sku.price });
+
+      // Find cart item and mark it for removal
+      const productIncartItem = cart.cartItems.find((ci) => ci.skusId === item.skusId);
+      if (productIncartItem) {
+        itemsToRemove.push(productIncartItem.id);
+      }
     }
 
     const createdOrders = [];
@@ -265,6 +174,12 @@ export const createOrders = async (req, res, next) => {
 
       createdOrders.push(order);
     }
+    // Remove purchased items from the cart
+    await db.models.CartItem.destroy({
+      where: {
+        id: itemsToRemove,
+      },
+    });
 
     res.status(201).json({ message: 'Orders created successfully', orders: createdOrders });
   } catch (error) {

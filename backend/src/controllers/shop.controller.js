@@ -20,9 +20,18 @@ export const setTemporaryClosure = async (req, res, next) => {
             return res.status(404).json({ message: 'Shop not found' });
         }
 
+         // Check if the shop is already in a closed state
+         if (shop.dateClosed) {
+            return res.status(400).json({
+                message: `Shop is already in a closed state since ${shop.dateClosed.toISOString().split('T')[0]}.`,
+            });
+        }
+
         // Update shop with temporary closure details
+        shop.status = 'off';
         shop.temporaryClosurePeriod = temporaryClosurePeriod;
         shop.temporaryClosureReason = temporaryClosureReason;
+        shop.dateClosed = new Date();
         await shop.save();
 
         res.status(200).json({
@@ -32,6 +41,7 @@ export const setTemporaryClosure = async (req, res, next) => {
                 shopName: shop.shopName,
                 temporaryClosurePeriod: shop.temporaryClosurePeriod,
                 temporaryClosureReason: shop.temporaryClosureReason,
+                dateClosed: shop.dateClosed,
             },
         });
     } catch (error) {
@@ -43,7 +53,7 @@ export const setTemporaryClosure = async (req, res, next) => {
 // Controller to clear temporary closure for a shop
 export const clearTemporaryClosure = async (req, res, next) => {
     try {
-        const { shopId } = req.params; // Shop ID passed as a URL parameter
+        const { shopId } = req.params; 
 
         // Find the shop
         const shop = await db.models.Shop.findByPk(shopId);
@@ -52,9 +62,22 @@ export const clearTemporaryClosure = async (req, res, next) => {
             return res.status(404).json({ message: 'Shop not found' });
         }
 
+        // Check if the shop has been closed for at least 7 days
+        const now = new Date();
+        const closureDate = new Date(shop.dateClosed);
+
+        if (shop.dateClosed && (now - closureDate) / (1000 * 60 * 60 * 24) < 7) {
+            return res.status(400).json({
+                message: `The shop cannot be reopened. It has been closed for less than 7 days.`,
+            });
+        }
+
         // Clear temporary closure details
+        shop.status = 'on';
         shop.temporaryClosurePeriod = null;
         shop.temporaryClosureReason = null;
+        shop.dateClosed = null;
+
         await shop.save();
 
         res.status(200).json({
@@ -64,6 +87,7 @@ export const clearTemporaryClosure = async (req, res, next) => {
                 shopName: shop.shopName,
                 temporaryClosurePeriod: shop.temporaryClosurePeriod,
                 temporaryClosureReason: shop.temporaryClosureReason,
+                dateClosed: shop.dateClosed,
             },
         });
     } catch (error) {
