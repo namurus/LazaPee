@@ -20,7 +20,7 @@ module.exports = {
         allowNull: false,
         field: 'skus_id',
         references: {
-          model: 'Skus', 
+          model: 'skus', 
           key: 'id',    
         },
       },
