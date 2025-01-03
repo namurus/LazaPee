@@ -11,10 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       Order.hasMany(models.OrderItem, {
         foreignKey: 'orderId',
         as: 'OrderItems',
+        onDelete: 'CASCADE',
+      });
+      Order.belongsTo(models.Shop, {
+        foreignKey: 'shopId',
+        as: 'shop',
       });
     }
   }
-
   Order.init(
     {
       id: {
@@ -28,6 +32,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'customer_id',
+        references: {
+          model: 'user',
+          key: 'id',
+        },
+      },
+      shopId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'shop_id',
+        references: {
+          model: 'shops',
+          key: 'shop_id',
+        },
       },
       status: {
         type: DataTypes.STRING,
@@ -54,6 +71,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'order_note',
+      },
+      paymentMethod: {
+        type: DataTypes.STRING,
+        allowNull: false, 
+        field: 'payment_method',
       },
       shippingCompany: {
         type: DataTypes.STRING,

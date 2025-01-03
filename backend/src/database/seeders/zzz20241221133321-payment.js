@@ -15,7 +15,6 @@ module.exports = {
     await queryInterface.bulkInsert('payements', [{
     customer_id: 1,
     order_id: 1,
-    payment_method: 'credit card',
     amount: 299.99,
     status: 'completed',
     description: 'Payment for order 1',
@@ -24,7 +23,6 @@ module.exports = {
     }, {
     customer_id: 1,
     order_id: 2,
-    payment_method: 'credit card',
     amount: 999.99,
     status: 'completed',
     description: 'Payment for order 2',

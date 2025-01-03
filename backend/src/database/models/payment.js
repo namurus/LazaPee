@@ -31,11 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         field: 'amount',
       },
-      paymentMethod: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        field: 'payment_method',
-      },
       orderId: {
         type: DataTypes.STRING,
         allowNull: false,

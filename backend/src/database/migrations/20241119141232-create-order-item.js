@@ -15,10 +15,14 @@ module.exports = {
         allowNull: false,
         field: 'order_id',  
       },
-      productId: {
+      skusId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        field: 'product_id',
+        field: 'skus_id',
+        references: {
+          model: 'Skus', 
+          key: 'id',    
+        },
       },
       quantity: {
         type: Sequelize.INTEGER,

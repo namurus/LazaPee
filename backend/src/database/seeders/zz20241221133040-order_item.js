@@ -16,14 +16,14 @@ module.exports = {
     */
     await queryInterface.bulkInsert('order_items', [{
     order_id: 1,
-    product_id: 1,
+    skus_id: 1,
     quantity: 2,
     price: 99.99,
     created_at: new Date(),
     updated_at: new Date(),
     }, {
     order_id: 1,
-    product_id: 2,
+    skus_id: 2,
     quantity: 1,
     price: 999.99,
     created_at: new Date(),

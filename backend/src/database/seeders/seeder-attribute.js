@@ -18,6 +18,41 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        name: 'material',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+          name: 'warranty',
+          created_at: new Date(),
+          updated_at: new Date(),
+      },
+      {
+          name: 'edition',
+          created_at: new Date(),
+          updated_at: new Date(),
+      },
+      {
+          name: 'weight',
+          created_at: new Date(),
+          updated_at: new Date(),
+      },
+      {
+          name: 'paper_type',
+          created_at: new Date(),
+          updated_at: new Date(),
+      },
+      {
+          name: 'binding',
+          created_at: new Date(),
+          updated_at: new Date(),
+      },
+      {
+          name: 'language',
+          created_at: new Date(),
+          updated_at: new Date(),
+      },
     ], {});
   },
 

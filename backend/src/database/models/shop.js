@@ -1,16 +1,21 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class shop extends Model {
+  class Shop extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Shop.hasMany(models.Product, {
+      foreignKey: 'shopId', 
+      as: 'products', 
+      });
+      Shop.belongsTo(models.User, {
+        foreignKey: 'ownerId',
+        as: 'owner',          
+      });
     }
   }
   Shop.init(
@@ -26,6 +31,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'shop_name',
+      },
+      ownerId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'owner_id',
+        references: {
+          model: 'user',
+          key: 'id',
+        },
       },
       revenue: {
         type: DataTypes.FLOAT,
@@ -64,22 +78,29 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
         field: 'product_number',
       },
+      temporaryClosurePeriod: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: 'temporary_closure_period',
+      },
+      temporaryClosureReason: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'temporary_closure_reason',
+      },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: DataTypes.DATE,
         field: 'created_at',
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: DataTypes.DATE,
         field: 'updated_at',
       },
       deletedAt: {
         allowNull: true,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         field: 'deleted_at',
       },
     },

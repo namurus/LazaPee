@@ -13,6 +13,19 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         field: 'customer_id',
+        references: {
+          model: 'user',
+          key: 'id',
+        },
+      },
+      shopId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'shop_id',
+        references: {
+          model: 'shops',
+          key: 'shop_id',
+        },
       },
       status: {
         type: Sequelize.STRING,
@@ -49,6 +62,11 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false, 
         field: 'shipping_fee',
+      },
+      paymentMethod: {
+        type: Sequelize.STRING,
+        allowNull: false, 
+        field: 'payment_method',
       },
       createdAt: {
         allowNull: false,

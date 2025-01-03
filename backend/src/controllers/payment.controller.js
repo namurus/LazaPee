@@ -1,4 +1,5 @@
 import db from '@/database';
+import { checkPaid } from '@/until/payment';
 
 // Controller to get payments by user
 export const getPaymentsByUser = async (req, res, next) => {
@@ -38,17 +39,26 @@ export const createPayment = async (req, res, next) => {
         const orderID = req.params.orderID; 
         const {paymentMethod} = req.body;
 
-        const order = await db.models.Order.findByPk(orderID);
+        const order = await db.models.Order.findOne({
+            where: {
+              id: orderID,
+              customerId: customerId
+            }
+        });
 
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
+        }
+
+        if (order.status === 'paid') {
+            return res.status(400).json({ message: 'Order has already been paid' });
         }
 
         const amount = order.totalAmount;
         //Create new payment
         const newPayment = await db.models.Payment.create({
             customerId,
-            amount: amount,
+            amount: order.totalAmount,
             paymentMethod,
             orderId: orderID,
             description: 'Temporary description', // Tạm thời
@@ -74,12 +84,11 @@ export const createPayment = async (req, res, next) => {
 
  // Controller to pay and update the payment status
 export const processPayment = async (req, res, next) => {
-    try {
-           
+    try {  
         const { paymentID } = req.body;
         
         // Look for the payment
-        const payment = await Payment.findById(paymentID);
+        const payment = await db.models.Payment.findByPk(paymentID);
         if (!payment) {
             return res.status(404).json({ message: 'Payment not found' });
         }
@@ -88,8 +97,6 @@ export const processPayment = async (req, res, next) => {
         if (payment.status !== 'pending') {
             return res.status(400).json({ message: 'Payment is not pending' });
         }
-
-      
 
         // Check payment within 5 minutes
         const checkInterval = 10 * 1000; // 10 seconds
@@ -108,7 +115,6 @@ export const processPayment = async (req, res, next) => {
 
             // check status of the payment from API
             const isPaid = await checkPaid(payment.amount, payment.description);
-            console.log(payment);
             if (isPaid.success) {
                 // Thanh toán thành công
                 payment.status = 'completed';
@@ -116,12 +122,12 @@ export const processPayment = async (req, res, next) => {
                 
                
                 //Update the order status
-                const order = await order.findById(payment.orderId);
-                if (course) {
-                    order.status = 'completed';
+                const order = await db.models.Order.findByPk(payment.orderId);
+                if (order) {
+                    order.status = 'paid';
                     await order.save();
                 }
-
+                console.log('order:', payment.orderId);
                 console.log('Payment completed:', paymentID);
                 return res.json({ message: 'Payment completed successfully', payment });
             }

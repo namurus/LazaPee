@@ -12,7 +12,8 @@ import attributeModel from './models/attribute';
 
 import * as config from '@/config/sequelize';
 import productImage from './models/product-image';
-import payment from './models/payment';
+import paymentModel from './models/payment';
+import shopModel from './models/shop';
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -31,9 +32,10 @@ const modelDefiners = [
 	productImage,
 	orderModel,
 	orderItemModel,
-	payment,
+	paymentModel,
 	skusModel,
 	attributeModel,
+	shopModel,
 ];
 
 for (const modelDefiner of modelDefiners) {

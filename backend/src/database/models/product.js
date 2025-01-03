@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'productId',
 				as: 'skus',
 			});
+			Product.belongsTo(models.Shop, {
+                foreignKey: 'shopId',
+                as: 'shop',
+			});
+			  
 		}
 	}
 
@@ -41,6 +46,15 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				field: 'productName',
 			},
+			shopId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'shops',
+                    key: 'shop_id',
+                },
+                field: 'shop_id',
+            },
 			brand: {
 				type: DataTypes.STRING,
 				field: 'brand',

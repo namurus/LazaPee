@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             Attribute.hasMany(models.Skus, {
                 foreignKey: 'attributeName',
                 onDelete: 'CASCADE',
+                as: 'skus'
             });
         }
     }

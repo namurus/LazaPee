@@ -1,128 +1,279 @@
 import db from '@/database';
 
-//controller checkoutn (fetching product details)
+//controller add product to checkout (fetching all product details)
 export const addProductToOrderCheckout = async (req, res, next) => {
-    try {
-        const { cartItems } = req.body;
-        
-        // Validate input
-        if (!cartItems || !cartItems.length) {
-            return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
-        }
+  try {
+      const { selectItems } = req.body;
 
-        const productDetails = [];
+      // Validate input
+      if (!selectItems || !selectItems.length) {
+          return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
+      }
 
-        // Loop through each cart item and fetch product details
-        for (const item of cartItems) {
-            // Query product details along with associated product images
-            const product = await db.models.Product.findByPk(item.productId, {
-                include: [
-                    {
-                        model: db.models.ProductImage,
-                        as: 'images',
-                        attributes: ['id', 'url'],
-                    },
-                ],
-            });
+      const skusDetails = [];
+      let totalAmount = 0;
 
-            // Check if the product exists
-            if (!product) {
-                return res.status(404).json({ message: `Product with ID ${item.productId} does not exist!` });
-            }
+      for (const item of selectItems) {
+          // Query SKU details with relations (Product, Shop, Attribute)
+          const sku = await db.models.Skus.findByPk(item.skusId, {
+              attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+              include: [
+                  {
+                      model: db.models.Product,
+                      as: 'product',
+                      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                      include: [
+                          {
+                              model: db.models.Shop,
+                              as: 'shop',
+                              attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                          },
+                          {
+                            model: db.models.ProductImage,
+                            as: 'images',
+                            attributes: ['id', 'url'],
+                          },
+                      ],
+                  },                 
+              ],
+          });
 
-            // Check if the requested quantity exceeds available stock
-            if (product.stock < item.quantity) {
-                return res.status(400).json({ message: `Product with ID ${item.productId} is out of stock!` });
-            }
+          // Check if the SKU exists
+          if (!sku) {
+              skusDetails.push({ skusId: item.skusId, message: `SKU with ID ${item.skusId} does not exist!` });
+              continue;
+          }
 
-            const productData = product.toJSON();
+          const skuData = sku.toJSON();
 
-            // Add product details to the result, including quantity and stock remaining
-            productDetails.push({
-                ...productData, 
-                quantity: item.quantity,
-                stockRemaining: product.stock - item.quantity,
-            });
-        }
+          // Check if the shop exists and is active
+          if (!skuData.product?.shop) {
+              skusDetails.push({ skusId: item.skusId, message: `Shop for SKU ID ${item.skusId} does not exist!` });
+              continue;
+          }
 
-        return res.status(200).json({
-            message: 'Products retrieved successfully!',
-            products: productDetails,
-        });
-    } catch (error) {
+          if (skuData.product.shop.status === 'off') {
+              skusDetails.push({ skusId: item.skusId, message: `Shop for SKU ID ${item.skusId} is currently off.` });
+              continue;
+          }
 
-        console.error('Error retrieving product details:', error);
-        next(error);
-    }
+          // Check if the requested quantity exceeds available stock
+          if (skuData.stock_quantity < item.quantity) {
+              skusDetails.push({ skusId: item.skusId, message: `SKU with ID ${item.skusId} does not have enough stock!` });
+              continue;
+          }
+
+          // Calculate the amount for this product
+          const productAmount = item.quantity * skuData.price;
+          totalAmount += productAmount;
+
+          // Add SKU details to the result
+          skusDetails.push({
+              ...skuData,
+              quantity: item.quantity,
+              amount: productAmount,
+          });
+      }
+
+      return res.status(200).json({
+          skusDetails,
+          totalAmount,
+      });
+  } catch (error) {
+      console.error('Error retrieving product details:', error);
+      next(error);
+  }
 };
 
-// Controller for creating an orders
-export const createOrders = async (req, res) => {
-  const {paymentMethod, shippingAddress, shippingCompany, cartItems } = req.body;
+// // Controller for creating orders
+// export const createOrders = async (req, res) => {
+//   const { paymentMethod, shippingAddress, shippingCompany, phoneNumber, shippingFee, selectItems } = req.body;
 
+//   try {
+//     // Validate input
+//     if (!paymentMethod || !shippingAddress || !selectItems || selectItems.length === 0) {
+//       return res.status(400).json({ message: 'Invalid input. Please provide all required information.' });
+//     }
+
+//     const createdOrders = [];
+
+//     for (const item of selectItems) {
+//       // Find SKU
+//       const sku = await db.models.Skus.findByPk(item.skusId, {
+//         attributes: ['id', 'stock_quantity', 'price'],
+//         include: [
+//           {
+//             model: db.models.Product,
+//             as: 'product',
+//             attributes: ['id'],
+//             include: [
+//               {
+//                 model: db.models.Shop,
+//                 as: 'shop',
+//                 attributes: ['shop_id', 'status'],
+//               },
+//             ],
+//           },
+//         ],
+//       });
+
+//       if (!sku) {
+//         createdOrders.push({
+//           skusId: item.skusId,
+//           message: `SKU with ID ${item.skusId} not found.`
+//         });
+//         continue;
+//       }
+
+//       // Check if shop exists and is active
+//       if (!sku.product?.shop || sku.product.shop.status !== 'on') {
+//         createdOrders.push({
+//           skusId: item.skusId,
+//           message: `Shop for SKU ID ${item.skusId} (${sku.product?.shop?.shopName || 'Unknown'}) is currently off.`
+//         });
+//         continue;
+//       }
+
+//       // Check stock availability
+//       if (sku.stock_quantity < item.quantity) {
+//         createdOrders.push({
+//           skusId: item.skusId,
+//           message: `SKU with ID ${item.skusId} does not have enough stock.`
+//         });
+//         continue;
+//       }
+
+//       // Create order
+//       const order = await db.models.Order.create({
+//         customerId: req.user.id,
+//         paymentMethod,
+//         shippingAddress,
+//         shippingCompany,
+//         phoneNumber: phoneNumber,
+//         shippingFee: shippingFee,
+//         status: 'pending',
+//         totalAmount: sku.price * item.quantity,
+//       });
+
+//       // Create order item
+//       await db.models.OrderItem.create({
+//         orderId: order.id,
+//         skusId: item.skusId,
+//         quantity: item.quantity,
+//         price: sku.price * item.quantity,
+//       });
+
+//       // Update SKU stock
+//       await sku.update({
+//         stock_quantity: sku.stock_quantity - item.quantity,
+//       });
+
+//       // Add order to response
+//       createdOrders.push({
+//         orderId: order.id,
+//         skusId: item.skusId,
+//         productId: sku.product.id,
+//         quantity: item.quantity,
+//         totalPrice: sku.price * item.quantity,
+//         status: order.status,
+//         shippingAddress: order.shippingAddress,
+//         paymentMethod: order.paymentMethod,
+//         shippingCompany: order.shippingCompany,
+//       });
+//     }
+
+//     if (paymentMethod === 'COD') {
+//       return res.status(201).json({
+//           message: 'Order created successfully with COD payment.',
+//           order: createdOrders,
+//       });
+//     }
+//     return res.status(201).json({
+//       message: 'Order created successfully. Please proceed with bank transfer payment.',
+//       order: createdOrders,
+//     });
+//   } catch (error) {
+//     console.error('Error creating order:', error);
+//     return res.status(500).json({ message: 'Internal server error.' });
+//   }
+// };
+
+export const createOrders = async (req, res, next) => {
   try {
-    // Validate input
-    if (!paymentMethod || !shippingAddress || !cartItems || cartItems.length === 0) {
-      return res.status(400).json({ message: 'Invalid input. Please provide all required information.' });
+    const { shippingAddress, shippingCompany, phoneNumber, paymentMethod, shippingFee, selectItems, voucherId } = req.body;
+
+    // Map items by shopId
+    const shopOrders = {};
+    for (const item of selectItems) {
+      const sku = await db.models.Skus.findOne({ where: { id: item.skusId } });
+
+      if (!sku) {
+        return res.status(404).json({ message: `SKU with ID ${item.skusId} not found` });
+      }
+
+      if (sku.stock_quantity < item.quantity) {
+        return res.status(400).json({ message: `Insufficient stock for SKU ${item.skusId}` });
+      }
+
+      const product = await db.models.Product.findOne({ where: { id: sku.productId } });
+      if (!shopOrders[product.shopId]) {
+        shopOrders[product.shopId] = [];
+      }
+
+      // Deduct stock quantity
+      sku.stock_quantity -= item.quantity;
+      await sku.save();
+
+      shopOrders[product.shopId].push({ sku, quantity: item.quantity, price: sku.price });
     }
 
     const createdOrders = [];
+    for (const [shopId, items] of Object.entries(shopOrders)) {
+      const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    for (const item of cartItems) {
-      const product = await db.models.Product.findByPk(item.productId);
+      // // Apply voucher if provided
+      // let discount = 0;
+      // if (voucherId) {
+      //   const voucher = await db.models.Voucher.findOne({ where: { id: voucherId, status: true } });
+      //   if (voucher) {
+      //     discount = (totalAmount * voucher.discount) / 100;
+      //     voucher.quantity -= 1;
+      //     if (voucher.quantity <= 0) voucher.status = false;
+      //     await voucher.save();
+      //   }
+      // }
 
-      if (!product) {
-        return res.status(404).json({ message: `Product with ID ${item.productId} not found.` });
-      }
-
-      if (product.stock < item.quantity) {
-        return res.status(400).json({ message: `Product with ID ${item.productId} is out of stock.` });
-      }
-
-      // Create order
       const order = await db.models.Order.create({
-        userId: req.user.id,
-        paymentMethod,
+        customerId: req.user.id,
+        shopId: parseInt(shopId),
         shippingAddress,
         shippingCompany,
-        status: 'pending',
+        phoneNumber,
+        paymentMethod,
+        shippingFee,
+        totalAmount: totalAmount,
       });
 
-      // Create order item
-      await db.models.OrderItem.create({
-        orderId: order.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        price: product.price * item.quantity,
-      });
+      for (const { sku, quantity } of items) {
+        await db.models.OrderItem.create({
+          orderId: order.id,
+          skusId: sku.id,
+          quantity,
+          price: sku.price,
+        });
+      }
 
-      // Update product stock
-      await product.update({
-        stock: product.stock - item.quantity,
-      });
-
-      // Add order to response
-      createdOrders.push({
-        orderId: order.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        totalprice: product.price * item.quantity,
-        status: order.status,
-        shippingAddress: order.shippingAddress,
-        paymentMethod: order.paymentMethod,
-        shippingCompany: order.shippingCompany,
-      });
+      createdOrders.push(order);
     }
 
-    return res.status(201).json({
-      message: 'Orders created successfully.',
-      orders: createdOrders,
-    });
+    res.status(201).json({ message: 'Orders created successfully', orders: createdOrders });
   } catch (error) {
-    console.error('Error creating order:', error);
-    return res.status(500).json({ message: 'Internal server error.' });
+    console.error('Error creating orders:', error);
+    next(error);
   }
 };
+
+
 
 // Controller to get order details by ID
 export const getOrderDetailsById = async (req, res, next) => {
@@ -136,42 +287,53 @@ export const getOrderDetailsById = async (req, res, next) => {
 
     // Find the order by its ID and include related information
     const order = await db.models.Order.findByPk(id, {
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       include: [
         {
           model: db.models.OrderItem,
           as: 'OrderItems',
+          attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
           include: [
             {
-              model: db.models.Product,
-              as: 'product',
+              model: db.models.Skus,
+              as: 'sku', // Alias for the relation
+              attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
               include: [
                 {
-                  model: db.models.ProductImage,
-                  as: 'images',
-                  attributes: ['id', 'url'],
+                  model: db.models.Product,
+                  as: 'product',
+                  attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                  include: [
+                    {
+                      model: db.models.Shop,
+                      as: 'shop',
+                      attributes: ['shop_id', 'shopName', 'status'],
+                    },
+                    {
+                      model: db.models.ProductImage,
+                      as: 'images',
+                      attributes: ['id', 'url'],
+                    },
+                  ],
                 },
               ],
-              
             },
           ],
         },
         {
           model: db.models.User,
-          as: 'user',
+          as: 'customer',
+          attributes: ['id', 'fullName', 'email', 'phone'], // Adjust attributes as needed
         },
       ],
     });
 
-    // Check if the order exists
+    // Check if order exists
     if (!order) {
       return res.status(404).json({ message: `Order with ID ${id} not found.` });
     }
 
-    // Return the order details in the response
-    return res.status(200).json({
-      message: 'Order details retrieved successfully.',
-      order,
-    });
+    return res.status(200).json({ order });
   } catch (error) {
     console.error('Error retrieving order details:', error);
     next(error);
@@ -181,7 +343,7 @@ export const getOrderDetailsById = async (req, res, next) => {
 // Controller to update an order by ID
 export const updateOrderByID = async (req, res, next) => {
   const { id } = req.params;
-  const { status, shippingAddress, paymentMethod, shippingCompany } = req.body;
+  const { status, shippingAddress, paymentMethod, phoneNumber} = req.body;
 
   try {
     // Validate if the order ID is missing
@@ -202,23 +364,40 @@ export const updateOrderByID = async (req, res, next) => {
       ...(status && { status }),
       ...(shippingAddress && { shippingAddress }),
       ...(paymentMethod && { paymentMethod }),
-      ...(shippingCompany && { shippingCompany }),
+      ...(phoneNumber && { phoneNumber }),
+      ...(paymentMethod && { paymentMethod }),
     });
 
     // Fetch the updated order details, including associated items and product data
-    const updatedOrder = await db.models.Order.findByPk(id, {
+     const updatedOrder = await db.models.Order.findByPk(id, {
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       include: [
         {
           model: db.models.OrderItem,
           as: 'OrderItems',
+          attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
           include: [
             {
-              model: db.models.Product,
-              as: 'product',
+              model: db.models.Skus,
+              as: 'sku', // Alias for the relation
+              attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
               include: [
                 {
-                  model: db.models.ProductImage,
-                  as: 'images',
+                  model: db.models.Product,
+                  as: 'product',
+                  attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                  include: [
+                    {
+                      model: db.models.Shop,
+                      as: 'shop',
+                      attributes: ['shop_id', 'shopName', 'status'],
+                    },
+                    {
+                      model: db.models.ProductImage,
+                      as: 'images',
+                      attributes: ['id', 'url'],
+                    },
+                  ],
                 },
               ],
             },
@@ -233,12 +412,12 @@ export const updateOrderByID = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error updating order:', error);
-    next(error); // Pass the error to the error-handling middleware
+    next(error); 
   }
 };
 
 // Controller to delete an order by ID
-export const deleteOrderByID = async (req, res, next) => {
+export const cancelledOrderByID = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -255,10 +434,23 @@ export const deleteOrderByID = async (req, res, next) => {
       return res.status(404).json({ message: `Order with ID ${id} not found.` });
     }
 
+    if (order.status !== 'pending') {
+      return res.status(400).json({
+        message: `Order with ID ${id} cannot be cancelled because it is ${order.status}.`,
+      });
+    }
+
+      //Update status order
+    await db.models.Order.update({
+      status: 'cancelled',
+    }, {
+      where: { id: id },
+    });
+
     // Delete the order
     await db.models.Order.destroy({
       where: { id: id },
-  });
+   });
 
     return res.status(200).json({
       message: `Order with ID ${id} deleted successfully.`,
@@ -276,24 +468,40 @@ export const getUserOrders = async (req, res, next) => {
   try {
     // Validate if userId is provided
     if (!id) {
-      return res.status(400).json({ message: 'User ID is required.' });
+      return res.status(400).json({ message: 'Customer ID is required.' });
     }
 
     // Fetch all orders for the given userId
     const orders = await db.models.Order.findAll({
-      where: { userId: id },
+      where: { customerId: id },
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
       include: [
         {
           model: db.models.OrderItem,
           as: 'OrderItems',
+          attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
           include: [
             {
-              model: db.models.Product,
-              as: 'product',
+              model: db.models.Skus,
+              as: 'sku', // Alias for the relation
+              attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
               include: [
                 {
-                  model: db.models.ProductImage,
-                  as: 'images',
+                  model: db.models.Product,
+                  as: 'product',
+                  attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                  include: [
+                    {
+                      model: db.models.Shop,
+                      as: 'shop',
+                      attributes: ['shop_id', 'shopName', 'status'],
+                    },
+                    {
+                      model: db.models.ProductImage,
+                      as: 'images',
+                      attributes: ['id', 'url'],
+                    },
+                  ],
                 },
               ],
             },

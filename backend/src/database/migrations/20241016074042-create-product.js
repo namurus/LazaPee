@@ -14,6 +14,15 @@ module.exports = {
         type: Sequelize.TEXT,
         field: 'productName',
       },
+      shopId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'shops',
+          key: 'shop_id',
+        },
+        field: 'shop_id',
+      },
       brand: {
         type: Sequelize.STRING,
         allowNull: false,

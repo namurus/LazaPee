@@ -3,7 +3,7 @@ import {addProductToOrderCheckout,
         createOrders,
         getOrderDetailsById,
         updateOrderByID,
-        deleteOrderByID,
+        cancelledOrderByID,
         getUserOrders,
     }from '../controllers/order.controller';
 
@@ -13,7 +13,7 @@ router.post('/addItem', addProductToOrderCheckout);
 router.post('/', createOrders);
 router.get('/:id', getOrderDetailsById);
 router.patch('/:id', updateOrderByID);
-router.delete('/:id', deleteOrderByID);
+router.delete('/:id', cancelledOrderByID);
 router.get('/user/:id', getUserOrders);
 
 export default router;

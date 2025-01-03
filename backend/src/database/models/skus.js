@@ -7,11 +7,16 @@ module.exports = (sequelize, DataTypes) => {
             Skus.belongsTo(models.Product, {
                 foreignKey: 'productId',
                 onDelete: 'CASCADE',
+                 as: 'product',
             });
             Skus.belongsTo(models.Attribute, {
                 foreignKey: 'attributeName',
                 onDelete: 'CASCADE',
+                as: 'attribute',
             });
+            Skus.hasMany(models.OrderItem, {
+                foreignKey: 'skusId',
+                as: 'orderItems' });
         }
     }
 
@@ -57,12 +62,14 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.DATE,
                 defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+                field: 'created_at'
             },
             updatedAt: {
                 allowNull: false,
                 type: DataTypes.DATE,
                 defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
                 onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
+                field: 'updated_at',
             },
         },
         {

@@ -10,6 +10,7 @@ import orderRoutes from "./order.route";
 import authentication from "@/middlewares/authentication";
 import paymentRoutes from "./payment.route";
 import searchRoutes from "./search.route";
+import shopRoutes from "./shop.route";
 
 export default (app) => { 
 	app.use("/auth", authRoutes);
@@ -27,4 +28,6 @@ export default (app) => {
 	app.use("/order", authentication, orderRoutes);
 
 	app.use("/payment", authentication, paymentRoutes);
+
+    app.use("/shop", shopRoutes);
 }

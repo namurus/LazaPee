@@ -17,6 +17,15 @@ module.exports = {
         allowNull: false,
         field: 'shop_name',
       },
+      ownerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'owner_id',
+        references: {
+          model: 'user',
+          key: 'id',
+        },
+      },
       Revenue: {
         type: Sequelize.FLOAT,
         allowNull: false,
@@ -28,6 +37,7 @@ module.exports = {
         allowNull: false,
         field: 'status',
       },
+      
       CreationDate: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -53,6 +63,16 @@ module.exports = {
         allowNull: false,
         defaultValue: 0,
         field: 'product_number', 
+      },
+      temporaryClosurePeriod: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        field: 'temporary_closure_period',
+      },
+      temporaryClosureReason: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        field: 'temporary_closure_reason',
       },
       createdAt: {
         allowNull: false,

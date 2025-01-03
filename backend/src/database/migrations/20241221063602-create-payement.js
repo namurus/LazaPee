@@ -19,12 +19,7 @@ module.exports = {
       amount: {
         type: Sequelize.FLOAT,
         allowNull: false,
-        field: 'amount'
-      },
-      paymentMethod: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        field: 'payment_method'
+        field: 'amount',
       },
       orderId: {
         type: Sequelize.STRING,
