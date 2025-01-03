@@ -2,7 +2,18 @@ import db from '@/database';
 
 export const fetchAllProducts = async (req, res, next) => {
     try {
-        const products = await db.models.Product.findAll();
+        const products = await db.models.Product.findAll(
+            {
+                attributes: ['id', 'productName', 'brand', 'description', 'thumbnail', 'image'],
+                include: [
+                    {
+                        model: db.models.Skus,
+                        as: 'skus',
+                        attributes: ['price', 'stock_quantity','color', 'size'],
+                    },
+                ],
+            }
+        );
 
         if (products.length > 0) {
             return res.status(200).json({ code: 200, data: products });
@@ -24,11 +35,12 @@ export const fetchProductById = async (req, res, next) => {
 
         const product = await db.models.Product.findOne({
             where: { id },
+            attributes: ['id', 'productName', 'brand', 'description', 'thumbnail', 'image'],
             include: [
                 {
                     model: db.models.Skus,
                     as: 'skus',
-                    attributes: ['price', 'stock_quantity','attributeName' ,'value'],
+                    attributes: ['price', 'stock_quantity','color','size'],
                     
                 },
             ],
@@ -47,7 +59,7 @@ export const fetchProductById = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
     try {
 
-        const { productName, price, brand, description, thumbnail, image, attributeName, attributeValue } = req.body;
+        const { productName, price, brand, description, thumbnail, image, skus } = req.body;
         const product = await db.models.Product.create({
             productName,    
             brand,
@@ -56,17 +68,31 @@ export const createProduct = async (req, res, next) => {
             image,
         });
 
-        const attribute = await db.models.Attribute.findOne({
-            where: { name: attributeName },
-        });
+        if(!skus)
+        {
+            await db.models.Skus.create({
+                color: null,
+                size: null,
+                price,
+                productId: product.id,
+            });
+        }
+        else
+        {
+        const skus_array = JSON.parse(skus);
+        for (let i = 0; i < skus_array.length; i++) {
+            const { color, size, price, stock_quantity } = skus_array[i];
+            await db.models.Skus.create({
+                color: color,
+                size: size,
+                price,
+                stock_quantity,
+                productId: product.id,
+            });
+        }
 
-        const sku = await db.models.Skus.create({
-            price,
-            stock_quantity: 0,
-            productId: product.id,
-            attributeName: attribute.name,
-            value: attributeValue,
-        });
+        return res.status(201).json({ code: 201, message: 'Product created successfully' });
+    }
 
     } catch (err) {
         next(err);

@@ -17,7 +17,11 @@ const getProductsWithSort = (sort) => {
 };
 
 const getCategories = () => {
-  return fetchWithInstance('products/category-list');
+  return fetch('https://fakestoreapi.com/products/categories').then((res) =>
+    res.json()
+  );
+
+  // return fetchWithInstance('category');
 };
 
 const getCategoryProducts = (category) => {

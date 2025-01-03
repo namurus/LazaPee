@@ -5,6 +5,7 @@ import ColorPicker from './ColorPicker';
 import SizeList from './SizeList';
 import QuantitySelector from '../atoms/QuantitySelector';
 import InverseButton from '../atoms/InverseButton';
+import { discountPercentageToPrice } from '../../helpers/CaculationHelper';
 
 const config = {
   priceRange: {
@@ -40,24 +41,26 @@ function ProductDetailInfo({ product }) {
     <div className='flex flex-col gap-4 *:py-6'>
       <div className='line-below space-y-3'>
         <h1 className='font-display text-2xl leading-7 lg:text-[2.5rem]'>
-          {product.title}
+          {product.productName}
         </h1>
         <StarRating rating={product.rating} name={`${product.id}-product`} />
         <div className='flex gap-3 text-2xl font-semibold'>
           <p>
             {CurrencyFormatter.formatWithLocaleInfo(
-              product.price * 25000,
+              isNaN(product.price) ? 0 : product.price * 25000,
               'VND'
             )}
           </p>
           <p className='line-through opacity-30'>
             {CurrencyFormatter.formatWithLocaleInfo(
-              Math.round(product.price * 1.2 * 10 * 25000) / 10,
+              isNaN(product.discount)
+                ? 0
+                : discountPercentageToPrice(product.price, product.discount),
               'VND'
             )}
           </p>
           <div className='flex items-center justify-center rounded-full bg-[#FF3333] bg-opacity-10 px-3 py-[0.375rem] text-sm font-normal leading-none text-[#FF3333] lg:px-4 lg:text-[0.75rem]'>
-            -20%
+            {isNaN(product.discount) ? 0 : product.discount}%
           </div>
         </div>
         <p className='text-sm font-light opacity-60 lg:text-base'>
@@ -66,7 +69,7 @@ function ProductDetailInfo({ product }) {
       </div>
       <div className='line-below'>
         <h2 className='mb-4 text-sm opacity-60'>Select Colors</h2>
-        <ColorPicker colors={config.colors} onPickColor={() => {}} />
+        <ColorPicker onPickColor={() => {}} />
       </div>
       <div className='line-below'>
         <h2 className='mb-4 text-sm opacity-60'>Choose Size</h2>

@@ -9,14 +9,10 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: 'CASCADE',
                  as: 'product',
             });
-            Skus.belongsTo(models.Attribute, {
-                foreignKey: 'attributeName',
-                onDelete: 'CASCADE',
-                as: 'attribute',
-            });
             Skus.hasMany(models.OrderItem, {
                 foreignKey: 'skusId',
                 as: 'orderItems' });
+
         }
     }
 
@@ -45,18 +41,13 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 defaultValue: 0,
             },
-            attributeName: {
+            color: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                references: {
-                    model: 'Attribute',
-                    key: 'name',
-                },
-                onDelete: 'CASCADE',
+                allowNull: true,
             },
-            value: {
+            size: {
                 type: DataTypes.STRING,
-                allowNull: false,
+                allowNull: true,
             },
             createdAt: {
                 allowNull: false,

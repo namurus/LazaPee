@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { FaAngleDown } from 'react-icons/fa';
+import { ChevronDown } from 'lucide-react';
 
 function CloseableFilterSection({ children, title }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -16,7 +16,7 @@ function CloseableFilterSection({ children, title }) {
           className='flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition-transform duration-150'
           style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }}
         >
-          <FaAngleDown className='h-full opacity-40' />
+          <ChevronDown className='h-full opacity-40' />
         </div>
       </div>
       <div

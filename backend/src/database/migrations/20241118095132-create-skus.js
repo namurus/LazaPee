@@ -15,8 +15,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'product',
-          key: 'id'
+          key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       price: {
         type: Sequelize.DECIMAL(10, 0),
@@ -26,17 +27,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      attributeName: {
+      color: {
         type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: 'attribute',
-          key: 'name'
-        },
+        allowNull: true
       },
-      value: {
+      size: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

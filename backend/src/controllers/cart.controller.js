@@ -12,9 +12,16 @@ export const fetchAllCartItems = async (req, res, next) => {
                     attributes: ['quantity'],
                     include: [
                         {
-                            model: db.models.Product,
-                            as: 'product',
-                            attributes: ['id', 'productName', 'price', 'description', 'thumbnail', 'brand'],
+                            model: db.models.Skus,
+                            as: 'sku',
+                            attributes: ['price', 'attributeName', 'value', 'stock_quantity'],
+                            include: [
+                                {
+                                    model: db.models.Product,
+                                    as: 'product',
+                                    attributes: ['id', 'productName', 'brand', 'description', 'thumbnail'],
+                                },
+                            ],
                         },
                     ],
                 },
@@ -24,12 +31,15 @@ export const fetchAllCartItems = async (req, res, next) => {
         const result = {
             id: cart.id,
             products: await Promise.all(cart.cartItems.map(async (cartItem) => ({
-                id: cartItem.product.id,
-                productName: cartItem.product.productName,
-                price: cartItem.product.price,
-                description: cartItem.product.description,
-                brand: cartItem.product.brand,
-                thumbnail: cartItem.product.thumbnail,
+                id: cartItem.sku.product.id,
+                productName: cartItem.sku.product.productName,
+                price: cartItem.sku.price,
+                attributeName: cartItem.sku.attributeName,
+                stock_quantity: cartItem.sku.stock_quantity,
+                value: cartItem.sku.value,
+                description: cartItem.sku.product.description,
+                brand: cartItem.sku.product.brand,
+                thumbnail: cartItem.sku.product.thumbnail,
                 quantity: cartItem.quantity,
                 total: await cartItem.getTotal(),
                 discountedTotal: await cartItem.getDiscountedTotal()
@@ -48,16 +58,16 @@ export const fetchAllCartItems = async (req, res, next) => {
 
 export const addCartItem = async (req, res, next) => {
     try {
-        const { productId, quantity } = req.body
-        const product = await db.models.Product.findOne({
-            where: { id: productId },
+        const { skusId, quantity } = req.body
+        const skus = await db.models.Skus.findOne({
+            where: { id: skusId },
         })
 
-        if (!product) {
+        if (!skus) {
             return res.status(404).json({ code: 404, message: 'Product not found' })
         }
 
-        if (product.stock < quantity) {
+        if (skus.stock_quantity < quantity) {
             return res.status(400).json({ code: 400, message: 'Not enough stock available' })
         }
 
@@ -67,7 +77,7 @@ export const addCartItem = async (req, res, next) => {
 
         // Kiểm tra xem cart có cartItem nào có productId trùng với req.body.productId không
         const existingCartItem = await db.models.CartItem.findOne({
-            where: { cartId: cart.id, productId: productId },
+            where: { cartId: cart.id, skusId: skusId },
         });
 
         if (existingCartItem) {
@@ -77,8 +87,8 @@ export const addCartItem = async (req, res, next) => {
         } else {
             // Nếu chưa tồn tại, tạo mới
             const [cartItem, created] = await db.models.CartItem.findOrCreate({
-                where: { cartId: cart.id, productId: productId },
-                defaults: { quantity, price: product.price },
+                where: { cartId: cart.id, skusId: productId },
+                defaults: { quantity, price: skus.price },
             });
 
             res.status(201).json(cartItem);
@@ -99,15 +109,15 @@ export const updateCartItem = async (req, res, next) => {
             return res.status(404).json({ code: 404, message: 'Cart item not found' })
         }
 
-        const product = await db.models.Product.findOne({
-            where: { id: cartItem.productId },
+        const skus = await db.models.Skus.findOne({
+            where: { id: cartItem.skusId },
         })
 
-        if (!product) {
+        if (!skus) {
             return res.status(404).json({ code: 404, message: 'Product not found' })
         }
 
-        if (product.stock < quantity) {
+        if (skus.stock_quantity < quantity) {
             return res.status(400).json({ code: 400, message: 'Not enough stock available' })
         }
 
