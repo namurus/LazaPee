@@ -131,13 +131,14 @@ export const createProduct = async (req, res, next) => {
 export const deleteProduct = async (req, res, next) => {
 	try {
 		const id = req.params.id;
+		const { shopId } = req.shopInfo;
 
 		if (!id) {
 			return res.status(400).json({ code: 400, message: 'Product ID is required' });
 		}
 
 		const product = await db.models.Product.findOne({
-			where: { id: id },
+			where: { id: id, shopId: shopId },
 		});
 
 		if (!product) {
