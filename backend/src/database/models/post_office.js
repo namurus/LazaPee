@@ -21,17 +21,17 @@ module.exports = (sequelize, DataTypes) => {
             officeName: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                field: 'shipmentDate',
+                field: 'officeName',
             },
             officeAddress: {
                 type: DataTypes.TEXT,
                 allowNull: false,
-                field: 'shipmentAddress',
+                field: 'officeAddress',
             },
             shipUnit: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                field: 'shipmentStatus',
+                field: 'shipUnit',
             },
             shipCost: { // per km
                 type: DataTypes.DECIMAL(10, 2),

@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { getNearbyShip, getNearbyPost } from '@/controllers/shipment.controller';
-
+import { getNearbyShip, getNearbyPost, testAPI } from '@/controllers/shipment.controller';
 const router = Router();
 
-router.get('/nearby-ship', getNearbyShip);
+router.get('/nearbyship', getNearbyShip);
 
-router.get('/nearby-post', getNearbyPost);
+router.get('/nearbypost', getNearbyPost);
+
+// for testing purpost
+router.get('/test', testAPI)
 
 export default router;

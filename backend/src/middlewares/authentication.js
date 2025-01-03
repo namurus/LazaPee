@@ -28,4 +28,4 @@ export default async (req, res, next) => {
 	}
 };
 
-export default authenticate;
+

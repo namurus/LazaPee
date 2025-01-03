@@ -2,39 +2,80 @@ import db from '@/database';
 import axios from 'axios';
 import haversine from 'haversine';
 
+// for testing purpose
+export const testAPI = async (req, res) => {
+    const shopAddress = req.body.shopAddress;
+    try {
+        // // Get all post office addresses from the database
+        // const postOffices = await db.models.PostOffice.findAll();
+
+        // // Geocode shop address to get latitude and longitude using Nominatim
+        // const shopGeocode = await getCoordinatesFromAddress(shopAddress);
+
+        // if (!shopGeocode) {
+        //     return res.status(404).json({ error: 'Shop address not found' });
+        // }
+
+        // const shopLocation = shopGeocode;
+        // const nearbyPostOffices = [];
+
+        // for (const post of postOffices) {
+        //     const postOfficeGeocode = await getCoordinatesFromAddress(post.officeAddress);
+        //     const postOfficeLocation = postOfficeGeocode;
+
+        //     console.log(post.officeAddress,postOfficeLocation);
+        //     // Use haversine to calculate the distance
+        //     const distance = haversine(shopLocation, postOfficeLocation, { unit: 'km' });
+        //     const cost = distance * post.shipCost;
+
+        //     // Check if within 20km
+        //     if (distance <= 20) {
+        //         nearbyPostOffices.push({ post, cost, distance });
+        //     }
+        // }
+
+        // res.status(200).json({ nearbyPostOffices });
+
+        shopLocation = await getCoordinatesFromAddress(shopAddress);
+        console.log(shopAddress);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 
 // Get nearby shipping options
 export const getNearbyShip = async (req, res) => {
-    const { shopAddress } = req.body;
-
-
-    const PostOffice = db.model.findAll();
-    // Get all post office addresses from database
-    
-
+    const shopAddress  = req.body.shopAddress;
+    console.log(shopAddress);
     try {
-        // Geocode shop address to get latitude and longitude using Nominatim
-        const shopGeocode = await getCoordinatesFromAddress(shopAddress);
+        // Get all post office addresses from the database
+        const postOffices = await db.models.PostOffice.findAll();
 
-        if (!shopGeocode) {
+        // Geocode shop address to get latitude and longitude using Nominatim
+        const shopLocation = await getCoordinatesFromAddress(shopAddress);
+
+        if (!shopLocation) {
             return res.status(404).json({ error: 'Shop address not found' });
         }
 
-        const shopLocation = shopGeocode;
+        const nearbyPostOffices = [];
 
-        PostOffice.forEach(post => {
-            const postOfficeGeocode =  getCoordinatesFromAddress(post.officeAddress);
-            const postOfficeLocation = postOfficeGeocode;
+        for (const post of postOffices) {
+            const postOfficeLocation = await getCoordinatesFromAddress(post.officeAddress);
+            if(!postOfficeLocation) {
+                continue;
+            }
             // Use haversine to calculate the distance
             const distance = haversine(shopLocation, postOfficeLocation, { unit: 'km' });
-            console.log(shopLocation, postOfficeLocation);
-            console.log(`Distance to ${post.officeAddress}: ${distance}m`);
-            const cost = distance * post.costPerKm;
-            // Check if within 10km
+            const cost = distance * post.shipCost;
+            
+            // Check if within 20km
             if (distance <= 20) {
                 nearbyPostOffices.push({ post, cost, distance });
             }
-        });
+        }
 
         res.status(200).json({ nearbyPostOffices });
     } catch (error) {
@@ -43,35 +84,37 @@ export const getNearbyShip = async (req, res) => {
     }
 };
 
+
 // Get nearby post office options to deliver package to that post
 export const getNearbyPost = async (req, res) => {
-    const { shopAddress } = req.body;
-
-    const PostOffice = db.model.findAll();
+    const shopAddress = req.body.shopAddress;
+    const postOffices = await db.models.PostOffice.findAll();
     // Get all post office addresses from database
 
     try {
         // Geocode shop address to get latitude and longitude using Nominatim
-        const shopGeocode = await getCoordinatesFromAddress(shopAddress);
+        const shopLocation = await getCoordinatesFromAddress(shopAddress);
 
-        if (!shopGeocode) {
+        if (!shopLocation) {
             return res.status(404).json({ error: 'Shop address not found' });
         }
 
-        const shopLocation = shopGeocode;
+        const nearbyPostOffices = [];
 
-        PostOffice.forEach(post => {
-            const postOfficeGeocode =  getCoordinatesFromAddress(post.officeAddress);
-            const postOfficeLocation = postOfficeGeocode;
+        for (const post of postOffices) {
+            const postOfficeLocation = await getCoordinatesFromAddress(post.officeAddress);
+            if (!postOfficeLocation) {
+                continue;
+            }
             // Use haversine to calculate the distance
             const distance = haversine(shopLocation, postOfficeLocation, { unit: 'km' });
-            console.log(shopLocation, postOfficeLocation);
-            console.log(`Distance to ${post.officeAddress}: ${distance}m`);
+
             // Check if within 10km
             if (distance <= 10) {
                 nearbyPostOffices.push({ post, distance });
             }
-        });
+        }
+
 
         res.status(200).json({ nearbyPostOffices });
     } catch (error) {

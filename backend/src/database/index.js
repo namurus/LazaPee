@@ -7,6 +7,7 @@ import cartItemModel from "./models/cart_item";
 import cartModel from "./models/cart";
 import skusModel from './models/skus';
 import attributeModel from './models/attribute';
+import postOfficeModel from './models/post_office';
 
 import * as config from '@/config/sequelize';
 import productImage from './models/product-image';
@@ -27,9 +28,10 @@ const modelDefiners = [
 	cartItemModel,
 	cartModel,
 	productImage,
-	forgotPassword
+	forgotPassword,
 	skusModel,
 	attributeModel,
+	postOfficeModel
 ];
 
 for (const modelDefiner of modelDefiners) {

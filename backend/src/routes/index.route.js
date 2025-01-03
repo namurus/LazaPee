@@ -15,7 +15,7 @@ export default (app) => {
 	app.use("/products", productRoutes);
 	app.use("/cart", cartRoutes);
 	app.use("/search", searchRoutes);
-  app.use('/user', userRoutes);
+  	app.use('/user', userRoutes);
 
 	//router for shop
 	app.use("/shop/shipment",shopShipmentRoutes);
