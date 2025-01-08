@@ -74,10 +74,7 @@ export const otp = async (req, res) => {
 		}
 
 		const resetToken = uuidv4();
-		await db.models.ForgotPassword.update(
-			{ resetToken },
-			{ where: { id: forgotPassword.id } } 
-		);
+		await db.models.ForgotPassword.update({ resetToken }, { where: { id: forgotPassword.id } });
 
 		return res.status(200).json({
 			code: 200,
@@ -90,9 +87,8 @@ export const otp = async (req, res) => {
 	}
 };
 
-
 // [POST] /user/password/reset
-export const resetPassword = async (req, res) => { 
+export const resetPassword = async (req, res) => {
 	try {
 		const { resetToken, password } = req.body;
 

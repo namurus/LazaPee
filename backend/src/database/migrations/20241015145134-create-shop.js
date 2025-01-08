@@ -17,6 +17,11 @@ module.exports = {
         allowNull: false,
         field: 'shop_name',
       },
+			background: {
+				type: Sequelize.STRING,
+				allowNull: true,
+				field: 'background',
+			},
       ownerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -26,43 +31,14 @@ module.exports = {
           key: 'id',
         },
       },
-      revenue: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'revenue', 
-      },
       status: {
         type: Sequelize.STRING,
         allowNull: false,
         field: 'status',
       },
-      
-      creationDate: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        field: 'creation_date',
-      },
-      location: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        field: 'location',
-      },
-      reviewRating: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'review_rating', 
-      },
       description: {
         type: Sequelize.TEXT,
         field: 'description', 
-      },
-      productNumber: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'product_number', 
       },
       temporaryClosurePeriod: {
         type: Sequelize.INTEGER,

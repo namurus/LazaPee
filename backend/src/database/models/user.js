@@ -22,7 +22,10 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'ownerId', 
 				as: 'shop',            
 			});
-			
+			User.hasMany(models.Review, {
+				foreignKey: 'userId',
+				as: 'reviews',
+			});
 		}
 		validatePassword(plainPassword) {
 			return compare(plainPassword, this.password);
