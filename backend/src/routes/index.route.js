@@ -16,6 +16,7 @@ import adminVoucherRoutes from "./admin/voucher.route";
 import searchRoutes from "./search.route";
 import shopShipmentRoutes from "./shipment.route";
 import voucherRoutes from './voucher.route';
+import shopRevenueRoutes from './revenue.route';
 
 export default (app) => { 
 	app.use("/auth", authRoutes);
@@ -24,7 +25,8 @@ export default (app) => {
 	app.use("/search", searchRoutes);
 	//router for shop
 	app.use("/shop/shipment",shopShipmentRoutes);
-  app.use('/user', userRoutes);
+	app.use("/shop/revenue", shopRevenueRoutes)
+  	app.use('/user', userRoutes);
 	app.use("/voucher", voucherRoutes)
 
 	//router for admin
