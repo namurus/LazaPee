@@ -17,6 +17,11 @@ module.exports = {
         allowNull: false,
         field: 'shop_name',
       },
+			background: {
+				type: Sequelize.STRING,
+				allowNull: true,
+				field: 'background',
+			},
       ownerId: {
         type: Sequelize.INTEGER,
         allowNull: false,

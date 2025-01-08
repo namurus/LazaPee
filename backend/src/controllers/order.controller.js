@@ -10,6 +10,23 @@ export const addProductToOrderCheckout = async (req, res, next) => {
           return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
       }
 
+      // Lấy giỏ hàng của người dùng
+      const cart = await db.models.Cart.findOne({
+      where: { userId: req.user.id },
+      include: {
+          model: db.models.CartItem,
+          as: 'cartItems',
+          attributes: ['skusId', 'quantity'],
+      },
+    });
+
+    if (!cart || !cart.cartItems.length) {
+        return res.status(400).json({ message: 'Your cart is empty!' });
+    }
+
+    const cartItemsMap = new Map(cart.cartItems.map(item => [item.skusId, item.quantity]));
+
+
       const skusDetails = [];
       let totalAmount = 0;
 
