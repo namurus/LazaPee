@@ -32,10 +32,6 @@ const data = {
           title: 'Danh sách đơn hàng',
           url: '#',
         },
-        {
-          title: 'Project Structure',
-          url: '#',
-        },
       ],
     },
     {

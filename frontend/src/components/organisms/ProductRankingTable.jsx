@@ -1,51 +1,6 @@
 import DataTable from '../molecules/DataTable';
 
-function ProductRankingTable() {
-  const data = [
-    {
-      id: 1,
-      productName: 'Áo thun nam',
-      revenue: 1000000,
-      soldCount: 100,
-      viewCount: 1000,
-    },
-    {
-      id: 2,
-      productName: 'Áo thun nữ',
-      revenue: 1000000,
-      soldCount: 100,
-      viewCount: 1000,
-    },
-    {
-      id: 3,
-      productName: 'Quần jean nam',
-      revenue: 1000000,
-      soldCount: 100,
-      viewCount: 1000,
-    },
-    {
-      id: 4,
-      productName: 'Quần jean nữ',
-      revenue: 1000000,
-      soldCount: 100,
-      viewCount: 1000,
-    },
-    {
-      id: 5,
-      productName: 'Áo khoác nam',
-      revenue: 1000000,
-      soldCount: 100,
-      viewCount: 1000,
-    },
-    {
-      id: 6,
-      productName: 'Áo khoác nữ',
-      revenue: 1000000,
-      soldCount: 100,
-      viewCount: 1000,
-    },
-  ];
-
+function ProductRankingTable({ data }) {
   const columns = [
     {
       header: 'ID',

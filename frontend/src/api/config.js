@@ -12,8 +12,15 @@ const fetchWithInstance = async (endPoint, options) => {
     }
     return response.data;
   } catch (error) {
-    console.log('Error fetching data:', error);
-    // throw new Error(`${error.response.status}`);
+    console.error('Error fetching data:', error);
+    if (error.response) {
+      console.error(
+        'Response error:',
+        error.response.status,
+        error.response.data
+      );
+    }
+    return null;
   }
 };
 

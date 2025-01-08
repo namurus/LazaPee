@@ -151,7 +151,7 @@ function OrderManagement() {
   return (
     <SidebarMaincontentLayout>
       <Tabs defaultValue='all' onValueChange={(value) => console.log(value)}>
-        <TabsList className='mb-6 grid w-max grid-cols-4 gap-4' onChan>
+        <TabsList className='mb-6 grid w-max grid-cols-4 gap-4'>
           <TabsTrigger value='all'>Tất cả</TabsTrigger>
           <TabsTrigger value='pending'>Chờ xác nhận</TabsTrigger>
           <TabsTrigger value='delivering'>Đang giao</TabsTrigger>

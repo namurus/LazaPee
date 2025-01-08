@@ -1,7 +1,7 @@
-import { BadgeCheck, CircleArrowDown, CircleArrowUp } from 'lucide-react';
+import { CircleArrowDown, CircleArrowUp } from 'lucide-react';
 import { Card } from '../ui/card';
 import { useState } from 'react';
-import { cn } from '../../lib/utils';
+import PropTypes from 'prop-types';
 
 function StatisticCard({ cardInfo, isSelected, selectColor, ...props }) {
   return (
@@ -42,8 +42,24 @@ const CONFIG = {
 };
 
 function StatisticCardList({ cards, onCardSelected }) {
-  const [selectedCard, setSelectedCard] = useState(null);
-
+  const [selectedCards, setSelectedCard] = useState(null);
+  const handleSelectCard = (card) => {
+    if (!selectedCards) {
+      setSelectedCard([card]);
+      return;
+    }
+    const existingCard = selectedCards.find(
+      (selectedCard) => selectedCard.key === card.key
+    );
+    if (existingCard) {
+      const newSelectedCards = selectedCards.filter(
+        (selectedCard) => selectedCard.key !== card.key
+      );
+      setSelectedCard(newSelectedCards);
+    } else {
+      setSelectedCard([...selectedCards, card]);
+    }
+  };
   return (
     <div className='grid grid-cols-4 gap-4'>
       {cards.map((card, index) => (
@@ -51,9 +67,13 @@ function StatisticCardList({ cards, onCardSelected }) {
           selectColor={CONFIG[index + 1]}
           key={index}
           cardInfo={card}
-          isSelected={selectedCard === index}
+          isSelected={
+            selectedCards?.find(
+              (selectedCard) => selectedCard.key === card.key
+            ) !== undefined
+          }
           onClick={() => {
-            setSelectedCard(index);
+            handleSelectCard(card);
             onCardSelected(card);
           }}
         />
@@ -61,5 +81,22 @@ function StatisticCardList({ cards, onCardSelected }) {
     </div>
   );
 }
+StatisticCard.propTypes = {
+  cardInfo: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    unit: PropTypes.string,
+    isIncreased: PropTypes.bool.isRequired,
+    compareValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+  }).isRequired,
+  isSelected: PropTypes.bool,
+  selectColor: PropTypes.string,
+};
+
+StatisticCardList.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onCardSelected: PropTypes.func.isRequired,
+};
 
 export default StatisticCardList;

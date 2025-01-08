@@ -3,6 +3,7 @@ import { loginBanner } from '../../assets';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { login } from '../../contexts/auth/reducers';
+import { getMe, login as loginAPI } from '../../api/user/auth';
 import Image from '../atoms/Image';
 
 const Login = () => {
@@ -19,19 +20,30 @@ const Login = () => {
     setMessage(null);
 
     try {
-      const response = await fetch('https://dummyjson.com/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-          expiresInMins: 30,
-        }),
+      const response = await loginAPI({
+        username: username,
+        password: password,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        dispatch(login({ user: data }));
+      if (response.code === 200) {
+        // get user
+        const getMeResponse = await getMe();
+        if (!getMeResponse) {
+          setError('Failed to fetch user data');
+          return;
+        }
+        if (getMeResponse.code !== 200) {
+          setError(getMeResponse.message || 'Failed to fetch user data');
+          return;
+        }
+        dispatch(
+          login({
+            user: {
+              ...getMeResponse.data,
+              accessToken: response.token,
+            },
+          })
+        );
         setMessage('Login successful');
       } else {
         const errorData = await response.json();
