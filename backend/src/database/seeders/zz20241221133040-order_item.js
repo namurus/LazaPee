@@ -28,7 +28,15 @@ module.exports = {
     price: 999.99,
     created_at: new Date(),
     updated_at: new Date(),
-    },], {});
+    }, {
+    order_id: 3,
+    skus_id: 3,
+    quantity: 1,
+    price: 199.99,
+    created_at: new Date(),
+    updated_at: new Date(),
+    }, 
+    ], {});
   },
 
   async down (queryInterface, Sequelize) {

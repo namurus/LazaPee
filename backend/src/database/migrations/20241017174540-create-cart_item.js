@@ -21,14 +21,10 @@ module.exports = {
         allowNull: false,
         field: 'cart_id',
       },
-      productId: {
+      skusId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        field: 'product_id',
-        references: {
-          model: 'product',
-          key: 'id',
-        },
+        field: 'skus_id',
       },
       price: {
         type: Sequelize.DECIMAL(10, 3),
