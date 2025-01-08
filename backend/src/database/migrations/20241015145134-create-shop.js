@@ -3,8 +3,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Shops', {
-      ShopID: {
+    await queryInterface.createTable('shops', {
+      shopId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
@@ -12,11 +12,16 @@ module.exports = {
         autoIncrement: true,
         field: 'shop_id',
       },
-      ShopName: {
+      shopName: {
         type: Sequelize.STRING,
         allowNull: false,
         field: 'shop_name',
       },
+			background: {
+				type: Sequelize.STRING,
+				allowNull: true,
+				field: 'background',
+			},
       ownerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -26,43 +31,14 @@ module.exports = {
           key: 'id',
         },
       },
-      Revenue: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'revenue', 
-      },
-      Status: {
+      status: {
         type: Sequelize.STRING,
         allowNull: false,
         field: 'status',
       },
-      
-      CreationDate: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        field: 'creation_date',
-      },
-      Location: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        field: 'location',
-      },
-      ReviewRating: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'review_rating', 
-      },
-      Description: {
+      description: {
         type: Sequelize.TEXT,
         field: 'description', 
-      },
-      ProductNumber: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'product_number', 
       },
       temporaryClosurePeriod: {
         type: Sequelize.INTEGER,
@@ -96,6 +72,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Shops');
+    await queryInterface.dropTable('shops');
   }
 };

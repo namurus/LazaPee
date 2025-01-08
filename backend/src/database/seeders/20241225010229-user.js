@@ -1,5 +1,5 @@
 'use strict';
-
+import { hash } from 'bcrypt';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('user', [
@@ -50,6 +50,19 @@ module.exports = {
         phone: '5566778899',
         address: '101 High Hill, Riverside',
         role: 'customer',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+			// Người dùng mới thứ 2
+      {
+        full_name: 'Shop Owner',
+        email: 'shop@example.com',
+        username: 'shopowner',
+        password: await hash('shopowner', 10),
+        avatar: 'https://example.com/avatar4.png',
+        phone: '5566778899',
+        address: '101 High Hill, Riverside',
+        role: 'seller',
         created_at: new Date(),
         updated_at: new Date(),
       },

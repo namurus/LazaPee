@@ -41,42 +41,19 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      revenue: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'revenue',
-      },
+			background: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				field: 'background',
+			},
       status: {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'status',
       },
-      creationDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        field: 'creation_date',
-      },
-      location: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        field: 'location',
-      },
-      reviewRating: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'review_rating',
-      },
       description: {
         type: DataTypes.TEXT,
         field: 'description',
-      },
-      productNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        field: 'product_number',
       },
       temporaryClosurePeriod: {
         type: DataTypes.INTEGER,

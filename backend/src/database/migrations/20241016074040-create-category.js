@@ -2,61 +2,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('product', {
+		await queryInterface.createTable('category', {
 			id: {
-				type: Sequelize.INTEGER,
 				allowNull: false,
 				autoIncrement: true,
-				unique: true,
 				primaryKey: true,
-			},
-			productName: {
-				type: Sequelize.TEXT,
-				field: 'productName',
-			},
-			shopId: {
 				type: Sequelize.INTEGER,
-				allowNull: false,
-				references: {
-					model: 'shops',
-					key: 'shop_id',
-				},
-				field: 'shop_id',
+				field: 'id',
 			},
-			brand: {
+			name: {
 				type: Sequelize.STRING,
 				allowNull: false,
-				unique: true,
-				field: 'brand',
+				field: 'name',
 			},
-			thumbnail: {
+			description: { 
 				type: Sequelize.STRING,
-				field: 'thumbnail',
-			},
-			description: {
-				type: Sequelize.TEXT,
+				allowNull: true,
 				field: 'description',
+			},
+			parentId: {
+				type: Sequelize.INTEGER,
+				allowNull: true,
+				field: 'parent_id',
+				references: {
+					model: 'category',
+					key: 'id',       
+				},
 			},
 			slug: {
 				type: Sequelize.STRING,
+				allowNull: true,
 				field: 'slug',
 			},
-			categoryId: {
-				type: Sequelize.INTEGER,
-				field: 'category_id',
-				references: {
-					model: 'category',
-					key: 'id',
-				},
-			},
-			status: {
-				type: Sequelize.ENUM('available', 'out of stock'),
-				field: 'status',
-			},
-			soldQuantity: {
-				type: Sequelize.INTEGER,
-				allowNull: false,
-				defaultValue: 0,
+			thumbnail: {
+				type: Sequelize.STRING,
+				allowNull: true,
+				field: 'thumbnail',
 			},
 			createdAt: {
 				allowNull: false,
@@ -75,11 +56,11 @@ module.exports = {
 				allowNull: true,
 				type: Sequelize.DATE,
 				field: 'deleted_at',
+				onDelete: Sequelize.literal('CURRENT_TIMESTAMP'),
 			},
 		});
 	},
-
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable('product');
+		await queryInterface.dropTable('category');
 	},
 };
