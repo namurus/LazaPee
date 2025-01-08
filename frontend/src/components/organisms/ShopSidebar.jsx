@@ -24,48 +24,48 @@ import { Link } from 'react-router-dom';
 const data = {
   navMain: [
     {
-      title: 'Orders',
+      title: 'Quản lý đơn hàng',
       url: 'orders',
       icon: ShoppingCart,
       items: [
         {
-          title: 'All Orders',
-          url: '#',
-        },
-        {
-          title: 'Project Structure',
+          title: 'Danh sách đơn hàng',
           url: '#',
         },
       ],
     },
     {
-      title: 'Products',
+      title: 'Quản lý sản phẩm',
       url: 'products',
       icon: ShoppingBag,
       items: [
         {
-          title: 'All Products',
+          title: 'Danh sách sản phẩm',
           url: '#',
           isActive: true,
         },
         {
-          title: 'Add a Product',
+          title: 'Thêm sản phẩm mới',
           url: 'new',
         },
       ],
     },
     {
-      title: 'Shop Management',
+      title: 'Quản lý shop',
       url: 'shop-management',
       icon: Store,
       items: [
         {
-          title: 'Shop Profile',
+          title: 'Hồ sơ shop',
           url: 'profile',
         },
         {
           title: 'Shop Decoration',
           url: 'decoration',
+        },
+        {
+          title: 'Thống kê',
+          url: 'statistics',
         },
       ],
     },
@@ -109,10 +109,7 @@ function ShopSidebar({ ...props }) {
                       <SidebarMenuSub className='ml-0 border-l-0 px-1.5'>
                         {item.items.map((subitem) => (
                           <SidebarMenuSubItem key={subitem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={subitem.isActive}
-                            >
+                            <SidebarMenuSubButton asChild>
                               <Link to={`${item.url}/${subitem.url}`}>
                                 {subitem.title}
                               </Link>
