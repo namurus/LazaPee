@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Shop.belongsTo(models.User, {
         foreignKey: 'ownerId',
-        as: 'owner',          
+        as: 'owner',       
       });
     }
   }
@@ -64,6 +64,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'temporary_closure_reason',
+      },
+      dateClosed: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'date_closed',
       },
       createdAt: {
         allowNull: false,

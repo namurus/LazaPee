@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 field: 'skus_id',
+                references: {
+                    model: 'skus',
+                    key: 'id',
+                },
             },
             price: {
                 type: DataTypes.DECIMAL(10, 3),
