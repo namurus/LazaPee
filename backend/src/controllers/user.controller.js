@@ -123,14 +123,15 @@ export const resetPassword = async (req, res) => {
 export const changePassword = async (req, res) => { 
 	try {
 		const {oldPassword, newPassword, confirmPassword } = req.body;
-		const user = req.user;
+		const userId = req.user.id;
+		const user = await db.models.User.findByPk(userId);
 		if (!user) {
 			return res.status(404).json({ code: 404, message: 'User not found' });
 		}
 		if (newPassword !== confirmPassword) {
 			return res.status(400).json({ code: 400, message: 'New password and confirm password do not match' });
 		}
-		const isMatch = await user.comparePassword(oldPassword);
+		const isMatch = await user.validatePassword(oldPassword);
 		if (!isMatch) {
 			return res.status(400).json({ code: 400, message: 'Old password is incorrect' });
 		}
