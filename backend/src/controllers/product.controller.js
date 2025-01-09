@@ -8,7 +8,8 @@ export const fetchAllProducts = async (req, res, next) => {
 				{
 					model: db.models.Skus,
 					as: 'skus',
-					attributes: ['price', 'stock_quantity', 'color', 'size'],
+					attributes: ['price', 'stock_quantity'],
+					limit: 1,
 				},
 				{
 					model: db.models.ProductImage,
@@ -38,12 +39,17 @@ export const fetchProductById = async (req, res, next) => {
 
 		const product = await db.models.Product.findOne({
 			where: { id },
-			attributes: ['id', 'productName', 'brand', 'description', 'thumbnail', 'image'],
+			attributes: ['id', 'productName', 'brand', 'description', 'thumbnail'],
 			include: [
 				{
 					model: db.models.Skus,
 					as: 'skus',
 					attributes: ['price', 'stock_quantity', 'color', 'size'],
+				},
+				{
+					model: db.models.ProductImage,
+					as: 'images',
+					attributes: ['url'],
 				},
 			],
 		});
