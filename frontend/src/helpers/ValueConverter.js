@@ -5,7 +5,14 @@ class ValueConverter {
     return CurrencyFormatter.formatWithLocaleInfo(value, currency);
   }
 
-  static formatDateTime(value) {
+  static formatDateTime(value, options = { dateOnly: false }) {
+    if (options.dateOnly) {
+      return new Intl.DateTimeFormat('vi-VN', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      }).format(new Date(value));
+    }
     return new Intl.DateTimeFormat('vi-VN', {
       year: 'numeric',
       month: 'numeric',

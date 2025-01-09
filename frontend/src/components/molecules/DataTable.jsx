@@ -4,6 +4,7 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 
 import {
@@ -20,6 +21,7 @@ import { useState } from 'react';
 import DataTablePagination from './DataTablePagination';
 
 function DataTable({ columns, data, searchColumn }) {
+  const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const table = useReactTable({
     data,
@@ -28,8 +30,11 @@ function DataTable({ columns, data, searchColumn }) {
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
       columnFilters,
+      sorting,
     },
   });
   return (

@@ -34,6 +34,7 @@ function ShopProfile() {
   const fetchData = async () => {
     // Fetch shop info here
     const response = await get('/shop/detail');
+    console.log(response);
     setShopInfo({
       shopName: response.data.shopInfo.shopName,
       shopImage: response.data.userInfo.avatar,

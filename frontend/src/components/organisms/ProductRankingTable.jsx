@@ -1,4 +1,7 @@
+import { ArrowUpDown } from 'lucide-react';
 import DataTable from '../molecules/DataTable';
+import { Button } from '../ui/button';
+import ValueConverter from '../../helpers/ValueConverter';
 
 function ProductRankingTable({ data }) {
   const columns = [
@@ -11,15 +14,48 @@ function ProductRankingTable({ data }) {
       accessorKey: 'productName',
     },
     {
-      header: 'Doanh thu',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Doanh thu
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
       accessorKey: 'revenue',
+      cell: ({ row }) => {
+        return ValueConverter.formatCurrency(row.original.revenue, 'VND');
+      },
     },
     {
-      header: 'Số lượng đã bán',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Số lượng đã bán
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
       accessorKey: 'soldCount',
     },
     {
-      header: 'Lượt xem',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Lượt xem
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
       accessorKey: 'viewCount',
     },
   ];

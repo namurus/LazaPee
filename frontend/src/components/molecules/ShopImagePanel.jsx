@@ -11,7 +11,7 @@ function ShopImagePanel({ shopInfo, onImageUpload }) {
           src={shopInfo.shopCover}
           alt='Shop cover'
         />
-        <div className='group/panel relative flex items-center justify-center gap-4 px-4 py-6'>
+        <div className='group/panel relative flex items-center justify-center gap-4 bg-slate-700 bg-opacity-35 px-4 py-6'>
           <Avatar className='group/avatar relative h-16 w-16 overflow-hidden'>
             <AvatarImage src={shopInfo.shopImage} alt={shopInfo.shopName} />
             <AvatarFallback>{shopInfo.shopName[0]}</AvatarFallback>
