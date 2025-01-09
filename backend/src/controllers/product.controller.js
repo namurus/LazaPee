@@ -8,8 +8,7 @@ export const fetchAllProducts = async (req, res, next) => {
 				{
 					model: db.models.Skus,
 					as: 'skus',
-					attributes: ['price', 'stock_quantity'],
-					limit: 1,
+					attributes: ['price', 'stock_quantity', 'color', 'size'],
 				},
 				{
 					model: db.models.ProductImage,
@@ -66,7 +65,7 @@ export const fetchProductById = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
 	try {
 		const { shopId } = req.shopInfo;
-		const { images, productName, brand, description, skus, categoryId } = req.body;
+		const { images, productName, brand, description, skus, categoryId, price } = req.body;
 
 		if (!images || images.length === 0) {
 			return res.status(400).json({ code: 400, message: 'Images are required' });
