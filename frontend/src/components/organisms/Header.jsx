@@ -86,16 +86,19 @@ export default function Header() {
         {isAuthenticated ? (
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Avatar alt={user.firstName} size='sm' rounded color='gray'>
+              <Avatar alt={user.fullName} size='sm' rounded='true' color='gray'>
                 <AvatarImage
-                  src={`https://i.pinimg.com/originals/c7/ae/40/c7ae40f6a425e144f7dd8cee87128aed.jpg`}
+                  src={
+                    user.avatar ||
+                    'https://i.pinimg.com/originals/c7/ae/40/c7ae40f6a425e144f7dd8cee87128aed.jpg'
+                  }
                 />
-                <AvatarFallback>{user.firstName[0]}</AvatarFallback>
+                <AvatarFallback>{user.fullName[0]}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>
-                <span className='block text-sm'>{user.firstName}</span>
+                <span className='block text-sm'>{user.fullName}</span>
                 <span className='block truncate text-sm font-medium'>
                   {user.email}
                 </span>

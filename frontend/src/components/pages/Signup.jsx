@@ -13,7 +13,6 @@ const Signup = () => {
   const [step, setStep] = useState(1);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
   const navigate = useNavigate();
 
   const handleNext = (e) => {
@@ -55,6 +54,7 @@ const Signup = () => {
         setError('Signup failed');
       }
     } catch (error) {
+      console.log('Error in signup:', error);
       setError('An unexpected error occurred. Please try again later.');
     }
   };

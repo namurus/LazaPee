@@ -27,21 +27,15 @@ const Login = () => {
 
       if (response.code === 200) {
         // get user
-        const getMeResponse = await getMe();
-        if (!getMeResponse) {
+        localStorage.setItem('ACCESS_TOKEN', response.token);
+        const user = await getMe();
+        if (!user) {
           setError('Failed to fetch user data');
-          return;
-        }
-        if (getMeResponse.code !== 200) {
-          setError(getMeResponse.message || 'Failed to fetch user data');
           return;
         }
         dispatch(
           login({
-            user: {
-              ...getMeResponse.data,
-              accessToken: response.token,
-            },
+            user: user,
           })
         );
         setMessage('Login successful');
