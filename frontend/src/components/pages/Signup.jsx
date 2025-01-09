@@ -53,6 +53,7 @@ const Signup = () => {
         setError('Signup failed');
       }
     } catch (error) {
+      console.log('Error in signup:', error);
       setError('An unexpected error occurred. Please try again later.');
     }
   };

@@ -19,7 +19,12 @@ async function categoryLoader({ params, request }) {
   }
 
   const products = await getCategoryProducts(params.categoryID);
-
+  if (products === null) {
+    return {
+      products: [],
+      subCategory,
+    };
+  }
   return {
     products: products.products,
     subCategory,
