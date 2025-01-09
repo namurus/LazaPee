@@ -8,7 +8,7 @@ async function categoryLoader({ params, request }) {
   const url = new URL(request.url);
 
   const subCategory = url.searchParams.get('subCat');
-  const page = url.searchParams.get('page') || 0;
+  const page = url.searchParams.get('page') || 1;
   const sortBy = url.searchParams.get('sortBy') || 'most-popular';
 
   if (!url.searchParams.get('page') || !url.searchParams.get('sortBy')) {
@@ -17,18 +17,24 @@ async function categoryLoader({ params, request }) {
 
     return redirect(`${url.pathname}?${url.searchParams.toString()}`);
   }
-
-  const products = await getCategoryProducts(params.categoryID);
+  const products = await getCategoryProducts(params.categoryID, {
+    page,
+    limit: 6,
+  });
   if (products === null) {
     return {
       products: [],
       subCategory,
+      categoryName: products.category.name,
     };
   }
   return {
     products: products.products,
     subCategory,
-    categoryID: params.categoryID,
+    categoryName: products.category.name,
+    currentPage: products.pagination.currentPage,
+    totalPages: products.pagination.totalPages,
+    totalProducts: products.pagination.totalProducts,
   };
 }
 

@@ -20,8 +20,10 @@ const getCategories = () => {
   return get('category');
 };
 
-const getCategoryProducts = (category) => {
-  return fetchWithInstance(`category/${category}`);
+const getCategoryProducts = (category, queryParams = {}) => {
+  return fetchWithInstance(`category/${category}`, {
+    params: queryParams,
+  });
 };
 
 const addProduct = (product) => {

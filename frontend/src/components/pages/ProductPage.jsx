@@ -50,9 +50,10 @@ const config = {
 };
 
 function ProductPage() {
-  const { products, categoryID } = useLoaderData();
+  const { products, categoryName } = useLoaderData();
+  const { currentPage, totalPages, totalProducts } = useLoaderData();
+  const { searchKeyWord } = useLoaderData();
   const subCatagories = ['T-shirts', 'Shorts', 'Shirts', 'Hoodie', 'Jeans'];
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [pickedColor, setPickedColor] = useState(null);
   const [pickedSize, setPickedSize] = useState(null);
@@ -62,10 +63,6 @@ function ProductPage() {
   ]);
   const [sortBy, setSortBy] = useState('newest');
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-
-  const page = parseInt(searchParams.get('page')) || 0;
-
-  const maxPage = products.length / 9 < 1 ? 1 : Math.ceil(products.length / 9);
 
   const pickColorHandler = (color) => {
     if (color === pickedColor) {
@@ -88,7 +85,7 @@ function ProductPage() {
   };
 
   const pageChangeHandler = (page) => {
-    let newpage = Math.max(0, Math.min(page, maxPage - 1));
+    let newpage = Math.max(0, Math.min(page, totalPages));
     searchParams.set('page', newpage);
     setSearchParams(searchParams);
   };
@@ -228,9 +225,11 @@ function ProductPage() {
         </div>
         <ProductListPanel
           products={products}
-          currentPage={page}
-          totalPages={maxPage}
-          listTitle={categoryID}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalProducts={totalProducts}
+          searchValue={searchKeyWord}
+          listTitle={categoryName}
           sortByOptions={[
             { label: 'Newest', value: 'newest' },
             { label: 'Popular', value: 'popular' },

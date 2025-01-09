@@ -28,14 +28,24 @@ function ProductListPanel({
   sortByDefaultValue,
   onSortByChange,
   onFilterIconClick,
+  totalProducts,
+  searchValue,
 }) {
   return (
     <div className='flex-1'>
+      {searchValue && (
+        <div>
+          <p className='text-2xl font-light text-opacity-60'>
+            Kết quả tìm kiếm cho &quot;
+            <span className='font-bold'>{searchValue}</span>&quot;
+          </p>
+        </div>
+      )}
       <div className='md:flex md:justify-between'>
         <h1 className='text-[2rem] font-semibold capitalize'>{listTitle}</h1>
         <div className='flex items-center gap-3 text-sm font-light text-opacity-60'>
           <p>
-            Showing {currentPage + 1}-{totalPages} of {products.length} Products
+            Showing {currentPage + 1}-{totalPages} of {totalProducts} Products
           </p>
           <div
             className={'ml-auto w-fit rounded-full bg-neutral p-2 md:hidden'}
@@ -61,7 +71,7 @@ function ProductListPanel({
           </div>
         </div>
       </div>
-      <div className='line-below grid grid-cols-2 gap-[0.875rem] py-4 md:grid-cols-3 md:gap-5 md:p-4 lg:grid-cols-4 lg:gap-9'>
+      <div className='line-below grid grid-cols-2 gap-[0.875rem] py-4 md:grid-cols-3 md:gap-5 md:p-4 lg:gap-9'>
         {products.length !== 0 ? (
           products.map((product) => (
             <Link to={`/product/details/${product.id}`} key={product.id}>
