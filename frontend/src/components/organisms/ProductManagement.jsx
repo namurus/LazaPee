@@ -373,12 +373,11 @@ function ProductManagement() {
   return (
     <SidebarMaincontentLayout>
       <div className='flex flex-col space-y-6'>
-        <Tabs defaultValue='all' onValueChange={(value) => console.log(value)}>
-          <TabsList className='mb-6 grid w-max grid-cols-4 gap-4' onChan>
+        <Tabs defaultValue='all'>
+          <TabsList className='mb-6 grid w-max grid-cols-3 gap-4' onChan>
             <TabsTrigger value='all'>Tất cả</TabsTrigger>
             <TabsTrigger value='available'>Còn hàng</TabsTrigger>
-            <TabsTrigger value='out-of-stock'>Hết hàng</TabsTrigger>
-            <TabsTrigger value='hidden'>Đã ẩn</TabsTrigger>
+            <TabsTrigger value='out-of-stock'>Ngừng bán</TabsTrigger>
           </TabsList>
           <TabsContent value='all'>
             <DataTable
@@ -390,21 +389,17 @@ function ProductManagement() {
           <TabsContent value='available'>
             <DataTable
               columns={columns}
-              data={data}
+              data={data.filter((product) => product.status === 'available')}
               searchColumn={'productName'}
             />
           </TabsContent>
           <TabsContent value='out-of-stock'>
             <DataTable
               columns={columns}
-              data={data}
-              searchColumn={'productName'}
-            />
-          </TabsContent>
-          <TabsContent value='hidden'>
-            <DataTable
-              columns={columns}
-              data={data}
+              data={data.filter(
+                (product) =>
+                  product.status === 'out of stock' || product.status === null
+              )}
               searchColumn={'productName'}
             />
           </TabsContent>
