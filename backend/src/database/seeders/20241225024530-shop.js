@@ -54,6 +54,18 @@ module.exports = {
 					updated_at: new Date(),
 					deleted_at: null,
 				},
+				{
+					shop_id: 5,
+					shop_name: 'Thai Dinh Ngan Pet Store',
+					owner_id: 5,
+					status: 'on',
+					description: 'Everything you need for your furry friends.',
+					temporary_closure_period: null,
+					temporary_closure_reason: null,
+					created_at: new Date(),
+					updated_at: new Date(),
+					deleted_at: null,
+				},
 			],
 			{}
 		);
