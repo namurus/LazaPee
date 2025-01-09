@@ -12,9 +12,11 @@ import ValueConverter from '../../helpers/ValueConverter';
 import LoadingSpinner from '../atoms/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';
 import { toast } from 'sonner';
+import { add, parseJSON } from 'date-fns';
 
 function ShopProfile() {
   const [shopInfo, setShopInfo] = useState({
+    id: null,
     shopName: '',
     shopImage: 'https://via.placeholder.com/150',
     shopDescription: '',
@@ -40,8 +42,13 @@ function ShopProfile() {
       joinDate: ValueConverter.formatDateTime(response.data.shopInfo.createdAt),
       state: {
         active: response.data.shopInfo.status === 'open' ? true : false,
-        returnDate: null,
+        returnDate: ValueConverter.formatDateTime(
+          add(parseJSON(response.data.shopInfo.dateClosed), {
+            months: response.data.shopInfo.temporaryClosurePeriod,
+          })
+        ),
       },
+      id: response.data.shopInfo.shopId,
     });
   };
   useEffect(() => {
@@ -105,6 +112,88 @@ function ShopProfile() {
       reader.readAsDataURL(file);
     }
   };
+
+  const handleShopClose = async (data) => {
+    // Change shop state
+    try {
+      const response = await fetch(
+        `https://lazapee-jivl.onrender.com/shop/${shopInfo.id}/temporary-closure`,
+        {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        toast.success('Tạm nghỉ shop thành công', {
+          className: 'bg-green-500 text-white',
+          position: 'top-right',
+          closeButton: true,
+        });
+        fetchData();
+        return true;
+      } else {
+        toast.error('Có lỗi xảy ra khi tạm nghỉ shop', {
+          className: 'bg-red-500 text-white',
+          position: 'top-right',
+          closeButton: true,
+        });
+        return false;
+      }
+    } catch (err) {
+      console.error('Error updating shop state:', err);
+      toast.error('Có lỗi xảy ra khi tạm nghỉ shop', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+      return false;
+    }
+  };
+
+  const handleShopOpen = async () => {
+    try {
+      const response = await fetch(
+        `https://lazapee-jivl.onrender.com/shop/${shopInfo.id}/temporary-closure`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+      if (response.ok) {
+        toast.success('Mở cửa shop thành công', {
+          className: 'bg-green-500 text-white',
+          position: 'top-right',
+          closeButton: true,
+        });
+        fetchData();
+      } else {
+        toast.error(
+          'Rất tiếc, bạn không thể mở lại shop ngay bây giờ vì đã tạm dừng hoạt động trong vòng 7 ngày qua.',
+          {
+            className: 'bg-red-500 text-white',
+            position: 'top-right',
+            closeButton: true,
+          }
+        );
+      }
+    } catch (err) {
+      console.error('Error opening shop:', err);
+      toast.error('Có lỗi xảy ra khi mở cửa shop', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+    }
+  };
+
   return (
     <SidebarMaincontentLayout>
       <div className='space-y-6'>
@@ -164,15 +253,27 @@ function ShopProfile() {
               </span>
             )}
           </p>
-          {shopInfo.state.active && (
+          {shopInfo.state.active ? (
             <>
               <Button onClick={() => setOpen(true)}>Tạm nghỉ</Button>
               <TemporaryClosureDialog
                 open={open}
                 setOpen={setOpen}
-                onConfirmed={() => setOpen(false)}
+                onConfirmed={async (data) => {
+                  // Handle temporary closure here
+                  console.log(data);
+                  const sucess = await handleShopClose({
+                    temporaryClosureReason: data.description,
+                    temporaryClosurePeriod: data.option.id,
+                  });
+                  if (sucess) {
+                    setOpen(false);
+                  }
+                }}
               />
             </>
+          ) : (
+            <Button onClick={handleShopOpen}>Mở cửa shop</Button>
           )}
         </ShopTitleSection>
       </div>
