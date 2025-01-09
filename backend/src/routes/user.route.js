@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getMe, updateMe, forgotPassword, otp, resetPassword } from '@/controllers/user.controller';
+import { getMe, updateMe, forgotPassword, otp, resetPassword, changePassword } from '@/controllers/user.controller';
 
 import multer from 'multer';
 import uploadCloud from '@/middlewares/uploadCloud';
@@ -14,5 +14,6 @@ router.patch('/update', authenticate, upload.single('avatar'), uploadCloud, upda
 router.post('/password/forgot', forgotPassword);
 router.post('/password/otp', otp);
 router.post('/password/reset', resetPassword);
+router.post("/change-password", authenticate, changePassword);
 
 export default router;
