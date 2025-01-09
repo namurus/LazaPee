@@ -12,16 +12,25 @@ const ChangePassword = () => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setPasswordError('Mật khẩu mới và xác nhận mật khẩu không khớp.');
+      setPasswordError('Mật khẩu mới và mật khẩu xác nhận không khớp.');
       setPasswordSuccess('');
       return;
     }
 
     try {
-      const response = await axios.post('/api/user/change-password', {
-        oldPassword,
-        newPassword,
-      });
+      const response = await axios.post(
+        'https://lazapee-jivl.onrender.com/user/change-password', 
+        {
+          oldPassword,
+          newPassword,
+          confirmPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
         setPasswordSuccess('Đổi mật khẩu thành công.');
@@ -41,11 +50,11 @@ const ChangePassword = () => {
       <p className='mb-4 text-gray-500'>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
       <hr className='mb-6 mt-4 border-gray-300' />
       <form onSubmit={handlePasswordChange}>
-        {passwordError && <p className='text-red-500'>{passwordError}</p>}
-        {passwordSuccess && <p className='text-green-500'>{passwordSuccess}</p>}
+        {passwordError && <p className='text-red-500 mb-4'>{passwordError}</p>}
+        {passwordSuccess && <p className='text-green-500 mb-4'>{passwordSuccess}</p>}
         <div className='mb-4'>
           <label className="block text-gray-700">Mật khẩu cũ</label>
-          <input type='password' className="w-1/3 p-2 border border-gray-300 rounded" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+          <input type='password' className="w-1/3 p-2 border border-gray-300 rounded mt-2" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
         </div>
         <div className='mb-4'>
           <label className="block text-gray-700">Mật khẩu mới</label>

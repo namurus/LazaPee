@@ -1,20 +1,44 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { getMe } from '../../api/user/auth';
 
 const Profile = () => {
+  const [user, setUser] = useState(null);
+
+  // Fetch user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getMe();
+        setUser(data);
+      } catch (err) {
+        console.error('Failed to fetch user data', err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
-    <div className='flex flex-col p-4 md:flex-row'>
-      {/* Sidebar */}
-      <div className='w-full bg-gray-100 p-4 pl-12 shadow-md md:w-1/4'>
+    <div className='flex flex-col p-4 md:flex-row px-4 md:px-20'>
+      <div className='w-full bg-gray-100 p-4 lg:px-12 shadow-md md:w-1/4'>
         <div className='mb-5 flex items-center'>
           <img
-            src='https://placehold.co/50x50'
-            alt='User avatar'
-            className='h-12 w-12 rounded-full'
+            src={user?.avatar || 'https://placehold.co/50x50'}
+            alt='image'
+            className='h-12 w-12 rounded-full object-cover'
           />
           <div className='ml-4'>
-            <div className='font-bold'>Tên Người Dùng</div>
+            <div className='font-bold'>
+              {user?.username || 'Tên Người Dùng'}
+            </div>
             <div className='text-sm text-gray-500'>
-              <i className='fas fa-pen'></i> Sửa Hồ Sơ
+              <NavLink
+                to='/user/account/profile'
+                className='text-blue-500'
+              >
+                <i className='fas fa-pen'></i> Sửa Hồ Sơ
+              </NavLink>
             </div>
           </div>
         </div>
@@ -85,8 +109,7 @@ const Profile = () => {
         </nav>
       </div>
 
-      {/* Content */}
-      <div className='ml-0 mt-4 w-full bg-gray-100 p-4 shadow-md md:ml-4 md:mt-0 md:w-3/4'>
+      <div className='mt-4 w-full bg-gray-100 p-4 shadow-md md:ml-4 md:mt-0 md:w-3/4'>
         <Outlet />
       </div>
     </div>
