@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 import { MoreHorizontal, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { get } from '../../api/config';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { deleteProduct } from '../../api/admin/product';
 
 // const data = [
 //   {
@@ -240,6 +241,7 @@ const data = [
 */
 
 function ProductManagement() {
+  const [products, setProducts] = useState(data);
   const columns = [
     {
       accessorKey: 'thumbnail',
@@ -316,9 +318,9 @@ function ProductManagement() {
       header: 'Trạng thái',
       cell: ({ row }) => (
         <Badge
-          variant={row.original.status === 'active' ? 'success' : 'warning'}
+          variant={row.original.status === 'available' ? 'success' : 'warning'}
         >
-          {row.original.status === 'active' ? 'Đang bán' : 'Ngừng bán'}
+          {row.original.status === 'available' ? 'Đang bán' : 'Ngừng bán'}
         </Badge>
       ),
     },
@@ -334,8 +336,10 @@ function ProductManagement() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-            <DropdownMenuItem>Xóa sản phẩm</DropdownMenuItem>
+            {/* <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem> */}
+            <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
+              Xóa sản phẩm
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -343,15 +347,28 @@ function ProductManagement() {
   ];
 
   useEffect(() => {
-    console.log('fetching data');
-    get('/shop/product')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const res = await get('/shop/product');
+      console.log(res.data);
+      //setProducts(res.data);
+    } catch (error) {
+      console.log('Error fetching categories:', error);
+    }
+  };
+
+  const handleDelete = (id) => {
+    try {
+      console.log('delete', id);
+      // await deleteProduct(id);
+      // fetchData();
+    } catch (error) {
+      console.log('Error deleting product:', error);
+    }
+  };
 
   return (
     <SidebarMaincontentLayout>
@@ -366,7 +383,7 @@ function ProductManagement() {
           <TabsContent value='all'>
             <DataTable
               columns={columns}
-              data={data}
+              data={products}
               searchColumn={'productName'}
             />
           </TabsContent>
