@@ -1,15 +1,20 @@
-import { Navigate } from 'react-router-dom';
 import OpenShopPage from '../components/pages/OpenShopPage';
 import { useAuth } from '../hooks/useAuth';
+import LoadingSpinner from '../components/atoms/LoadingSpinner';
+
+import PropTypes from 'prop-types';
 
 function ShopGuard({ children }) {
   const { user, isAuthenticated } = useAuth();
   if (!isAuthenticated) {
-    return <Navigate to='/auth/login' />;
+    return <LoadingSpinner className='min-h-screen' />;
   }
   const hasShop = user.role === 'seller';
   return hasShop ? children : <OpenShopPage />;
-  //   return children;
 }
+
+ShopGuard.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default ShopGuard;

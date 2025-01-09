@@ -1,7 +1,6 @@
 import DataTable from '../molecules/DataTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
-import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 
 import { Button } from '../ui/button';
 import { MoreHorizontal, Plus } from 'lucide-react';
@@ -13,10 +12,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { deleteProduct } from '../../api/admin/product';
+import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 
 // const data = [
 //   {
@@ -290,7 +289,9 @@ function ProductManagement() {
           <div className='space-y-1'>
             {skus.map((sku, index) => (
               <div key={index} className='flex gap-2'>
-                <p>{sku.price}</p>
+                <p>
+                  {CurrencyFormatter.formatWithLocaleInfo(sku.price, 'VND')}
+                </p>
               </div>
             ))}
           </div>
