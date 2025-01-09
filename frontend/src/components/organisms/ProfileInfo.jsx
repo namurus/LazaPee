@@ -4,16 +4,24 @@ import axios from 'axios';
 const ProfileInfo = () => {
   const [user, setUser] = useState(null);
   const [gender, setGender] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Fetch user data from the API
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get('/api/user/profile');
-        setUser(response.data);
-        setGender(response.data.gender || '');
+        const data = response.data.data;
+        setUser(data);
+        setGender(data.gender || '');
+        setFullName(data.fullName || '');
+        setEmail(data.email || '');
+        setPhone(data.phone || '');
       } catch (err) {
         setError('Failed to load user data');
         console.error(err);
@@ -24,6 +32,28 @@ const ProfileInfo = () => {
 
     fetchUserData();
   }, []);
+
+  // Update user profile
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSuccessMessage('');
+    setError(null);
+
+    try {
+      const payload = {
+        fullName,
+        email,
+        phone,
+        gender,
+      };
+
+      await axios.patch('/api/user/update', payload);
+      setSuccessMessage('Profile updated successfully!');
+    } catch (err) {
+      setError('Failed to update profile');
+      console.error(err);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -43,7 +73,7 @@ const ProfileInfo = () => {
       <div className='flex'>
         {/* Left: User Information */}
         <div className='w-2/3 border-r border-gray-300 pr-4'>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className='mb-6 mr-4'>
               <div className='flex items-center'>
                 <label className='w-1/3 pr-4 text-right text-gray-700'>
@@ -61,13 +91,25 @@ const ProfileInfo = () => {
             </div>
             <div className='mb-6 mr-4'>
               <div className='flex items-center'>
-                <label className='w-1/3 pr-4 text-right text-gray-700'>
-                  Tên
-                </label>
+                <label className='w-1/3 pr-4 text-right text-gray-700'>Tên</label>
                 <div className='w-2/3'>
                   <input
                     type='text'
-                    value={user?.firstName || ''}
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className='w-full rounded border border-gray-300 p-2'
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='mb-6 mr-4'>
+              <div className='flex items-center'>
+                <label className='w-1/3 pr-4 text-right text-gray-700'>Email</label>
+                <div className='w-2/3'>
+                  <input
+                    type='email'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className='w-full rounded border border-gray-300 p-2'
                   />
                 </div>
@@ -76,26 +118,15 @@ const ProfileInfo = () => {
             <div className='mb-6 mr-4'>
               <div className='flex items-center'>
                 <label className='w-1/3 pr-4 text-right text-gray-700'>
-                  Email
-                </label>
-                <div className='flex w-2/3 items-center'>
-                  <span className='flex-grow'>{user?.email || ''}</span>
-                  <a href='#' className='ml-4 text-blue-500'>
-                    Thay đổi
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className='mb-6 mr-4'>
-              <div className='flex items-center'>
-                <label className='w-1/3 pr-4 text-right text-gray-700'>
                   Số điện thoại
                 </label>
-                <div className='flex w-2/3 items-center'>
-                  <span className='flex-grow'>********89</span>
-                  <a href='#' className='ml-4 text-blue-500'>
-                    Thay đổi
-                  </a>
+                <div className='w-2/3'>
+                  <input
+                    type='text'
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className='w-full rounded border border-gray-300 p-2'
+                  />
                 </div>
               </div>
             </div>
@@ -141,24 +172,6 @@ const ProfileInfo = () => {
                 </div>
               </div>
             </div>
-            <div className='mb-6 mr-4'>
-              <div className='flex items-center'>
-                <label className='w-1/3 pr-4 text-right text-gray-700'>
-                  Ngày sinh
-                </label>
-                <div className='flex w-2/3'>
-                  <select className='mr-4 rounded border border-gray-300 p-2'>
-                    <option>Ngày</option>
-                  </select>
-                  <select className='mr-4 rounded border border-gray-300 p-2'>
-                    <option>Tháng</option>
-                  </select>
-                  <select className='rounded border border-gray-300 p-2'>
-                    <option>Năm</option>
-                  </select>
-                </div>
-              </div>
-            </div>
             <button
               type='submit'
               className='rounded bg-red-500 px-4 py-2 text-white'
@@ -166,17 +179,8 @@ const ProfileInfo = () => {
               Lưu
             </button>
           </form>
-        </div>
-        {/* Right: Change Profile Picture */}
-        <div className='mt-8 flex w-1/3 flex-col items-center'>
-          <img
-            src={user?.image || 'https://placehold.co/112x112'}
-            alt='Profile'
-            className='mb-4 h-28 w-28 rounded-full'
-          />
-          <button className='rounded border border-gray-300 px-4 py-2'>
-            Chọn Ảnh
-          </button>
+          {successMessage && <p className='text-green-500 mt-4'>{successMessage}</p>}
+          {error && <p className='text-red-500 mt-4'>{error}</p>}
         </div>
       </div>
     </>

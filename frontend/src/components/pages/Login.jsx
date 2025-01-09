@@ -18,13 +18,13 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     setMessage(null);
-    
+
     try {
       const response = await loginAPI({
         username: username,
         password: password,
       });
-
+      console.log(response);
       if (response.code === 200) {
         // get user
         const getMeResponse = await getMe();
@@ -45,14 +45,12 @@ const Login = () => {
           })
         );
         setMessage('Login successful');
-
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');
       }
-    } catch(error) {
-      // console.error();
-      setError(error.response.data.message);
+    } catch {
+      setError('An unexpected error occurred. Please try again later.');
     }
   };
   if (isAuthenticated) {
