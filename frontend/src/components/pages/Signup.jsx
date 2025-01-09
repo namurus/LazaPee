@@ -1,19 +1,18 @@
 import { useState } from 'react';
 import { signupBanner } from '../../assets';
 import { useNavigate } from 'react-router-dom';
-import { signup as signupAPI } from '../../api/user/auth';
+import { signup } from '../../api/user/auth'; // Import the signup function
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [fullname, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [step, setStep] = useState(1);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
   const navigate = useNavigate();
 
   const handleNext = (e) => {
@@ -40,58 +39,53 @@ const Signup = () => {
     }
 
     try {
-      const response = await signupAPI({
+      const response = await signup({
         email: email,
         username: username,
-        fullname: fullname,
         phone: phoneNumber,
         password: password,
+        fullName: fullName,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response) {
         setMessage(`Welcome! Your account has been created.`);
-        setAccessToken(data.accessToken);
-        await handleFetchUserData();
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Signup failed');
-        console.log(errorData);
+        setError('Signup failed');
       }
-    } catch {
+    } catch (error) {
       setError('An unexpected error occurred. Please try again later.');
     }
   };
 
-  const handleFetchUserData = async () => {
-    if (!accessToken) {
-      setError('No access token available. Please sign up first.');
-      return;
-    }
+  // const handleFetchUserData = async () => {
+  //   if (!accessToken) {
+  //     setError('No access token available. Please sign up first.');
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch('https://dummyjson.com/auth/me', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        credentials: 'include',
-      });
+  //   try {
+  //     const response = await fetch('https://dummyjson.com/auth/me', {
+  //       method: 'GET',
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       credentials: 'include',
+  //     });
 
-      if (response.ok) {
-        const userData = await response.json();
-        console.log('User data:', userData);
-        setMessage(
-          'User data fetched successfully. Check console for details.'
-        );
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to fetch user data');
-      }
-    } catch {
-      setError('An unexpected error occurred while fetching user data.');
-    }
-  };
+  //     if (response.ok) {
+  //       const userData = await response.json();
+  //       console.log('User data:', userData);
+  //       setMessage(
+  //         'User data fetched successfully. Check console for details.'
+  //       );
+  //     } else {
+  //       const errorData = await response.json();
+  //       setError(errorData.message || 'Failed to fetch user data');
+  //     }
+  //   } catch {
+  //     setError('An unexpected error occurred while fetching user data.');
+  //   }
+  // };
 
   const handleLoginRedirect = () => {
     navigate('../login');
@@ -147,11 +141,11 @@ const Signup = () => {
                 />
               </div>
               <div className='mb-4'>
-                <label className='mb-2 block text-gray-700'>Full Name</label>
+                <label className='mb-2 block text-gray-700'>Fullname</label>
                 <input
                   type='text'
-                  placeholder='Enter your phone number'
-                  value={fullname}
+                  placeholder='Enter your fullname'
+                  value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className='w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500'
                 />

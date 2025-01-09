@@ -14,7 +14,18 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'userId',
 				as: 'cart',
 			});
-			
+			User.hasMany(models.Order, {
+				foreignKey: 'customerId',
+				as: 'orders',
+			});
+			User.hasOne(models.Shop, {
+				foreignKey: 'ownerId', 
+				as: 'shop',            
+			});
+			User.hasMany(models.Review, {
+				foreignKey: 'userId',
+				as: 'reviews',
+			});
 		}
 		validatePassword(plainPassword) {
 			return compare(plainPassword, this.password);

@@ -20,7 +20,7 @@ const getMe = async () => {
   if (localStorage.getItem('ACCESS_TOKEN')) {
     // Validate the token
     try {
-      const user = await fetchWithInstance('auth/me', {
+      const user = await fetchWithInstance('user/profile', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
@@ -30,7 +30,8 @@ const getMe = async () => {
         return Promise.reject(new Error('Failed to fetch user data'));
       }
       return Promise.resolve(user);
-    } catch {
+    } catch (error) {
+      console.log(error.message);
       return Promise.reject(new Error('Failed to fetch user data'));
     }
   } else {

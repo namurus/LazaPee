@@ -1,5 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
+const slugify = require('slugify');
+
 module.exports = (sequelize, DataTypes) => {
 	class Category extends Model {
 		/**
@@ -15,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 			Category.belongsTo(models.Category, {
 				foreignKey: 'parentId',
 				as: 'parentCategory',
+
 			});
 			Category.hasMany(models.Product, {
 				foreignKey: 'categoryId',
@@ -36,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				field: 'name',
 			},
+			description: {
+				type: DataTypes.TEXT,
+				allowNull: true,
+				field: 'description',
+			},
 			parentId: {
 				type: DataTypes.INTEGER,
 				allowNull: true,
@@ -45,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 				field: 'slug',
+				unique: true,
 			},
 
 			thumbnail: {
@@ -73,7 +82,35 @@ module.exports = (sequelize, DataTypes) => {
 			paranoid: true,
 			modelName: 'Category',
 			tableName: 'category',
+			hooks: {
+				// create a slug before saving the record (for both create and update)
+				beforeSave: async (category) => {
+					// Only generate a slug if the 'name' field has been changed
+					if (category.changed('name')) {
+						category.slug = await createUniqueSlug(category.name);
+					}
+				},
+			},
 		}
 	);
+	// Function to create a unique slug for a category
+	async function createUniqueSlug(name) {
+		let slug = slugify(name, { lower: true, strict: true });
+		let uniqueSlug = slug;
+
+		// Check if a category with the same slug already exists in the database
+		let existingCategory = await Category.findOne({ where: { slug: uniqueSlug } });
+		let count = 1;
+
+		// If a conflict is found, append a suffix to make the slug unique
+		while (existingCategory) {
+			uniqueSlug = `${slug}-${count}`;
+			existingCategory = await Category.findOne({ where: { slug: uniqueSlug } });
+			count++;
+		}
+
+		return uniqueSlug;
+	}
+
 	return Category;
 };

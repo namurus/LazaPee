@@ -3,7 +3,7 @@ import { loginBanner } from '../../assets';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { login } from '../../contexts/auth/reducers';
-import {login as loginAPI} from '../../api/user/auth';
+import { getMe, login as loginAPI } from '../../api/user/auth';
 import Image from '../atoms/Image';
 
 const Login = () => {
@@ -20,10 +20,30 @@ const Login = () => {
     setMessage(null);
     
     try {
-      const response = await loginAPI({ username: username, password:password });
-      if (response.ok) {
-        const data = await response.json();
-        dispatch(login({ user: data }));
+      const response = await loginAPI({
+        username: username,
+        password: password,
+      });
+
+      if (response.code === 200) {
+        // get user
+        const getMeResponse = await getMe();
+        if (!getMeResponse) {
+          setError('Failed to fetch user data');
+          return;
+        }
+        if (getMeResponse.code !== 200) {
+          setError(getMeResponse.message || 'Failed to fetch user data');
+          return;
+        }
+        dispatch(
+          login({
+            user: {
+              ...getMeResponse.data,
+              accessToken: response.token,
+            },
+          })
+        );
         setMessage('Login successful');
 
       } else {
