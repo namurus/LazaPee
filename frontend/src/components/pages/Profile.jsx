@@ -5,7 +5,6 @@ import { getMe } from '../../api/user/auth';
 const Profile = () => {
   const [user, setUser] = useState(null);
 
-  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -97,7 +96,7 @@ const Profile = () => {
             </li>
             <li className='mb-4'>
               <NavLink
-                to='/user/account/vouchers'
+                to='/user/voucher'
                 className={({ isActive }) =>
                   isActive ? 'font-bold text-blue-500' : 'text-gray-700'
                 }
