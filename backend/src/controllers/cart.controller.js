@@ -1,7 +1,19 @@
 import db from '@/database';
+import { parse } from 'dotenv';
 
 export const fetchAllCartItems = async (req, res, next) => {
     try {
+        const cartFind = await db.models.Cart.findOne({
+            where: { userId: req.user.id }
+        });
+        if(!cartFind) {
+            const [cart, created] = await db.models.Cart.findOrCreate({
+                where: { userId: userId },
+                defaults: { userId: userId }, // Chỉ được sử dụng khi cần tạo
+            });
+            return res.status(200).json(cart);
+        }
+        const userId = req.user.id
         const cart = await db.models.Cart.findOne({
             where: { userId: req.user.id }, 
             attributes: ['id'],
@@ -13,8 +25,8 @@ export const fetchAllCartItems = async (req, res, next) => {
                     include: [
                         {
                             model: db.models.Skus,
-                            as: 'sku',
-                            attributes: ['price', 'attributeName', 'value', 'stock_quantity'],
+                            as: 'skus',
+                            attributes: ['price', 'color', 'size', 'stock_quantity'],
                             include: [
                                 {
                                     model: db.models.Product,
@@ -31,15 +43,15 @@ export const fetchAllCartItems = async (req, res, next) => {
         const result = {
             id: cart.id,
             products: await Promise.all(cart.cartItems.map(async (cartItem) => ({
-                id: cartItem.sku.product.id,
-                productName: cartItem.sku.product.productName,
-                price: cartItem.sku.price,
-                attributeName: cartItem.sku.attributeName,
-                stock_quantity: cartItem.sku.stock_quantity,
-                value: cartItem.sku.value,
-                description: cartItem.sku.product.description,
-                brand: cartItem.sku.product.brand,
-                thumbnail: cartItem.sku.product.thumbnail,
+                id: cartItem.skus.product.id,
+                productName: cartItem.skus.product.productName,
+                price: cartItem.skus.price,
+                color: cartItem.skus.color,
+                size: cartItem.skus.size,
+                value: cartItem.skus.value,
+                description: cartItem.skus.product.description,
+                brand: cartItem.skus.product.brand,
+                thumbnail: cartItem.skus.product.thumbnail,
                 quantity: cartItem.quantity,
                 total: await cartItem.getTotal(),
                 discountedTotal: await cartItem.getDiscountedTotal()
@@ -58,11 +70,13 @@ export const fetchAllCartItems = async (req, res, next) => {
 
 export const addCartItem = async (req, res, next) => {
     try {
-        const { skusId, quantity } = req.body
+        console.log(req.body);
+        const skusId = parseInt(req.body.skusId)
+        const quantity = parseInt(req.body.quantity)
+        const userId = req.user.id
         const skus = await db.models.Skus.findOne({
             where: { id: skusId },
         })
-
         if (!skus) {
             return res.status(404).json({ code: 404, message: 'Product not found' })
         }
@@ -70,16 +84,15 @@ export const addCartItem = async (req, res, next) => {
         if (skus.stock_quantity < quantity) {
             return res.status(400).json({ code: 400, message: 'Not enough stock available' })
         }
-
-        const cart = await db.models.Cart.findOne({
-            where: { userId: req.user.id },
-        })
-
+        const [cart, created] = await db.models.Cart.findOrCreate({
+            where: { userId: userId },
+            defaults: { userId: userId }, // Chỉ được sử dụng khi cần tạo
+        });
         // Kiểm tra xem cart có cartItem nào có productId trùng với req.body.productId không
         const existingCartItem = await db.models.CartItem.findOne({
             where: { cartId: cart.id, skusId: skusId },
         });
-
+        
         if (existingCartItem) {
             // Nếu đã tồn tại, cập nhật số lượng
             await existingCartItem.update({ quantity: existingCartItem.quantity + quantity });
@@ -87,7 +100,7 @@ export const addCartItem = async (req, res, next) => {
         } else {
             // Nếu chưa tồn tại, tạo mới
             const [cartItem, created] = await db.models.CartItem.findOrCreate({
-                where: { cartId: cart.id, skusId: productId },
+                where: { cartId: cart.id, skusId: skusId },
                 defaults: { quantity, price: skus.price },
             });
 
@@ -100,7 +113,10 @@ export const addCartItem = async (req, res, next) => {
 
 export const updateCartItem = async (req, res, next) => {
     try {
-        const { cartItemId, quantity } = req.body
+        const cartItemId = parseInt(req.body.cartItemId)
+        const quantity = parseInt(req.body.quantity)
+
+        const userId = req.user.id
         const cartItem = await db.models.CartItem.findOne({
             where: { id: cartItemId },
         })
