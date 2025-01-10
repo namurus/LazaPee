@@ -50,8 +50,11 @@ export const createPayment = async (req, res, next) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        if (order.status === 'paid') {
-            return res.status(400).json({ message: 'Order has already been paid' });
+        // Kiểm tra trạng thái đơn hàng
+        if (order.status !== 'pending') {
+            return res.status(400).json({ 
+                message: `Cannot create payment. Order status must be 'pending'. Current status: ${order.status}` 
+            });
         }
 
         const amount = order.totalAmount;
