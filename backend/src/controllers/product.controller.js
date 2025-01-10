@@ -65,22 +65,23 @@ export const fetchProductById = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
 	try {
 		const { shopId } = req.shopInfo;
-		const { images, productName, brand, description, skus, categoryId, price } = req.body;
-
+		const { images, productName, brand, description, skus, categoryId } = req.body;
+		const price = parseFloat(req.body.price);
+		const stock_quantity = parseInt(req.body.stock_quantity);
 		if (!images || images.length === 0) {
 			return res.status(400).json({ code: 400, message: 'Images are required' });
 		}
 
 		const thumbnail = images[0];
-
 		// Create the product
 		const product = await db.models.Product.create({
-			productName,
-			brand,
-			description,
-			thumbnail,
-			shopId,
-			categoryId,
+			productName: productName,
+			shopId: shopId,
+			brand: brand,
+			thumbnail: thumbnail,
+			description: description,
+			slug: productName,
+			categoryId: categoryId,
 		});
 
 		// Insert product images in bulk
@@ -97,7 +98,7 @@ export const createProduct = async (req, res, next) => {
 				color: null,
 				size: null,
 				price,
-				stock_quantity: null,
+				stock_quantity: stock_quantity,
 				productId: product.id,
 			});
 		} else {
@@ -106,11 +107,10 @@ export const createProduct = async (req, res, next) => {
 				color,
 				size,
 				price,
-				stock_quantity,
+				stock_quantity: stock_quantity,
 				productId: product.id,
 			}));
 		}
-
 		// Insert skus in bulk
 		await db.models.Skus.bulkCreate(skusData);
 

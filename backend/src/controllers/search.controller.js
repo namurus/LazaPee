@@ -14,7 +14,7 @@ export const searchProducts = async (req, res, next) => {
             ],
         };
 
-        const replacements = { keyword };
+        const replacements = { keyword: `*${req.query.keyword}*` };
 
         if (facet) {
             const categories = facet.split(',');
@@ -42,42 +42,66 @@ export const searchProducts = async (req, res, next) => {
             });
         }
 
-        // Điều kiện liên quan đến size và color
-        const skuWhereClause = {
-            [db.Sequelize.Op.or]: [],
-        };
-
-        if (size) {
-            skuWhereClause[db.Sequelize.Op.or].push({
-                attributeName: 'size',
-                value: size,
-            });
-        }
-
-        if (color) {
-            skuWhereClause[db.Sequelize.Op.or].push({
-                attributeName: 'color',
-                value: color,
-            });
-        }
-
         const limit = 10; // Số lượng sản phẩm trên mỗi trang
         const offset = page ? page * limit : 0;
+        let products = [];
+        if(color || size) {
+            // Điều kiện liên quan đến size và color
+            const skuWhereClause = {
+                [db.Sequelize.Op.or]: [],
+            };
 
-        const products = await db.models.Product.findAll({
-            where: whereClause,
-            replacements,
-            include: [
-                {
-                    model: db.models.Skus,
-                    as: 'skus',
-                    where: skuWhereClause,
-                    required: true, // Chỉ lấy các product có SKU thỏa mãn
-                },
-            ],
-            limit: limit,
-            offset: offset,
-        });
+            if (size) {
+                skuWhereClause[db.Sequelize.Op.or].push({
+                    attributeName: 'size',
+                    value: size,
+                });
+            }
+
+            if (color) {
+                skuWhereClause[db.Sequelize.Op.or].push({
+                    attributeName: 'color',
+                    value: color,
+                });
+            }
+
+            products = await db.models.Product.findAll({
+                where: whereClause,
+                attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'slug', 'categoryId'] },
+                replacements,
+                include: [
+                    {
+                        model: db.models.Skus,
+                        as: 'skus',
+                        where: skuWhereClause,
+                        required: true, // Chỉ lấy các product có SKU thỏa mãn
+                    },
+                ],
+                limit: limit,
+                offset: offset,
+            });
+        }
+        else
+        {
+            // Không có điều kiện liên quan đến size và color
+            products = await db.models.Product.findAll({
+                where: whereClause,
+                attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'slug', 'categoryId'] },
+                replacements,
+                limit: limit,
+                offset: offset,
+                include: [
+                    {
+                        model: db.models.Skus,
+                        as: 'skus',
+                        attributes: ['price'],
+                        limit : 1,
+                    },
+                ],
+            });
+        }
+
+
 
         if (products.length > 0) {
             return res.status(200).json({ code: 200, data: products });

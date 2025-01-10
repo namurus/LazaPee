@@ -56,8 +56,8 @@ module.exports = {
       payment_method: 'credit card',
       shipping_company: 'USPS',
       shipping_fee: 15,
-      created_at: new Date(),
-      updated_at: new Date(),
+      created_at: '2025-01-07 13:26:36',
+      updated_at: '2025-01-07 13:26:36',
 
     }, {
 
@@ -71,6 +71,19 @@ module.exports = {
       payment_method: 'COD',
       shipping_company: 'DHL',
       shipping_fee: 25,
+      created_at: new Date(),
+      updated_at: new Date(),
+    },{
+      customer_id: 1,
+      shop_id: 1,
+      status: 'completed',
+      phone_number: '1234567890',
+      shipping_address: '123 Main St, New York, NY 10001',
+      total_amount: 299.99,
+      order_note: 'Please handle with care',
+      payment_method: 'credit card',
+      shipping_company: 'UPS',
+      shipping_fee: 10,
       created_at: new Date(),
       updated_at: new Date(),
     }], {});
