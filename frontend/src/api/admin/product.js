@@ -1,4 +1,4 @@
-import { del, get, fetchWithInstance, post, put } from '../config';
+import { del, get, fetchWithInstance, post, put, patch } from '../config';
 
 const getProducts = () => {
   return fetchWithInstance('products');
@@ -38,6 +38,24 @@ const deleteProduct = (id) => {
   return del(`products/${id}`);
 };
 
+const getProductReviews = (id, queryParams = {}) => {
+  return get(`review/${id}`, {
+    params: queryParams,
+  });
+};
+
+const createReview = (productID, review) => {
+  return post(`review/${productID}`, review);
+};
+
+const deleteReview = (reviewID) => {
+  return del(`review/${reviewID}`);
+};
+
+const editReview = (reviewID, review) => {
+  return patch(`review/${reviewID}`, review);
+};
+
 export {
   getProducts,
   getProduct,
@@ -48,4 +66,8 @@ export {
   addProduct,
   updateProduct,
   deleteProduct,
+  getProductReviews,
+  createReview,
+  deleteReview,
+  editReview,
 };
