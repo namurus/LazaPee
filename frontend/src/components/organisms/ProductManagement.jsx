@@ -384,14 +384,24 @@ function ProductManagement() {
             <DataTable
               columns={columns}
               data={products}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  searchColumn: 'productName',
+                  allowSearch: true,
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='available'>
             <DataTable
               columns={columns}
               data={data.filter((product) => product.status === 'available')}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  searchColumn: 'productName',
+                  allowSearch: true,
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='out-of-stock'>
@@ -401,7 +411,12 @@ function ProductManagement() {
                 (product) =>
                   product.status === 'out of stock' || product.status === null
               )}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  searchColumn: 'productName',
+                  allowSearch: true,
+                },
+              }}
             />
           </TabsContent>
         </Tabs>

@@ -9,6 +9,7 @@ import AuthGuard from '../guards/AuthGuard';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 import { rootAction, rootLoader } from './rootRoutes';
 import shopRoutes from './shopRoutes';
+import CheckoutPage from '../components/pages/CheckoutPage';
 
 const routes = [
   {
@@ -29,7 +30,7 @@ const routes = [
         path: '/checkout',
         element: (
           <AuthGuard>
-            <div>Checkout element Placeholder</div>
+            <CheckoutPage />
           </AuthGuard>
         ),
       },

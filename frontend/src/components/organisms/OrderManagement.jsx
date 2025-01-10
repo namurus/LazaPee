@@ -161,28 +161,48 @@ function OrderManagement() {
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                searchColumn: 'productName',
+                allowSearch: true,
+              },
+            }}
           />
         </TabsContent>
         <TabsContent value='pending'>
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                searchColumn: 'productName',
+                allowSearch: true,
+              },
+            }}
           />
         </TabsContent>
         <TabsContent value='delivering'>
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                searchColumn: 'productName',
+                allowSearch: true,
+              },
+            }}
           />
         </TabsContent>
         <TabsContent value='completed'>
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                searchColumn: 'productName',
+                allowSearch: true,
+              },
+            }}
           />
         </TabsContent>
       </Tabs>
