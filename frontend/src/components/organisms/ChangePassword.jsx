@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { post } from '../../api/config';
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState('');
@@ -18,13 +18,7 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await axios.post(
-        'https://lazapee-jivl.onrender.com/user/change-password', 
-        {
-          oldPassword,
-          newPassword,
-          confirmPassword,
-        },
+      const response = await post('user/change-password', { oldPassword, newPassword, confirmPassword },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,

@@ -1,41 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { getMe } from '../../api/user/auth';
 
 const Address = () => {
-  const [addresses, setAddresses] = useState([]); // Danh sách địa chỉ
-  const [showDialog, setShowDialog] = useState(false); // Trạng thái hiển thị dialog
-  const [newAddress, setNewAddress] = useState({
-    name: '',
-    phone: '',
-    address: '',
-  }); // Trạng thái địa chỉ mới
+  const [address, setAddress] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [newAddress, setNewAddress] = useState('');
 
-  const handleAddAddress = () => {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getMe();
+        setAddress(response.address);
+      } catch (err) {
+        console.error('Failed to load user data', err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleAddOrUpdateAddress = () => {
     setShowDialog(true);
+    if (address) {
+      setNewAddress(address);
+    }
   };
 
   const handleCloseDialog = () => {
     setShowDialog(false);
-    setNewAddress({ name: '', phone: '', address: '' }); // Reset form
+    setNewAddress('');
   };
 
-  const handleSaveAddress = () => {
-    if (!newAddress.name || !newAddress.phone || !newAddress.address) {
-      alert('Vui lòng điền đầy đủ thông tin.');
+  const handleSaveAddress = async () => {
+    if (!newAddress.trim()) {
+      alert('Vui lòng nhập địa chỉ.');
       return;
     }
 
-    setAddresses([...addresses, newAddress]); // Thêm địa chỉ mới vào danh sách
-    handleCloseDialog(); // Đóng dialog
+    try {
+      const token = localStorage.getItem('ACCESS_TOKEN');
+      await axios.patch('https://lazapee-jivl.onrender.com/user/update', { address: newAddress },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const updatedUser = await getMe();
+      setAddress(updatedUser.address);
+      alert('Cập nhật địa chỉ thành công.');
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Lỗi khi cập nhật địa chỉ:', error);
+      alert('Đã xảy ra lỗi khi cập nhật địa chỉ. Vui lòng thử lại sau.');
+    }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewAddress((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleDeleteAddress = (index) => {
-    const updatedAddresses = addresses.filter((_, i) => i !== index); // Xóa địa chỉ tại index
-    setAddresses(updatedAddresses); // Cập nhật lại danh sách địa chỉ
+  const handleDeleteAddress = async () => {
+    try {
+      const token = localStorage.getItem('ACCESS_TOKEN');
+      await axios.patch(
+        'https://lazapee-jivl.onrender.com/user/update',
+        { address: null }, // Gửi địa chỉ là null để xóa
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      setAddress(null);
+      alert('Xóa địa chỉ thành công.');
+    } catch (error) {
+      console.error('Lỗi khi xóa địa chỉ:', error);
+      alert('Đã xảy ra lỗi khi xóa địa chỉ. Vui lòng thử lại sau.');
+    }
   };
 
   return (
@@ -44,84 +85,58 @@ const Address = () => {
       <p className="mb-4 text-gray-500">Quản lý địa chỉ của bạn</p>
       <hr className="mb-6 mt-4 border-gray-300" />
 
-      {/* Danh sách địa chỉ */}
       <div className="mb-4">
-        {addresses.length === 0 ? (
-          <p className="text-gray-500">Chưa có địa chỉ nào.</p>
+        {address ? (
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-gray-600">{address}</p>
+            </div>
+            <div>
+              <button
+                onClick={handleAddOrUpdateAddress}
+                className="mr-2 text-blue-500 hover:text-blue-700"
+              >
+                Sửa
+              </button>
+              <button
+                onClick={handleDeleteAddress}
+                className="text-red-500 hover:text-red-700"
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
         ) : (
-          <ul className="list-disc pl-5">
-            {addresses.map((addr, index) => (
-              <li key={index} className="mb-2 flex justify-between items-center">
-                <div>
-                <p>
-                  <strong>{addr.name}</strong> - {addr.phone}
-                </p>
-                <p className="text-sm text-gray-600">{addr.address}</p>
-                </div>
-                 <button
-                  onClick={() => handleDeleteAddress(index)} // Xóa địa chỉ
-                  className="mt-2 text-red-500 hover:text-red-700"
-                >
-                  Xóa
-                </button>
-              </li>
-            ))}
-          </ul>
+          <p className="text-gray-500">Chưa có địa chỉ nào.</p>
         )}
       </div>
 
-      {/* Nút thêm địa chỉ */}
       <div className="flex justify-end">
         <button
-          onClick={handleAddAddress}
+          onClick={handleAddOrUpdateAddress}
           className="rounded bg-green-500 px-4 py-2 text-white"
         >
-          Thêm Địa Chỉ
+          {'Cập Nhật Địa Chỉ'}
         </button>
       </div>
 
-      {/* Dialog thêm địa chỉ */}
       {showDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="w-96 rounded-lg bg-white p-6 shadow-lg">
-            <h3 className="text-lg font-bold">Thêm Địa Chỉ Mới</h3>
+            <h3 className="text-lg font-bold">
+              {'Cập Nhật Địa Chỉ'}
+            </h3>
             <p className="mb-4 text-sm text-gray-500">
-              Nhập thông tin địa chỉ mới của bạn vào form bên dưới.
+              Nhập địa chỉ của bạn vào form bên dưới.
             </p>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Họ và Tên
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={newAddress.name}
-                onChange={handleChange}
-                className="mt-1 w-full rounded border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
-                placeholder="Nhập họ và tên"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Số Điện Thoại
-              </label>
-              <input
-                type="text"
-                name="phone"
-                value={newAddress.phone}
-                onChange={handleChange}
-                className="mt-1 w-full rounded border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
-                placeholder="Nhập số điện thoại"
-              />
-            </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Địa Chỉ
               </label>
               <textarea
                 name="address"
-                value={newAddress.address}
-                onChange={handleChange}
+                value={newAddress}
+                onChange={(e) => setNewAddress(e.target.value)}
                 className="mt-1 w-full rounded border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
                 placeholder="Nhập địa chỉ chi tiết"
               ></textarea>
