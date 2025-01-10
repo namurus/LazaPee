@@ -91,4 +91,9 @@ export default {
       value: 'XXL',
     },
   },
+  priceRange: {
+    min: 0,
+    max: 50000,
+    priceGap: 100,
+  },
 };

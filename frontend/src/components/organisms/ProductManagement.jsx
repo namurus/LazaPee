@@ -14,186 +14,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { deleteProduct } from '../../api/admin/product';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
-
-// const data = [
-//   {
-//     productName: 'Áo thun nam',
-//     productType: {
-//       'màu hồng': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//       'màu đen': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Áo thun nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Quần jean nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Quần jean nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Áo khoác nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Áo khoác nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Giày thể thao nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Giày thể thao nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Túi xách nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Túi xách nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Đồng hồ nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Đồng hồ nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Mắt kính nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Mắt kính nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-// ];
 
 // Data format:
 
-const data = [
-  {
-    id: 17,
-    productName: 'Smart phone',
-    shopId: 7,
-    brand: 'Smart phone',
-    thumbnail:
-      'http://res.cloudinary.com/dlao1onv5/image/upload/v1736395928/j39nqcnctiuc7tzf9yqn.jpg',
-    description: 'description Smart phone',
-    slug: 'smart-phone',
-    categoryId: 2,
-    status: null,
-    soldQuantity: 0,
-    createdAt: '2025-01-09T04:12:09.000Z',
-    updatedAt: '2025-01-09T04:12:09.000Z',
-    deletedAt: null,
-    category: {
-      name: 'Smartphone',
-      description: 'Smartphone',
-      thumbnail: 'https://via.placeholder.com/150',
-    },
-    images: [
-      {
-        url: 'http://res.cloudinary.com/dlao1onv5/image/upload/v1736395928/j39nqcnctiuc7tzf9yqn.jpg',
-      },
-    ],
-    skus: [
-      {
-        size: 'XL',
-        color: 'red',
-        stock_quantity: 0,
-        price: '500',
-      },
-      {
-        size: 'X',
-        color: 'green',
-        stock_quantity: 0,
-        price: '500',
-      },
-    ],
-  },
-];
 /*
 [
         {
@@ -240,7 +64,7 @@ const data = [
 */
 
 function ProductManagement() {
-  const [products, setProducts] = useState(data);
+  const [products, setProducts] = useState([]);
   const columns = [
     {
       accessorKey: 'thumbnail',
@@ -354,8 +178,7 @@ function ProductManagement() {
   const fetchData = async () => {
     try {
       const res = await get('/shop/product');
-      console.log(res.data);
-      //setProducts(res.data);
+      setProducts(res.data);
     } catch (error) {
       console.log('Error fetching categories:', error);
     }
@@ -395,7 +218,9 @@ function ProductManagement() {
           <TabsContent value='available'>
             <DataTable
               columns={columns}
-              data={data.filter((product) => product.status === 'available')}
+              data={products.filter(
+                (product) => product.status === 'available'
+              )}
               options={{
                 search: {
                   searchColumn: 'productName',
@@ -407,7 +232,7 @@ function ProductManagement() {
           <TabsContent value='out-of-stock'>
             <DataTable
               columns={columns}
-              data={data.filter(
+              data={products.filter(
                 (product) =>
                   product.status === 'out of stock' || product.status === null
               )}

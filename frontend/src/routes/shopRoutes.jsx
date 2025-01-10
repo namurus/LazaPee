@@ -6,6 +6,7 @@ import ShopPage from '../components/pages/ShopPage';
 import ShopProfile from '../components/organisms/ShopProfile';
 import Statistic from '../components/organisms/Statistic';
 import ShopGuard from '../guards/ShopGuard';
+import { get } from '../api/config';
 const shopRoutes = [
   {
     path: 'shop',

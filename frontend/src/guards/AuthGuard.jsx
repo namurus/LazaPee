@@ -8,7 +8,7 @@ function AuthGuard({ children }) {
   const location = useLocation();
 
   if (!isInitialized) {
-    return <LoadingSpinner className='min-h-screen' />;
+    return <LoadingSpinner outerClassName='min-h-screen' />;
   }
 
   return isAuthenticated ? (
