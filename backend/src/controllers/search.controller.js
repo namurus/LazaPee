@@ -1,4 +1,5 @@
 import db from '@/database';
+import Fuse from 'fuse.js';
 
 export const searchProducts = async (req, res, next) => {
     try {
@@ -8,103 +9,77 @@ export const searchProducts = async (req, res, next) => {
             return res.status(400).json({ code: 400, message: 'Keyword is required' });
         }
 
-        const whereClause = {
-            [db.Sequelize.Op.and]: [
-                db.Sequelize.literal(`MATCH (productName) AGAINST (:keyword IN BOOLEAN MODE)`),
+        const limit = 10; // Số lượng sản phẩm trên mỗi trang
+        const offset = page ? page * limit : 0;
+
+        // Lấy toàn bộ sản phẩm từ cơ sở dữ liệu trước
+        const products = await db.models.Product.findAll({
+            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'slug', 'categoryId'] },
+            include: [
+                {
+                    model: db.models.Skus,
+                    as: 'skus',
+                },
             ],
+        });
+
+        // Cấu hình Fuse.js
+        const options = {
+            keys: ['productName'], 
+            threshold: 0.3, // Độ chính xác tìm kiếm (0 = chính xác tuyệt đối, 1 = chấp nhận sai nhiều)
+            includeScore: true, // Bao gồm điểm số của từng kết quả
         };
 
-        const replacements = { keyword: `*${req.query.keyword}*` };
+        const fuse = new Fuse(products, options);
 
-        if (facet) {
-            const categories = facet.split(',');
-            whereClause[db.Sequelize.Op.and].push({
-                categoryId: { [db.Sequelize.Op.in]: categories },
-            });
+        // Thực hiện tìm kiếm với từ khóa
+        let result = fuse.search(keyword).map(({ item }) => item);
+
+        // Áp dụng các bộ lọc khác nếu có (maxPrice, minPrice, color, size, brands)
+        if (maxPrice && minPrice) {
+            result = result.filter((product) =>
+                product.skus.some((sku) => sku.price <= parseFloat(maxPrice) && sku.price >= parseFloat(minPrice))
+            );
         }
-
-        if (maxPrice) {
-            whereClause[db.Sequelize.Op.and].push({
-                price: { [db.Sequelize.Op.lte]: maxPrice },
-            });
+        else if (maxPrice) {
+            result = result.filter((product) =>
+                product.skus.some((sku) => sku.price <= parseFloat(maxPrice))
+            );
         }
-
-        if (minPrice) {
-            whereClause[db.Sequelize.Op.and].push({
-                price: { [db.Sequelize.Op.gte]: minPrice },
-            });
+        else if (minPrice) {
+            result = result.filter((product) =>
+                product.skus.some((sku) => sku.price >= parseFloat(minPrice))
+            );
         }
 
         if (brands) {
             const brandArray = brands.split(',');
-            whereClause[db.Sequelize.Op.and].push({
-                brand: { [db.Sequelize.Op.in]: brandArray },
-            });
+            result = result.filter((product) => brandArray.includes(product.brand));
         }
 
-        const limit = 10; // Số lượng sản phẩm trên mỗi trang
-        const offset = page ? page * limit : 0;
-        let products = [];
-        if(color || size) {
-            // Điều kiện liên quan đến size và color
-            const skuWhereClause = {
-                [db.Sequelize.Op.or]: [],
-            };
-
-            if (size) {
-                skuWhereClause[db.Sequelize.Op.or].push({
-                    attributeName: 'size',
-                    value: size,
-                });
-            }
-
-            if (color) {
-                skuWhereClause[db.Sequelize.Op.or].push({
-                    attributeName: 'color',
-                    value: color,
-                });
-            }
-
-            products = await db.models.Product.findAll({
-                where: whereClause,
-                attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'slug', 'categoryId'] },
-                replacements,
-                include: [
-                    {
-                        model: db.models.Skus,
-                        as: 'skus',
-                        where: skuWhereClause,
-                        required: true, // Chỉ lấy các product có SKU thỏa mãn
-                    },
-                ],
-                limit: limit,
-                offset: offset,
-            });
+        if (color || size) {
+            result = result.filter((product) =>
+                product.skus.some(
+                    (sku) =>
+                        (!color || sku.color === color) &&
+                        (!size || sku.size === size)
+                )
+            );
         }
-        else
-        {
-            // Không có điều kiện liên quan đến size và color
-            products = await db.models.Product.findAll({
-                where: whereClause,
-                attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'slug', 'categoryId'] },
-                replacements,
-                limit: limit,
-                offset: offset,
-                include: [
-                    {
-                        model: db.models.Skus,
-                        as: 'skus',
-                        attributes: ['price'],
-                        limit : 1,
-                    },
-                ],
-            });
-        }
+        result = result.map((product) => ({
+            id: product.id,
+            productName: product.productName,
+            brand: product.brand,
+            description: product.description,
+            thumbnail: product.thumbnail,
+            price: product.skus.length > 0 ? product.skus[0].price : null,
+            images: product.images,
+        }));
+        // Phân trang kết quả
+        const paginatedResult = result.slice(offset, offset + limit);
 
-
-
-        if (products.length > 0) {
-            return res.status(200).json({ code: 200, data: products });
+        if (paginatedResult.length > 0) {
+            return res.status(200).json({ code: 200, data: paginatedResult });
         } else {
             return res.status(404).json({ code: 404, message: 'No products found' });
         }

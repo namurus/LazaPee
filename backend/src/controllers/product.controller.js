@@ -2,13 +2,14 @@ import db from '@/database';
 
 export const fetchAllProducts = async (req, res, next) => {
 	try {
+		// Lấy danh sách sản phẩm từ cơ sở dữ liệu
 		const products = await db.models.Product.findAll({
 			attributes: ['id', 'productName', 'brand', 'description', 'thumbnail'],
 			include: [
 				{
 					model: db.models.Skus,
 					as: 'skus',
-					attributes: ['price', 'stock_quantity', 'color', 'size'],
+					attributes: ['price'], // Chỉ lấy giá
 				},
 				{
 					model: db.models.ProductImage,
@@ -18,8 +19,19 @@ export const fetchAllProducts = async (req, res, next) => {
 			],
 		});
 
-		if (products.length > 0) {
-			return res.status(200).json({ code: 200, data: products });
+		// Chỉ giữ `skus[0].price` và loại bỏ các thông tin khác
+		const formattedProducts = products.map((product) => ({
+			id: product.id,
+			productName: product.productName,
+			brand: product.brand,
+			description: product.description,
+			thumbnail: product.thumbnail,
+			price: product.skus.length > 0 ? product.skus[0].price : null, // Lấy `price` của `skus[0]`, nếu không có thì `null`
+			images: product.images, // Giữ nguyên trường `images`
+		}));
+
+		if (formattedProducts.length > 0) {
+			return res.status(200).json({ code: 200, data: formattedProducts });
 		} else {
 			return res.status(404).json({ code: 404, message: 'No products found' });
 		}
@@ -27,6 +39,7 @@ export const fetchAllProducts = async (req, res, next) => {
 		return next(err);
 	}
 };
+
 
 export const fetchProductById = async (req, res, next) => {
 	try {
