@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             stock_quantity: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 defaultValue: 0,
             },
             color: {

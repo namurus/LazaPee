@@ -55,7 +55,7 @@ module.exports = {
       },
 			// Người dùng mới thứ 2
       {
-        full_name: 'Shop Owner',
+        full_name: 'Thai Dinh Ngan',
         email: 'shop@example.com',
         username: 'shopowner',
         password: await hash('shopowner', 10),

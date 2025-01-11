@@ -35,7 +35,7 @@ module.exports = {
     price: 199.99,
     created_at: new Date(),
     updated_at: new Date(),
-    }, 
+    },
     ], {});
   },
 

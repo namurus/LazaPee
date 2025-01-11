@@ -118,3 +118,27 @@ export const resetPassword = async (req, res) => {
 		return res.status(500).json({ code: 500, message: 'Internal Server Error' });
 	}
 };
+
+// [POST] /user/change-password
+export const changePassword = async (req, res) => { 
+	try {
+		const {oldPassword, newPassword, confirmPassword } = req.body;
+		const userId = req.user.id;
+		const user = await db.models.User.findByPk(userId);
+		if (!user) {
+			return res.status(404).json({ code: 404, message: 'User not found' });
+		}
+		if (newPassword !== confirmPassword) {
+			return res.status(400).json({ code: 400, message: 'New password and confirm password do not match' });
+		}
+		const isMatch = await user.validatePassword(oldPassword);
+		if (!isMatch) {
+			return res.status(400).json({ code: 400, message: 'Old password is incorrect' });
+		}
+		await user.update({ password: newPassword });
+		return res.status(200).json({ code: 200, message: 'Password has been updated successfully' });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ code: 500, message: 'Internal Server Error' });
+	}
+}
