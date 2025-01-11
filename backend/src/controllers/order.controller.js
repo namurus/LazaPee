@@ -7,7 +7,7 @@ export const addProductToOrderCheckout = async (req, res, next) => {
 
       // Validate input
       if (!selectItems || !selectItems.length) {
-          return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
+          return res.status(400).json({ message: 'Incomplete information or cart is empty!'});
       }
 
       // Lấy giỏ hàng của người dùng
@@ -101,6 +101,108 @@ export const addProductToOrderCheckout = async (req, res, next) => {
       next(error);
   }
 };
+
+export const getCartItemAndUserInfo = async (req, res, next) => {
+  try {
+      const cart = await db.models.Cart.findOne({
+          where: { userId: req.user.id },
+          attributes: ['id'],
+          include: [
+              {
+                  model: db.models.CartItem,
+                  as: 'cartItems',
+                  attributes: ['quantity'],
+                  include: [
+                      {
+                          model: db.models.Skus,
+                          as: 'sku',
+                          attributes: ['price', 'attributeName', 'value', 'stock_quantity'],
+                          include: [
+                              {
+                                  model: db.models.Product,
+                                  as: 'product',
+                                  attributes: ['id', 'productName', 'brand', 'description', 'thumbnail'],
+                                  include: [
+                                      {
+                                          model: db.models.Shop,
+                                          as: 'shop',
+                                          attributes: ['shopName', 'status'],
+                                      },
+                                  ],
+                              },
+                          ],
+                      },
+                  ],
+              },
+          ],
+      });
+
+      if (!cart) {
+          return res.status(404).json({ message: 'Cart not found' });
+      }
+
+      const user = await db.models.User.findOne({
+          where: { id: req.user.id },
+          attributes: ['fullName', 'phone', 'address'],
+          include: [
+              {
+                  model: db.models.UserAddress,
+                  as: 'userAddress',
+                  attributes: ['fullName', 'phone', 'address'],
+              },
+          ],
+      });
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      const result = {
+          id: cart.id,
+          products: await Promise.all(cart.cartItems.map(async (cartItem) => {
+              const { product, price, attributeName, stock_quantity, value } = cartItem.sku;
+              const shop = product.shop;
+
+              return {
+                  id: product.id,
+                  productName: product.productName,
+                  price,
+                  attributeName,
+                  stock_quantity,
+                  value,
+                  description: product.description,
+                  brand: product.brand,
+                  thumbnail: product.thumbnail,
+                  quantity: cartItem.quantity,
+                  outOfStock: stock_quantity < cartItem.quantity ? 'yes' : 'no',
+                  shopOff: shop.status === 'off' ? 'yes' : 'no',
+                  shopName: shop.shopName,
+                  total: await cartItem.getTotal(),
+                  discountedTotal: await cartItem.getDiscountedTotal(),
+              };
+          })),
+          total: await cart.getTotal(),
+          discountedTotal: await cart.getDiscountedTotal(),
+          userId: req.user.id,
+          totalProducts: await cart.getTotalProducts(),
+          userInfo: {
+              fullName: user.fullName,
+              phone: user.phone,
+              address: user.address,
+              secondaryInfo: {
+                  secondaryFullName: user.userAddress?.secondaryFullName,
+                  secondaryPhone: user.userAddress?.secondaryPhone,
+                  secondaryAddress: user.userAddress?.secondaryAddress,
+              },
+          },
+      };
+
+      res.status(200).json(result);
+  } catch (err) {
+      return next(err);
+  }
+};
+
 
 
 export const createOrders = async (req, res, next) => {

@@ -5,6 +5,7 @@ import {addProductToOrderCheckout,
         updateOrderByID,
         cancelledOrderByID,
         getUserOrders,
+        getCartItemAndUserInfo,
     }from '../controllers/order.controller';
 
 const router = Router();
@@ -15,5 +16,6 @@ router.get('/:id', getOrderDetailsById);
 router.patch('/:id', updateOrderByID);
 router.delete('/:id', cancelledOrderByID);
 router.get('/user/:id', getUserOrders);
+router.get('/checkout', getCartItemAndUserInfo);
 
 export default router;
