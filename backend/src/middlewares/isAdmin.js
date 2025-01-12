@@ -13,7 +13,7 @@ export default async (req, res, next) => {
 		console.log(token);
 		
 		const tokenDecoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-		const admin = await db.models.Account.findOne({ where: { id: tokenDecoded.id } });
+		const admin = await db.models.User.findOne({ where: { id: tokenDecoded.id, role: 'admin' } });
 		if (!admin) {
 			return res.status(401).json({ code: 401, message: 'Unauthorized' });
 		}

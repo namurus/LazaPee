@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'userId',
 				as: 'reviews',
 			});
+			User.hasMany(models.AdminPermission, {
+				foreignKey: 'adminId',
+				as: 'adminPermissions',
+			});
 		}
 		validatePassword(plainPassword) {
 			return compare(plainPassword, this.password);
@@ -64,8 +68,6 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			email: {
 				type: DataTypes.STRING,
-				allowNull: false,
-				unique: true,
 				field: 'email',
 			},
 			password: {
