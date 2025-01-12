@@ -196,3 +196,36 @@ export const deleteUser = async (req, res) => {
 		res.status(500).json({ message: error.message, code: 500 });
 	}
 };
+
+// [GET] /admin/user/me
+export const getCurrentAdmin = async (req, res) => {
+	try {
+		const adminId = req.admin.id;
+
+		const admin = await db.models.User.findByPk(adminId, {
+			attributes: ['id', 'username', 'email', 'phone', 'avatar', 'address'],
+			include: [
+				{
+					model: db.models.AdminPermission,
+					as: 'adminPermissions',
+					attributes: ['permissionId'],
+					include: [
+						{
+							attributes: ['name'],
+							model: db.models.Permission,
+							as: 'permission',
+						},
+					],
+				},
+			],
+		});
+
+		res.status(200).json({
+			admin,
+			code: 200,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: error.message, code: 500 });
+	}
+};
