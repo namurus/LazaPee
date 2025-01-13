@@ -25,12 +25,22 @@ function UpdateVoucherForm() {
       try {
         const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
         const response = await axios.get(
-          `https://lazapee-jivl.onrender.com/admin/voucher/${id}`,
+          `https://lazapee-jivl.onrender.com/admin/voucher`, // Lấy tất cả voucher
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setVoucherData(response.data);
+  
+        const foundVoucher = response.data.find(voucher => voucher.id === parseInt(id));
+        if (foundVoucher) {
+          setVoucherData(foundVoucher);
+        } else {
+          toast.error('Voucher không tìm thấy', {
+            className: 'bg-red-500 text-white',
+            position: 'top-right',
+            closeButton: true,
+          });
+        }
       } catch (error) {
         console.error('Failed to fetch voucher:', error);
         toast.error('Không thể tải dữ liệu voucher', {
@@ -40,9 +50,10 @@ function UpdateVoucherForm() {
         });
       }
     };
-
+  
     fetchVoucher();
   }, [id]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,7 +109,7 @@ function UpdateVoucherForm() {
 
     try {
       const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-      const response = await axios.put(
+      const response = await axios.patch(
         `https://lazapee-jivl.onrender.com/admin/voucher/update/${id}`,
         updatedVoucherData,
         {
@@ -112,7 +123,7 @@ function UpdateVoucherForm() {
           position: 'top-right',
           closeButton: true,
         });
-        navigate('/admin/voucher-management'); // Điều hướng về trang quản lý voucher
+        navigate('/admin/voucher'); // Điều hướng về trang quản lý voucher
       } else {
         throw new Error('Có lỗi xảy ra khi cập nhật voucher');
       }
