@@ -85,7 +85,7 @@ export const createPayment = async (req, res, next) => {
     }
 }
 
-//  // Controller to pay and update the payment status
+ // Controller to pay and update the payment status
 // export const processPayment = async (req, res, next) => {
 //     try {  
 //         const { paymentID } = req.body;
