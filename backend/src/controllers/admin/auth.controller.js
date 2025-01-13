@@ -6,7 +6,7 @@ export const login = async (req, res, next) => {
 		const { username, password } = req.body;
 
 		// Find user by email address
-		const admin = await db.models.Account.findOne({ where: { username } });
+		const admin = await db.models.User.findOne({ where: { username, role: 'admin' } });
 		if (!admin) {
 			return res.status(400).json({ code: 400, message: 'There is no user with this username!' });
 		}
@@ -29,7 +29,7 @@ export const register = async (req, res, next) => {
 	try {
 		const { fullName, username, password } = req.body;
 		// Check if user exists
-		const userExists = await db.models.Account.findOne({
+		const userExists = await db.models.User.findOne({
 			where: {
 				username: username,
 			},
@@ -40,10 +40,11 @@ export const register = async (req, res, next) => {
 		}
 
 		// Create user
-		const admin = await db.models.Account.create({
+		const admin = await db.models.User.create({
 			fullName: fullName,
 			password: password,
 			username: username,
+			role: 'admin',
 		});
 
 		// Generate and return tokens

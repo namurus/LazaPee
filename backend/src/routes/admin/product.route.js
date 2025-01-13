@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProduct, getProduct, getAlProducts, deleteProduct } from '@/controllers/admin/product.controller';
+import { createProduct, getProduct, getAlProducts, deleteProduct, getProductReview } from '@/controllers/admin/product.controller';
 import isAdmin from '@/middlewares/isAdmin';
 import validate from '@/middlewares/validation';
 import multer from 'multer';
@@ -9,11 +9,12 @@ const upload = multer();
 
 const router = Router();
 
-router.post('/', upload.single('thumbnail'), uploadCloud, validate(createProductRules), createProduct);
+// router.post('/', upload.single('thumbnail'), uploadCloud, validate(createProductRules), createProduct);
 
 router.get('/:productId', getProduct);
 
 router.get('/', getAlProducts);
+router.get('/review/:productId', getProductReview);
 
 // router.patch('/:productId', upload.single('thumbnail'), uploadCloud, );
 

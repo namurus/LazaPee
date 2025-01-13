@@ -50,10 +50,15 @@ module.exports = {
         allowNull: true,
         field: 'temporary_closure_reason',
       },
+      dateClosed: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        field: 'date_closed',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
         field: 'created_at', 
       },
       updatedAt: {

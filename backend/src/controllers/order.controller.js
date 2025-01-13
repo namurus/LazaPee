@@ -7,8 +7,25 @@ export const addProductToOrderCheckout = async (req, res, next) => {
 
       // Validate input
       if (!selectItems || !selectItems.length) {
-          return res.status(400).json({ message: 'Incomplete information or cart is empty!' });
+          return res.status(400).json({ message: 'Incomplete information or cart is empty!'});
       }
+
+      // Lấy giỏ hàng của người dùng
+      const cart = await db.models.Cart.findOne({
+      where: { userId: req.user.id },
+      include: {
+          model: db.models.CartItem,
+          as: 'cartItems',
+          attributes: ['skusId', 'quantity'],
+      },
+    });
+
+    if (!cart || !cart.cartItems.length) {
+        return res.status(400).json({ message: 'Your cart is empty!' });
+    }
+
+    const cartItemsMap = new Map(cart.cartItems.map(item => [item.skusId, item.quantity]));
+
 
       const skusDetails = [];
       let totalAmount = 0;
@@ -85,173 +102,221 @@ export const addProductToOrderCheckout = async (req, res, next) => {
   }
 };
 
-// // Controller for creating orders
-// export const createOrders = async (req, res) => {
-//   const { paymentMethod, shippingAddress, shippingCompany, phoneNumber, shippingFee, selectItems } = req.body;
+export const getCartItemAndUserInfo = async (req, res, next) => {
+  try {
 
-//   try {
-//     // Validate input
-//     if (!paymentMethod || !shippingAddress || !selectItems || selectItems.length === 0) {
-//       return res.status(400).json({ message: 'Invalid input. Please provide all required information.' });
-//     }
+      const { voucherCode } = req.body; // Lấy mã voucher từ request body
 
-//     const createdOrders = [];
+      const cart = await db.models.Cart.findOne({
+          where: { userId: req.user.id },
+          attributes: ['id'],
+          include: [
+              {
+                  model: db.models.CartItem,
+                  as: 'cartItems',
+                  attributes: ['quantity'],
+                  include: [
+                      {
+                          model: db.models.Skus,
+                          as: 'skus',
+                          attributes: ['price', 'color', 'size', 'stock_quantity'],
+                          include: [
+                              {
+                                  model: db.models.Product,
+                                  as: 'product',
+                                  attributes: ['id', 'productName', 'brand', 'description', 'thumbnail'],
+                                  include: [
+                                      {
+                                          model: db.models.Shop,
+                                          as: 'shop',
+                                          attributes: ['shopName', 'status'],
+                                      },
+                                  ],
+                              },
+                          ],
+                      },
+                  ],
+              },
+          ],
+      });
 
-//     for (const item of selectItems) {
-//       // Find SKU
-//       const sku = await db.models.Skus.findByPk(item.skusId, {
-//         attributes: ['id', 'stock_quantity', 'price'],
-//         include: [
-//           {
-//             model: db.models.Product,
-//             as: 'product',
-//             attributes: ['id'],
-//             include: [
-//               {
-//                 model: db.models.Shop,
-//                 as: 'shop',
-//                 attributes: ['shop_id', 'status'],
-//               },
-//             ],
-//           },
-//         ],
-//       });
+        // Xử lý giỏ hàng không tồn tại hoặc trống
+    if (!cart || !cart.cartItems || cart.cartItems.length === 0) {
+      console.log('Your cart is empty!');
+      return res.status(400).json({ message: 'Your cart is empty!' });
+    }
 
-//       if (!sku) {
-//         createdOrders.push({
-//           skusId: item.skusId,
-//           message: `SKU with ID ${item.skusId} not found.`
-//         });
-//         continue;
-//       }
+      const user = await db.models.User.findOne({
+          where: {id: req.user.id },
+          attributes: ['id','fullName', 'phone', 'address'],
+          include: [
+              {
+                  model: db.models.UserAddress,
+                  as: 'user_addresses',
+                  attributes: ['fullName', 'phone', 'address'],
+              },
+          ],
+      });
 
-//       // Check if shop exists and is active
-//       if (!sku.product?.shop || sku.product.shop.status !== 'on') {
-//         createdOrders.push({
-//           skusId: item.skusId,
-//           message: `Shop for SKU ID ${item.skusId} (${sku.product?.shop?.shopName || 'Unknown'}) is currently off.`
-//         });
-//         continue;
-//       }
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      console.log('User:', user); 
 
-//       // Check stock availability
-//       if (sku.stock_quantity < item.quantity) {
-//         createdOrders.push({
-//           skusId: item.skusId,
-//           message: `SKU with ID ${item.skusId} does not have enough stock.`
-//         });
-//         continue;
-//       }
 
-//       // Create order
-//       const order = await db.models.Order.create({
-//         customerId: req.user.id,
-//         paymentMethod,
-//         shippingAddress,
-//         shippingCompany,
-//         phoneNumber: phoneNumber,
-//         shippingFee: shippingFee,
-//         status: 'pending',
-//         totalAmount: sku.price * item.quantity,
-//       });
+      // Lấy thông tin voucher
+      let voucher = null;
+      if (voucherCode) {
+          voucher = await db.models.Voucher.findOne({
+              where: { code: voucherCode },
+          });
 
-//       // Create order item
-//       await db.models.OrderItem.create({
-//         orderId: order.id,
-//         skusId: item.skusId,
-//         quantity: item.quantity,
-//         price: sku.price * item.quantity,
-//       });
+          if (!voucher) {
+              return res.status(404).json({ message: 'Voucher not found or invalid' });
+          }
 
-//       // Update SKU stock
-//       await sku.update({
-//         stock_quantity: sku.stock_quantity - item.quantity,
-//       });
+          // Kiểm tra hạn sử dụng của voucher
+          const now = new Date();
+          if (now < voucher.startDate || now > voucher.endDate) {
+            return res.status(400).json({ code: 400, message: 'Voucher is not available yet' });
+          }
 
-//       // Add order to response
-//       createdOrders.push({
-//         orderId: order.id,
-//         skusId: item.skusId,
-//         productId: sku.product.id,
-//         quantity: item.quantity,
-//         totalPrice: sku.price * item.quantity,
-//         status: order.status,
-//         shippingAddress: order.shippingAddress,
-//         paymentMethod: order.paymentMethod,
-//         shippingCompany: order.shippingCompany,
-//       });
-//     }
+          if (voucher.status === false || voucher.quantity === 0) {
+            return res.status(400).json({ code: 400, message: 'Voucher is not available' });
+          }
+          const userVoucher = await db.models.UserVoucher.findOne({
+            where: { userId: user.id, voucherId: voucher.id },
+          });
+          if (userVoucher) {
+            return res.status(400).json({ code: 400, message: 'Voucher has been used' });
+          }
+      }
 
-//     if (paymentMethod === 'COD') {
-//       return res.status(201).json({
-//           message: 'Order created successfully with COD payment.',
-//           order: createdOrders,
-//       });
-//     }
-//     return res.status(201).json({
-//       message: 'Order created successfully. Please proceed with bank transfer payment.',
-//       order: createdOrders,
-//     });
-//   } catch (error) {
-//     console.error('Error creating order:', error);
-//     return res.status(500).json({ message: 'Internal server error.' });
-//   }
-// };
+      const result = {
+          id: cart.id,
+          products: await Promise.all(cart.cartItems.map(async (cartItem) => {
+              const { product, price, attributeName, stock_quantity, value } = cartItem.skus;
+              const shop = product.shop;
+
+              return {
+                  id: product.id,
+                  productName: product.productName,
+                  price,
+                  attributeName,
+                  stock_quantity,
+                  value,
+                  description: product.description,
+                  brand: product.brand,
+                  thumbnail: product.thumbnail,
+                  quantity: cartItem.quantity,
+                  outOfStock: stock_quantity < cartItem.quantity ? 'yes' : 'no',
+                  shopOff: shop.status === 'off' ? 'yes' : 'no',
+                  shopName: shop.shopName,
+                  total: await cartItem.getTotal(),
+              };
+          })),
+          total: await cart.getTotal(),
+          userId: req.user.id,
+          totalProducts: await cart.getTotalProducts(),
+          discountPercentage: voucher.discount,
+          userInfo: {
+              fullName: user.fullName,
+              phone: user.phone,
+              address: user.address,
+              secondaryInfo: user.user_addresses.map((address) => ({
+                secondaryFullName: address.fullName,
+                secondaryPhone: address.phone,
+                secondaryAddress: address.address,
+              })),
+          },
+      };
+
+      res.status(200).json(result);
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    res.status(500).json({ message: 'Internal server error'});
+  }
+};
+
+
 
 export const createOrders = async (req, res, next) => {
   try {
-    const { shippingAddress, shippingCompany, phoneNumber, paymentMethod, shippingFee, selectItems, voucherId } = req.body;
+    const { fullName, phoneNumber, shippingAddress, shippingType,  paymentMethod, voucherCode} = req.body;
 
-    // Map items by shopId
+
+    // Fetch user's cart and related items
+    const cart = await db.models.Cart.findOne({
+      where: { userId: req.user.id },
+      include: {
+        model: db.models.CartItem,
+        as: 'cartItems',
+        include: [
+          {
+            model: db.models.Skus,
+            as: 'skus',
+            // attributes: ['i'productId', 'price', 'color', 'size', 'stock_quantity'],
+          },
+        ],
+      },  
+
+    });
+
+    if (!cart || !cart.cartItems.length) {
+      return res.status(400).json({ message: 'Your cart is empty!' });
+    }
+    
+
+      // Check if voucher exists and is valid
+      let voucher = null;
+      if (voucherCode) {
+        voucher = await db.models.Voucher.findOne({
+          where: { code: voucherCode },
+        });
+      }
+
+    // Determine shipping fee
+    const shippingFee = shippingType === 'express' ? 40000 : 20000;
+
+    // Organize cart items by shopId
     const shopOrders = {};
-    for (const item of selectItems) {
-      const sku = await db.models.Skus.findOne({ where: { id: item.skusId } });
-
-      if (!sku) {
-        return res.status(404).json({ message: `SKU with ID ${item.skusId} not found` });
-      }
-
-      if (sku.stock_quantity < item.quantity) {
-        return res.status(400).json({ message: `Insufficient stock for SKU ${item.skusId}` });
-      }
+    
+    for (let cartItem of cart.cartItems) {
+      const sku = cartItem.skus;
 
       const product = await db.models.Product.findOne({ where: { id: sku.productId } });
+
       if (!shopOrders[product.shopId]) {
         shopOrders[product.shopId] = [];
       }
 
       // Deduct stock quantity
-      sku.stock_quantity -= item.quantity;
+      sku.stock_quantity -= cartItem.quantity;
       await sku.save();
 
-      shopOrders[product.shopId].push({ sku, quantity: item.quantity, price: sku.price });
+      shopOrders[product.shopId].push({
+        sku,
+        quantity: cartItem.quantity,
+        price: sku.price,
+      });
     }
 
     const createdOrders = [];
     for (const [shopId, items] of Object.entries(shopOrders)) {
       const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      // // Apply voucher if provided
-      // let discount = 0;
-      // if (voucherId) {
-      //   const voucher = await db.models.Voucher.findOne({ where: { id: voucherId, status: true } });
-      //   if (voucher) {
-      //     discount = (totalAmount * voucher.discount) / 100;
-      //     voucher.quantity -= 1;
-      //     if (voucher.quantity <= 0) voucher.status = false;
-      //     await voucher.save();
-      //   }
-      // }
-
       const order = await db.models.Order.create({
         customerId: req.user.id,
         shopId: parseInt(shopId),
-        shippingAddress,
-        shippingCompany,
+        status: 'pending',
+        fullName,
         phoneNumber,
-        paymentMethod,
-        shippingFee,
-        totalAmount: totalAmount,
+        shippingAddress,
+        shippingType,
+        paymentMethod: paymentMethod,
+        totalAmount: totalAmount - (voucher ? totalAmount * voucher.discount / 100 : 0) + shippingFee,
+        shippingFee: shippingFee,
+        shippingCompany: 'GHN', // Temporary placeholder
       });
 
       for (const { sku, quantity } of items) {
@@ -266,11 +331,62 @@ export const createOrders = async (req, res, next) => {
       createdOrders.push(order);
     }
 
-    res.status(201).json({ message: 'Orders created successfully', orders: createdOrders });
-  } catch (error) {
-    console.error('Error creating orders:', error);
-    next(error);
+  // Handle payment method after creating all orders
+  if (paymentMethod === 'credit card') {
+    // Generate payment and QR code for credit card
+    const bankInfo = {
+      id: process.env.BANK_ID,
+      accountNo: process.env.ACCOUNT_NO,
+      accountName: process.env.ACCOUNT_NAME,
+      template: process.env.TEMPLATE,
+    };
+
+    const totalAmount = createdOrders.reduce((sum, order) => sum + order.totalAmount, 0); // Calculate total for all orders
+    const orderIds = createdOrders.map((o) => o.id).join(',')
+
+    const newPayment = await db.models.Payment.create({
+      orderId: orderIds,
+      customerId: req.user.id,
+      amount: totalAmount,
+      paymentMethod,
+      description: 'Temporary description', // Temporary placeholder
+      shippingFee
+    });
+
+    // Update payment description
+    await newPayment.update({
+      description: `Orders-${createdOrders.map((o) => o.id)}-Pays-${newPayment.id}`,
+    });
+
+    // Generate QR code data
+    const qrCodeData = `https://img.vietqr.io/image/${bankInfo.id}-${bankInfo.accountNo}-${bankInfo.template}.png?amount=${totalAmount}&addInfo=${encodeURIComponent(
+      newPayment.description
+    )}&accountName=${bankInfo.accountName}&paymentId=${newPayment.id}`;
+
+    return res.status(201).json({
+      message: 'Order successful please pay',
+      qrCode: qrCodeData,
+      paymentId: newPayment.id,
+      orderIds: orderIds,
+      orders: createdOrders,
+    });
+  } else if (paymentMethod === 'COD') {
+
+    await db.models.CartItem.destroy({
+      where: {
+        cartId: cart.id,
+      },
+    });
+
+    return res.status(201).json({
+      message: 'Orders created successfully',
+      orders: createdOrders,
+    });
   }
+} catch (error) {
+  console.error('Error creating orders:', error);
+  next(error);
+}
 };
 
 
@@ -343,7 +459,7 @@ export const getOrderDetailsById = async (req, res, next) => {
 // Controller to update an order by ID
 export const updateOrderByID = async (req, res, next) => {
   const { id } = req.params;
-  const { status, shippingAddress, paymentMethod, phoneNumber} = req.body;
+  const { status, shippingAddress, paymentMethod, phoneNumber, shipingCompany} = req.body;
 
   try {
     // Validate if the order ID is missing
@@ -366,6 +482,7 @@ export const updateOrderByID = async (req, res, next) => {
       ...(paymentMethod && { paymentMethod }),
       ...(phoneNumber && { phoneNumber }),
       ...(paymentMethod && { paymentMethod }),
+      ...(shipingCompany && { shipingCompany }),
     });
 
     // Fetch the updated order details, including associated items and product data
@@ -463,7 +580,7 @@ export const cancelledOrderByID = async (req, res, next) => {
 
 // Controller to retrieve all orders for a specific user
 export const getUserOrders = async (req, res, next) => {
-  const { id } = req.params;
+  const  id  = req.user.id;
 
   try {
     // Validate if userId is provided
@@ -474,7 +591,7 @@ export const getUserOrders = async (req, res, next) => {
     // Fetch all orders for the given userId
     const orders = await db.models.Order.findAll({
       where: { customerId: id },
-      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+      attributes: { exclude: ['updatedAt', 'deletedAt'] },
       include: [
         {
           model: db.models.OrderItem,

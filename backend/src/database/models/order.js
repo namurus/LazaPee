@@ -52,6 +52,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'pending',
         field: 'status',
       },
+      fullName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'full_name',
+      },
       phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -61,6 +66,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'shipping_address',
+      },
+      shippingType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'shipping_type',
       },
       totalAmount: {
         type: DataTypes.FLOAT,

@@ -24,7 +24,7 @@ const Login = () => {
         username: username,
         password: password,
       });
-
+      console.log(response);
       if (response.code === 200) {
         // get user
         localStorage.setItem('ACCESS_TOKEN', response.token);

@@ -7,9 +7,8 @@ function removeVietnameseTones(str) {
 }
 
 function removeWhitespaceAndHyphen(str) {
-    return str.replace(/[\s-]+/g, ""); // Loại bỏ tất cả khoảng trắng và ký tự '-'
+    return str.replace(/[,\s-]+/g, ""); // Loại bỏ tất cả khoảng trắng và ký tự '-'
 }
-
 
 
 async function checkPaid(price, description) {
@@ -20,7 +19,8 @@ async function checkPaid(price, description) {
         const lastPrice = parseInt(lastPaid["Giá trị"], 10);
         const lastContent = removeVietnameseTones(lastPaid["Mô tả"]);
         //const mainContent=removeWhitespace(lastContent);
-        const normalizedDescription = removeWhitespaceAndHyphen(description);
+        const  normalizedDescription = removeWhitespaceAndHyphen(description);
+        console.log("lastConten:", lastContent);
         console.log(normalizedDescription);
 
         if (lastPrice >= price && lastContent.includes(normalizedDescription)) {
