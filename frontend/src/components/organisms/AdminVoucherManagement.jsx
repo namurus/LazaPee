@@ -16,7 +16,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 
 function AdminVoucherManagement() {
   const [vouchers, setVouchers] = useState([]);

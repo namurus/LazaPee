@@ -4,7 +4,6 @@ import axios from 'axios';
 import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 import { Button } from '../ui/button';
-import ShopTitleSection from '../molecules/ShopTitleSection';
 
 function AdminViewOrderDetail() {
   const { id } = useParams();
@@ -28,16 +27,12 @@ function AdminViewOrderDetail() {
           (item) => item.id === parseInt(id)
         );
 
-        console.log('id:', id);
-
-        console.log('Order:', response.data.data);  
-        console.log('Order:', order);
-
         if (order) {
           setOrderDetail(order);
         } else {
           console.error('Order not found');
         }
+
       } catch (error) {
         console.error('Failed to fetch orders:', error);
       }
@@ -56,10 +51,7 @@ function AdminViewOrderDetail() {
     );
   }
 
-  const {
-    order,
-    sku: { product },
-  } = orderDetail;
+  const { order, sku: { product } } = orderDetail;
 
   const renderCustomerInfo = () => (
     <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
@@ -99,15 +91,11 @@ function AdminViewOrderDetail() {
   return (
     <SidebarMaincontentLayout>
       <div className="p-4">
-        
         {renderOrderInfo()}
         {renderCustomerInfo()}
         {renderProductInfo()}
         <div className='flex items-center justify-end'>
-        <Button
-          className="mb-4 bg-gray-900 hover:bg-gray-500"
-          onClick={() => navigate(-1)}
-        >
+        <Button className="mb-4 bg-gray-900 hover:bg-gray-500" onClick={() => navigate(-1)}>
           Quay lại
         </Button>
         </div>
