@@ -1,4 +1,4 @@
-import { del, fetchWithInstance, post, put } from '../config';
+import { del, get, fetchWithInstance, post, put } from '../config';
 
 const getProducts = () => {
   return fetchWithInstance('products');
@@ -17,15 +17,11 @@ const getProductsWithSort = (sort) => {
 };
 
 const getCategories = () => {
-  return fetch('https://fakestoreapi.com/products/categories').then((res) =>
-    res.json()
-  );
-
-  // return fetchWithInstance('category');
+  return get('category');
 };
 
 const getCategoryProducts = (category) => {
-  return fetchWithInstance(`products/category/${category}`);
+  return fetchWithInstance(`category/${category}`);
 };
 
 const addProduct = (product) => {

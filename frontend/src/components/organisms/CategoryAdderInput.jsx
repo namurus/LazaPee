@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { Fragment, useState } from 'react';
 import InputField from '../molecules/InputField';
 import { InputNumber } from 'antd';
+import config from '../../config/config';
 
 function constructTableData(categories) {
   const headers = categories.map((category) => category.type);
@@ -18,20 +19,62 @@ function constructTableData(categories) {
   if (categories.length === 2) {
     categories[0].items.forEach((item) => {
       categories[1].items.forEach((subItem) => {
-        rows[item.text][subItem.text] = { price: 0 };
+        rows[item.text][subItem.text] = { price: 0, stock: 0 };
       });
     });
   } else {
     categories[0].items.forEach((item) => {
-      rows[item.text] = { price: 0 };
+      rows[item.text] = { price: 0, stock: 0 };
     });
   }
-  console.log(rows);
 
   return {
     headers,
     rows,
   };
+}
+
+const headerMap = Object.values({ ...config.colors, ...config.sizes }).reduce(
+  (acc, color) => {
+    acc[color.text] = color.value;
+    return acc;
+  },
+  {}
+);
+
+const headerNameMap = {
+  'Màu sắc': 'color',
+  'Kích thước': 'size',
+};
+
+function constructSKUData(categories, tableData) {
+  if (!tableData) {
+    return null;
+  }
+  const skus = [];
+  const headers = tableData.headers;
+  const rows = tableData.rows;
+  if (headers.length === 1) {
+    Object.keys(rows).forEach((key) => {
+      skus.push({
+        [headerNameMap[headers[0]]]: headerMap[key] || key,
+        price: rows[key].price,
+        stock: rows[key].stock,
+      });
+    });
+  } else {
+    Object.keys(rows).forEach((key) => {
+      Object.keys(rows[key]).forEach((subKey) => {
+        skus.push({
+          [headerNameMap[headers[0]]]: headerMap[key] || key,
+          [headerNameMap[headers[1]]]: headerMap[subKey] || subKey,
+          price: rows[key][subKey].price,
+          stock: rows[key][subKey].stock,
+        });
+      });
+    });
+  }
+  return skus;
 }
 
 function CategoryAdderInput() {
@@ -56,6 +99,7 @@ function CategoryAdderInput() {
     setCategories(newCategories);
     setTableData(constructTableData(newCategories));
   };
+  console.log('sku', constructSKUData(categories, tableData));
   return (
     <div>
       <div className='space-y-4'>
@@ -98,15 +142,15 @@ function CategoryAdderInput() {
           <InputNumber
             placeholder='Nhập giá bán'
             className='flex w-full min-w-40 max-w-72 items-center px-4 before:mr-2 before:text-gray-500 before:content-["đ|"]'
-            name='priceData'
+            name='price'
             min={0}
           />
         </InputField>
       ) : (
         <textarea
           type='hidden'
-          name='priceData'
-          value={JSON.stringify(tableData)}
+          name='sku'
+          value={JSON.stringify(constructSKUData(categories, tableData))}
           className='hidden'
         />
       )}

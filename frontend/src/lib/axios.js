@@ -7,4 +7,15 @@ const instance = axios.create({
   },
 });
 
+instance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+)
+
+export const baseURL = 'https://lazapee-jivl.onrender.com';
+
 export default instance;
