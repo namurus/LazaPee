@@ -143,6 +143,276 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
+            {
+                productId: 30,
+                url: 'https://bom.so/JlOeru',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 30,
+                url: 'https://bom.so/mOKNlQ',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 30,
+                url: 'https://bom.so/xdbAQc',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 30,
+                url: 'https://bom.so/QfLLWw',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 30,
+                url: 'https://bom.so/6Zl7JB',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 31,
+                url: 'https://bom.so/jHglr2',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 31,
+                url: 'https://bom.so/206OwP',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 31,
+                url: 'https://bom.so/Ihzjj7',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 31,
+                url: 'https://bom.so/zlUzls',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 32,
+                url: 'https://bom.so/B37B25',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 32,
+                url: 'https://bom.so/W4uAvf',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 32,
+                url: 'https://bom.so/bXzVer',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 32,
+                url: 'https://bom.so/Wdm8ag',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 33,
+                url: 'https://bom.so/wLz9Ez',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 33,
+                url: 'https://bom.so/WERPlG',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 33,
+                url: 'https://bom.so/qlaXk2',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 33,
+                url: 'https://bom.so/b5CqZD',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 34,
+                url: 'https://bom.so/AyDYy3',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 34,
+                url: 'https://bom.so/UTY6ho',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 34,
+                url: 'https://bom.so/ro8Gst',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 34,
+                url: 'https://bom.so/cXfKNo',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 35,
+                url: 'https://bom.so/R8bEm8',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 35,
+                url: 'https://bom.so/NmQ05N',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 35,
+                url: 'https://bom.so/DdsixN',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 35,
+                url: 'https://bom.so/zAC8Pm',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 36,
+                url: 'https://bom.so/PuqqvR',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 36,
+                url: 'https://bom.so/pVMwCw',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 36,
+                url: 'https://bom.so/eGQgdu',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 36,
+                url: 'https://bom.so/3h4MYa',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 37,
+                url: 'https://bom.so/jjDVeC',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 37,
+                url: 'https://bom.so/UceEXi',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 37,
+                url: 'https://bom.so/FUM6yk',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 37,
+                url: 'https://bom.so/uqJyRC',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 38,
+                url: 'https://bom.so/E4ylKo',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 38,
+                url: 'https://bom.so/A6pXQY',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 38,
+                url: 'https://bom.so/ySIABd',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 38,
+                url: 'https://bom.so/D07VSF',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 39,
+                url: 'https://bom.so/x9NArq',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 39,
+                url: 'https://bom.so/7aTAhL',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 39,
+                url: 'https://bom.so/DWRgK6',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 39,
+                url: 'https://bom.so/LSvVsX',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 40,
+                url: 'https://bom.so/KFe0Hf',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 40,
+                url: 'https://bom.so/y0vbkt',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 40,
+                url: 'https://bom.so/UPGGIG',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 40,
+                url: 'https://bom.so/hmJfJU',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
         ], {});
     },
     down: async (queryInterface, Sequelize) => {

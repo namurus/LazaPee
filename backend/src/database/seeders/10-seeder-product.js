@@ -359,9 +359,9 @@ module.exports = {
             {
                 id: 30,
                 productName: 'Art and Craft Kit CreativeFun',
-                brand: 'BrandK',
+                brand: 'Crayola',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/creativefun_thumbnail.jpg',
+                thumbnail: 'https://bom.so/joNiSE',
                 description: 'Comprehensive art and craft kit for young artists.',
                 category_id: 3,
                 status: 'available',
@@ -371,9 +371,9 @@ module.exports = {
             {
                 id: 31,
                 productName: 'T-Shirt Classic Fit',
-                brand: 'BrandL',
+                brand: 'Hanes',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/classicfit_tshirt_thumbnail.jpg',
+                thumbnail: 'https://bom.so/GDFePK', // đen, trắng, xanh rêu, xám
                 description: 'Comfortable cotton T-shirt in multiple colors.',
                 category_id: 4,
                 status: 'available',
@@ -383,9 +383,9 @@ module.exports = {
             {
                 id: 32,
                 productName: 'Denim Jeans Slim Fit',
-                brand: 'BrandM',
+                brand: 'Levis',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/slimfit_jeans_thumbnail.jpg',
+                thumbnail: 'https://bom.so/qCiORA', // đen, xanh đen, xám khói, xanh sáng
                 description: 'Stylish slim-fit denim jeans for casual wear.',
                 category_id: 4,
                 status: 'available',
@@ -395,9 +395,9 @@ module.exports = {
             {
                 id: 33,
                 productName: 'Leather Jacket MotoStyle',
-                brand: 'BrandN',
+                brand: 'Harley-Davidson',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/motostyle_jacket_thumbnail.jpg',
+                thumbnail: 'https://bom.so/ZesiZe', // nâu, đen, xám, xanh rêu
                 description: 'Premium leather jacket for a bold look.',
                 category_id: 4,
                 status: 'available',
@@ -407,9 +407,9 @@ module.exports = {
             {
                 id: 34,
                 productName: 'Hoodie Winter Warm',
-                brand: 'BrandO',
+                brand: 'Champion',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/winterwarm_hoodie_thumbnail.jpg',
+                thumbnail: 'https://bom.so/sAUJnY', // hồng, xám, đen, xanh rêu
                 description: 'Cozy hoodie perfect for cold weather.',
                 category_id: 4,
                 status: 'available',
@@ -419,9 +419,9 @@ module.exports = {
             {
                 id: 35,
                 productName: 'Formal Shirt SlimFit',
-                brand: 'BrandP',
+                brand: 'Van Heusen',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/slimfit_shirt_thumbnail.jpg',
+                thumbnail: 'https://bom.so/p55WZI', // trắng, hồng, xanh, đen
                 description: 'Elegant slim-fit formal shirt for office wear.',
                 category_id: 4,
                 status: 'available',
@@ -431,9 +431,9 @@ module.exports = {
             {
                 id: 36,
                 productName: 'Sports Shorts ActiveWear',
-                brand: 'BrandQ',
+                brand: 'Nike',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/activewear_shorts_thumbnail.jpg',
+                thumbnail: 'https://bom.so/woGEJU', // đen, xanh ghi, xanh rêu, tím
                 description: 'Breathable sports shorts for active lifestyle.',
                 category_id: 4,
                 status: 'available',
@@ -443,9 +443,9 @@ module.exports = {
             {
                 id: 37,
                 productName: 'Polo Shirt Premium',
-                brand: 'BrandR',
+                brand: 'Ralph Lauren',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/premium_polo_thumbnail.jpg',
+                thumbnail: 'https://bom.so/y6E6Tl', // Nâu đất, xanh rêu, be, trắng
                 description: 'Classic polo shirt with a premium finish.',
                 category_id: 4,
                 status: 'available',
@@ -455,9 +455,9 @@ module.exports = {
             {
                 id: 38,
                 productName: 'Skirt ElegantFlow',
-                brand: 'BrandS',
+                brand: 'H&M',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/elegantflow_skirt_thumbnail.jpg',
+                thumbnail: 'https://bom.so/ZjmC10', // xám, đen, đỏ, be
                 description: 'Elegant skirt for casual and formal occasions.',
                 category_id: 4,
                 status: 'available',
@@ -467,9 +467,9 @@ module.exports = {
             {
                 id: 39,
                 productName: 'Tracksuit FlexPro',
-                brand: 'BrandT',
+                brand: 'Adidas',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/flexpro_tracksuit_thumbnail.jpg',
+                thumbnail: 'https://bom.so/s11qNz', //đen, xanh lục, xám
                 description: 'Comfortable tracksuit for training and lounging.',
                 category_id: 4,
                 status: 'available',
@@ -479,9 +479,9 @@ module.exports = {
             {
                 id: 40,
                 productName: 'Dress SummerBreeze',
-                brand: 'BrandU',
+                brand: 'Zara',
                 shop_id: 3,
-                thumbnail: 'https://example.com/images/summerbreeze_dress_thumbnail.jpg',
+                thumbnail: 'https://bom.so/uvTBzh', // hồng, xanh dương, trắng, vàng
                 description: 'Light and airy summer dress for sunny days.',
                 category_id: 4,
                 status: 'available',
