@@ -73,7 +73,7 @@ module.exports = {
                 price: 2000,
                 stock_quantity: 40,
                 color: 'white',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -83,7 +83,7 @@ module.exports = {
                 price: 2000,
                 stock_quantity: 45,
                 color: 'black',
-                size: 'L',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -94,7 +94,7 @@ module.exports = {
                 price: 500,
                 stock_quantity: 50,
                 color: 'blue',
-                size: 'S',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -104,7 +104,7 @@ module.exports = {
                 price: 500,
                 stock_quantity: 55,
                 color: 'red',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -115,7 +115,7 @@ module.exports = {
                 price: 300,
                 stock_quantity: 60,
                 color: 'green',
-                size: 'S',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -125,7 +125,7 @@ module.exports = {
                 price: 300,
                 stock_quantity: 65,
                 color: 'yellow',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -136,7 +136,7 @@ module.exports = {
                 price: 100,
                 stock_quantity: 70,
                 color: 'black',
-                size: 'S',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -146,7 +146,7 @@ module.exports = {
                 price: 100,
                 stock_quantity: 75,
                 color: 'white',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -157,7 +157,7 @@ module.exports = {
                 price: 150,
                 stock_quantity: 80,
                 color: 'blue',
-                size: 'S',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -167,7 +167,7 @@ module.exports = {
                 price: 150,
                 stock_quantity: 85,
                 color: 'red',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -178,7 +178,7 @@ module.exports = {
                 price: 250,
                 stock_quantity: 90,
                 color: 'green',
-                size: 'S',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -188,7 +188,7 @@ module.exports = {
                 price: 250,
                 stock_quantity: 95,
                 color: 'yellow',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -199,7 +199,7 @@ module.exports = {
                 price: 400,
                 stock_quantity: 100,
                 color: 'black',
-                size: 'S',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -209,7 +209,7 @@ module.exports = {
                 price: 400,
                 stock_quantity: 105,
                 color: 'white',
-                size: 'M',
+                size: null,
                 created_at: new Date(),
                 updated_at: new Date()
             },
