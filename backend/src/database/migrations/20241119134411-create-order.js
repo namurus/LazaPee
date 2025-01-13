@@ -1,4 +1,7 @@
 'use strict';
+
+const { ENUM } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -28,9 +31,9 @@ module.exports = {
         },
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('pending', 'waiting for delivery', 'shipping, shipped', 'canceled'),
         allowNull: false,
-        default: 'pending',
+        defaultValue: 'pending',
         field: 'status',
       },
       fullName: {
@@ -65,7 +68,7 @@ module.exports = {
       },
       shippingCompany: {
         type: Sequelize.STRING,
-        allowNull: false, 
+        allowNull: true, 
         field: 'shipping_company',
       },
       shipingFee: {

@@ -104,6 +104,9 @@ export const addProductToOrderCheckout = async (req, res, next) => {
 
 export const getCartItemAndUserInfo = async (req, res, next) => {
   try {
+
+      const { voucherCode } = req.body; // Lấy mã voucher từ request body
+
       const cart = await db.models.Cart.findOne({
           where: { userId: req.user.id },
           attributes: ['id'],
@@ -143,9 +146,23 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
       return res.status(400).json({ message: 'Your cart is empty!' });
     }
 
+    // Kiểm tra từng sản phẩm trong giỏ hàng
+    for (const cartItem of cart.cartItems) {
+      const sku = cartItem.skus;
+      if (sku.stock_quantity < cartItem.quantity) {
+        return res.status(400).json({
+          message: 'Some items are out of stock',
+          productId: sku.product.id,
+          productName: sku.product.productName,
+          availableStock: sku.stock_quantity,
+          requestedQuantity: cartItem.quantity,
+        });
+      }
+    }
+
       const user = await db.models.User.findOne({
           where: {id: req.user.id },
-          attributes: ['fullName', 'phone', 'address'],
+          attributes: ['id','fullName', 'phone', 'address'],
           include: [
               {
                   model: db.models.UserAddress,
@@ -157,6 +174,39 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
 
       if (!user) {
           return res.status(404).json({ message: 'User not found' });
+      }
+      console.log('User:', user); 
+
+
+      // Lấy thông tin voucher
+      let voucher = null;
+      if (voucherCode) {
+          voucher = await db.models.Voucher.findOne({
+              where: { code: voucherCode },
+          });
+
+          if (!voucher) {
+              return res.status(404).json({ message: 'Voucher not found or invalid' });
+          }
+
+          // Kiểm tra hạn sử dụng của voucher
+          const now = new Date();
+          if (now < voucher.startDate || now > voucher.endDate) {
+            return res.status(400).json({ code: 400, message: 'Voucher is not available yet' });
+          }
+
+          if (voucher.status === false || voucher.quantity === 0) {
+            return res.status(400).json({ code: 400, message: 'Voucher is not available' });
+          }
+          const userVoucher = await db.models.UserVoucher.findOne({
+            where: { userId: user.id, voucherId: voucher.id },
+          });
+          if (userVoucher) {
+            return res.status(400).json({ code: 400, message: 'Voucher has been used' });
+          }
+      }
+      else{
+        voucher = { discount: 0 };
       }
 
       const result = {
@@ -185,6 +235,8 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
           total: await cart.getTotal(),
           userId: req.user.id,
           totalProducts: await cart.getTotalProducts(),
+          voucherCode: voucherCode,
+          discountPercentage: voucher.discount,
           userInfo: {
               fullName: user.fullName,
               phone: user.phone,
@@ -208,7 +260,7 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
 
 export const createOrders = async (req, res, next) => {
   try {
-    const { fullName, phoneNumber, shippingAddress, shippingType,  paymentMethod} = req.body;
+    const { fullName, phoneNumber, shippingAddress, shippingType,  paymentMethod, voucherCode} = req.body;
 
 
     // Fetch user's cart and related items
@@ -232,6 +284,28 @@ export const createOrders = async (req, res, next) => {
       return res.status(400).json({ message: 'Your cart is empty!' });
     }
     
+
+      // Check if voucher exists and is valid
+      let voucher = null;
+      if (voucherCode) {
+        voucher = await db.models.Voucher.findOne({
+          where: { code: voucherCode },
+        });
+
+        // Ghi lại thông tin người dùng đã sử dụng voucher
+        await db.models.UserVoucher.create({
+          userId: req.user.id,
+          voucherId: voucher.id,
+        });
+
+        // Cập nhật số lượng voucher còn lại
+        voucher.quantity -= 1;
+        await voucher.save();
+      }
+
+    // Determine shipping fee
+    const shippingFee = shippingType === 'express' ? 40000 : 20000;
+
     // Organize cart items by shopId
     const shopOrders = {};
     
@@ -268,9 +342,9 @@ export const createOrders = async (req, res, next) => {
         shippingAddress,
         shippingType,
         paymentMethod: paymentMethod,
-        totalAmount: totalAmount,
-        shippingFee: 0,
-        shippingCompany: 'GHN',
+        totalAmount: totalAmount - (voucher ? totalAmount * voucher.discount / 100 : 0) + shippingFee,
+        shippingFee: shippingFee,
+        shippingCompany: 'GHN', // Temporary placeholder
       });
 
       for (const { sku, quantity } of items) {
@@ -304,6 +378,7 @@ export const createOrders = async (req, res, next) => {
       amount: totalAmount,
       paymentMethod,
       description: 'Temporary description', // Temporary placeholder
+      shippingFee
     });
 
     // Update payment description
@@ -412,7 +487,7 @@ export const getOrderDetailsById = async (req, res, next) => {
 // Controller to update an order by ID
 export const updateOrderByID = async (req, res, next) => {
   const { id } = req.params;
-  const { status, shippingAddress, paymentMethod, phoneNumber} = req.body;
+  const { status, shippingAddress, paymentMethod, phoneNumber, shipingCompany} = req.body;
 
   try {
     // Validate if the order ID is missing
@@ -435,6 +510,7 @@ export const updateOrderByID = async (req, res, next) => {
       ...(paymentMethod && { paymentMethod }),
       ...(phoneNumber && { phoneNumber }),
       ...(paymentMethod && { paymentMethod }),
+      ...(shipingCompany && { shipingCompany }),
     });
 
     // Fetch the updated order details, including associated items and product data
@@ -532,7 +608,7 @@ export const cancelledOrderByID = async (req, res, next) => {
 
 // Controller to retrieve all orders for a specific user
 export const getUserOrders = async (req, res, next) => {
-  const { id } = req.params;
+  const  id  = req.user.id;
 
   try {
     // Validate if userId is provided
@@ -543,7 +619,7 @@ export const getUserOrders = async (req, res, next) => {
     // Fetch all orders for the given userId
     const orders = await db.models.Order.findAll({
       where: { customerId: id },
-      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+      attributes: { exclude: ['updatedAt', 'deletedAt'] },
       include: [
         {
           model: db.models.OrderItem,

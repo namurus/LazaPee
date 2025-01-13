@@ -52,7 +52,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        full_name: 'Thai Dinh Ngan',
+        full_name: 'Thái Đình Ngân',
         email: 'TDNganJony@gmail.com',
         username: 'NganJony447',
         password: await hash('NganJony447@#$', 10),
@@ -63,6 +63,18 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        full_name: 'Nguyễn Thị Hồng',
+        email: 'HongNguyen1999@gmail.com',
+        username: 'HongNguyen1999',
+        password: await hash('HongNguyen1999@@@123',10),
+        avatar: 'https://bom.so/y1NOSR',
+        phone: '0377561184',
+        address: '118 Bùi Thị Xuân, Cát Lái, Bình Dương',
+        role: 'seller',
+        created_at: new Date(),
+        updated_at: new Date(),
+      }
     ]);
   },
 

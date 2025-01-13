@@ -85,6 +85,7 @@ export const createProduct = async (req, res, next) => {
 			return res.status(400).json({ code: 400, message: 'Images are required' });
 		}
 
+
 		const thumbnail = images[0];
 		// Create the product
 		const product = await db.models.Product.create({
@@ -96,12 +97,13 @@ export const createProduct = async (req, res, next) => {
 			slug: productName,
 			categoryId: categoryId,
 		});
-
+		
 		// Insert product images in bulk
 		const productImages = images.map((url) => ({
 			url,
 			productId: product.id,
 		}));
+
 		await db.models.ProductImage.bulkCreate(productImages);
 
 		let skusData = [];
@@ -142,6 +144,8 @@ export const createProduct = async (req, res, next) => {
 			product: createdProduct,
 		});
 	} catch (err) {
+		console.log(err.message);
+		
 		next(err);
 	}
 };

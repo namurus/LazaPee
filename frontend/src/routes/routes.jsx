@@ -6,13 +6,11 @@ import productRoutes from './productRoutes';
 import authRoutes from './authRoutes';
 import cartRoute from './cartRoute';
 import AuthGuard from '../guards/AuthGuard';
-import RoleBasedGuard from '../guards/RoleBasedGuard';
+// import RoleBasedGuard from '../guards/RoleBasedGuard';
 import { rootAction, rootLoader } from './rootRoutes';
 import shopRoutes from './shopRoutes';
+import adminRoutes from './adminRoutes';
 import CheckoutPage from '../components/pages/CheckoutPage';
-import ProductPage from '../components/pages/ProductPage';
-import { searchLoader } from './searchRoutes';
-import path from 'path';
 import QRPage from '../components/pages/QRPage';
 
 const routes = [
@@ -53,22 +51,19 @@ const routes = [
         ),
       },
       ...authRoutes,
-      {
-        path: 'admin',
-        element: (
-          <RoleBasedGuard role={['admin']}>
-            <div>Admin element Placeholder</div>
-          </RoleBasedGuard>
-        ),
-      },
-      {
-        path: 'search',
-        element: <ProductPage />,
-        loader: searchLoader,
-      },
+      // {
+      //   path: 'admin',
+      //   element: (
+      //     // <RoleBasedGuard roles={['admin']}>
+      //     //   <div>Admin element Placeholder</div>
+      //     // </RoleBasedGuard>
+      //     []
+      //   ),
+      // },
     ],
   },
   ...shopRoutes,
+  ...adminRoutes,
 ];
 
 export default routes;
