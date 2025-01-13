@@ -3,8 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
 
 import { Button } from '../ui/button';
-import { MoreHorizontal, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
@@ -27,7 +26,7 @@ function AdminUserManagement() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log('Users:', response.data.users);
+        // console.log('Users:', response.data.users);
         setUsers(response.data.users);
       } catch (error) {
         console.error('Failed to fetch users:', error);

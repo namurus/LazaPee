@@ -3,9 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
 
 import { Button } from '../ui/button';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { get } from '../../api/config';
 import { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
@@ -15,52 +14,32 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
-
-const data = [
-  {
-    id: 17,
-    productName: 'Smart phone',
-    shopId: 7,
-    brand: 'Smart phone',
-    thumbnail:
-      'http://res.cloudinary.com/dlao1onv5/image/upload/v1736395928/j39nqcnctiuc7tzf9yqn.jpg',
-    description: 'description Smart phone',
-    slug: 'smart-phone',
-    categoryId: 2,
-    status: 'available',
-    soldQuantity: 0,
-    createdAt: '2025-01-09T04:12:09.000Z',
-    updatedAt: '2025-01-09T04:12:09.000Z',
-    deletedAt: null,
-    category: {
-      name: 'Smartphone',
-      description: 'Smartphone',
-      thumbnail: 'https://via.placeholder.com/150',
-    },
-    images: [
-      {
-        url: 'http://res.cloudinary.com/dlao1onv5/image/upload/v1736395928/j39nqcnctiuc7tzf9yqn.jpg',
-      },
-    ],
-    skus: [
-      {
-        size: 'XL',
-        color: 'red',
-        stock_quantity: 0,
-        price: '500',
-      },
-      {
-        size: 'X',
-        color: 'green',
-        stock_quantity: 0,
-        price: '500',
-      },
-    ],
-  },
-];
+import axios from 'axios';
 
 function AdminProductManagement() {
-  const [products, setProducts] = useState(data);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+      const response = await axios.get('https://lazapee-jivl.onrender.com/admin/product', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setProducts(response.data.products);
+      console.log('Products:', response.data.products);
+    }
+
+    catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
 
   const columns = [
     {
@@ -141,12 +120,14 @@ function AdminProductManagement() {
       cell: ({ row }) => {
         const status = row.original.status;
         switch (status) {
-          case 'circulating':
-            return <Badge variant="success">Lưu hành</Badge>;
-          case 'pending':
-            return <Badge variant="warning">Chờ duyệt</Badge>;
-          case 'banned':
-            return <Badge variant="destructive">Bị cấm</Badge>;
+          case 'available':
+            return <Badge variant='success'>Có sẵn</Badge>;
+          case 'out of stock':
+            return <Badge variant='destructive'>Hết hàng</Badge>;
+          case 'active':
+            return <Badge variant='success'>Đang hoạt động</Badge>;
+          case 'inactive':
+            return <Badge variant='destructive'>Ngưng hoạt động</Badge>;
         }
       },
     },
@@ -172,27 +153,19 @@ function AdminProductManagement() {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const handleDelete = async (id) => {
     try {
-      const res = await get('/admin/product');
-      console.log(res.data);
-      setProducts(res.data);
+      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+      await axios.delete(`https://lazapee-jivl.onrender.com/admin/product/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert('Xóa sản phẩm thành công');
+      fetchData(); // Cập nhật danh sách sau khi xóa
     } catch (error) {
-      console.log('Error fetching categories:', error);
-    }
-  };
-
-  const handleDelete = (id) => {
-    try {
-      console.log('delete', id);
-      // await deleteProduct(id);
-      fetchData();
-    } catch (error) {
-      console.log('Error deleting product:', error);
+      console.error('Error deleting product:', error);
+      alert('Có lỗi xảy ra khi xóa sản phẩm');
     }
   };
 
@@ -200,11 +173,12 @@ function AdminProductManagement() {
     <SidebarMaincontentLayout>
       <div className='flex flex-col space-y-6'>
         <Tabs defaultValue='all'>
-          <TabsList className='mb-6 grid w-max grid-cols-4 gap-4' onChan>
+          <TabsList className='mb-6 grid w-max grid-cols-5 gap-4' onChan>
             <TabsTrigger value='all'>Tất cả</TabsTrigger>
-            <TabsTrigger value='circulating'>Lưu hành</TabsTrigger>
-            <TabsTrigger value='pending'>Chờ duyệt</TabsTrigger>
-            <TabsTrigger value='banned'>Bị cấm</TabsTrigger>
+            <TabsTrigger value='available'>Có sẵn</TabsTrigger>
+            <TabsTrigger value='out of stock'>Hết hàng</TabsTrigger>
+            <TabsTrigger value='active'>Đang hoạt động</TabsTrigger>
+            <TabsTrigger value='inactive'>Ngưng hoạt động</TabsTrigger>
           </TabsList>
           <TabsContent value='all'>
             <DataTable
@@ -213,36 +187,35 @@ function AdminProductManagement() {
               searchColumn={'productName'}
             />
           </TabsContent>
-          <TabsContent value='circulating'>
+          <TabsContent value='available'>
             <DataTable
               columns={columns}
-              data={data.filter((product) => product.status === 'circulating')}
+              data={products.filter((product) => product.status === 'available')}
               searchColumn={'productName'}
             />
           </TabsContent>
-          <TabsContent value='pending'>
+          <TabsContent value='out of stock'>
             <DataTable
               columns={columns}
-              data={data.filter((product) => product.status === 'pending')}
+              data={products.filter((product) => product.status === 'out of stock')}
               searchColumn={'productName'}
             />
           </TabsContent>
-          <TabsContent value='banned'>
+          <TabsContent value='active'>
             <DataTable
               columns={columns}
-              data={data.filter(
-                (product) =>
-                  product.status === 'banned' || product.status === null
-              )}
+              data={products.filter((product) => product.status === 'active')}
+              searchColumn={'productName'}
+            />
+          </TabsContent>
+          <TabsContent value='inactive'>
+            <DataTable
+              columns={columns}
+              data={products.filter((product) => product.status === 'inactive')}
               searchColumn={'productName'}
             />
           </TabsContent>
         </Tabs>
-        <Link to='./new' className='self-end'>
-          <Button>
-            Thêm 1 sản phẩm mới <Plus />
-          </Button>
-        </Link>
       </div>
     </SidebarMaincontentLayout>
   );

@@ -97,6 +97,7 @@ function AddVoucherForm() {
       }
 
     } catch (error) {
+      console.error('Failed to add voucher:', error);
       toast.error('Voucher đã tồn tại', {
         className: 'bg-red-500 text-white',
         position: 'top-right',
