@@ -4,8 +4,11 @@ import AdminProductManagement from '../components/organisms/AdminProductManageme
 import AdminOrderManagement from '../components/organisms/AdminOrderManagement';
 import AdminVoucherManagement from '../components/organisms/AdminVoucherManagement';
 import AdminUserManagement from '../components/organisms/AdminUserManagement';
-import AddVoucherForm from '../components/organisms/AddVoucherForm';
-import UpdateVoucherForm from '../components/organisms/UpdateVoucherForm';
+import AdminAddVoucherForm from '../components/organisms/AdminAddVoucherForm';
+import AdminUpdateVoucherForm from '../components/organisms/AdminUpdateVoucherForm';
+import AdminUpdateProductForm from '../components/organisms/AdminUpdateProductForm';
+import AdminReviewManagement from '../components/organisms/AdminReviewManagement';
+import AdminViewOrderDetail from '../components/organisms/AdminViewOrderDetail';
 
 const adminRoutes = [
   {
@@ -23,6 +26,16 @@ const adminRoutes = [
         },
       },
       {
+        path: 'product/update/:id',
+        element: <AdminUpdateProductForm />,
+        handle: {
+          crumb: (id) => ({
+          path: `/admin/product/update/${id}`,
+          name: `Chỉnh sửa sản phẩm`,
+          }),
+        },
+      },
+      {
         path: 'voucher',
         element: <AdminVoucherManagement />,
         handle: {
@@ -34,7 +47,7 @@ const adminRoutes = [
       },
       {
         path: 'voucher/new',
-        element: <AddVoucherForm />,
+        element: <AdminAddVoucherForm />,
         handle: {
           crumb: () => ({
             path: '/admin/voucher/new',
@@ -44,7 +57,7 @@ const adminRoutes = [
       },
       {
         path: 'voucher/update/:id',
-        element: <UpdateVoucherForm />,
+        element: <AdminUpdateVoucherForm />,
         handle: {
           crumb: (id) => ({
             path: `/admin/voucher/update/${id}`,
@@ -69,6 +82,26 @@ const adminRoutes = [
           crumb: () => ({
             path: '/admin/order',
             name: 'Quản lý đơn hàng',
+          }),
+        },
+      },
+      {
+        path: 'order/detail/:id',
+        element: <AdminViewOrderDetail />,
+        handle: {
+          crumb: (id) => ({
+          path: `/admin/order/detail/${id}`,
+          name: `Chi tiết đơn hàng`,
+          }),
+        },
+      },
+      {
+        path: 'product/review',
+        element: <AdminReviewManagement />,
+        handle: {
+          crumb: (id) => ({
+            path: `/admin/product/review/${id}`,
+            name: `Quản lý nhận xét`,
           }),
         },
       },

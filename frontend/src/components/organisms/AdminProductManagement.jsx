@@ -143,7 +143,7 @@ function AdminProductManagement() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {/* <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem> */}
+            <DropdownMenuItem>Xem chi tiết</DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
               Xóa sản phẩm
             </DropdownMenuItem>

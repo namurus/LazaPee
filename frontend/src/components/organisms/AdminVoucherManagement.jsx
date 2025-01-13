@@ -79,10 +79,10 @@ function AdminVoucherManagement() {
       header: 'Giá trị',
       cell: ({ row }) => {
         const discount = row.original.discount;
-        if (discount > 0 && discount < 1) {
+        //if (discount > 0 && discount <= 1) {
           return `${discount * 100}%`;
-        }
-        return CurrencyFormatter.formatWithLocaleInfo(discount, 'VND');
+        //}
+        // return CurrencyFormatter.formatWithLocaleInfo(discount, 'VND');
       },
     },
     {

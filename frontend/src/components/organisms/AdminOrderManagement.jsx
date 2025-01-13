@@ -2,152 +2,191 @@ import DataTable from '../molecules/DataTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
-import PrepareOrderDialog, {
-  SelectDelivery,
-} from '../molecules/PrepareOrderDialog';
-import ResponsiveDialog from '../molecules/ResonsiveDialog';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-// const columns = [
-//   { header: 'ID', accessorKey: 'id' },
-//   { header: 'Tên sản phẩm', accessorKey: 'productName' },
-//   {
-//     header: 'Tổng đơn hàng',
-//     accessorKey: 'orderTotal',
-//     cell: ({ row }) => {
-//       const total = parseFloat(row.getValue('orderTotal'));
-//       const formatted = CurrencyFormatter.formatWithLocaleInfo(total, 'VND');
-//       return <p className='text-sm text-muted-foreground'>{formatted}</p>;
-//     },
-//   },
-//   { header: 'Trạng thái', accessorKey: 'state' },
-//   { header: 'Vận chuyển', accessorKey: 'delivery' },
-//   {
-//     accessorKey: 'actions',
-//     header: 'Thao tác',
-//     cell: ({ row }) => {
-//       const rowData = row.original;
-//       console.log(rowData);
-//       return (
-//         <p className='cursor-pointer text-blue-600'>
-//           {row.getValue('actions')}
-//         </p>
-//       );
-//     },
-//   },
-// ];
-
-const data = [
-  {
-    id: 1,
-    productName: 'Áo thun nam',
-    orderTotal: 61000,
-    state: 'Đang giao',
-    delivery: 'Giao hàng tiết kiệm',
-    actions: 'Xem chi tiết',
-  },
-  {
-    id: 2,
-    productName: 'Áo thun nữ',
-    orderTotal: 20000,
-    state: 'Chờ xác nhận',
-    delivery: 'Giao hàng nhanh',
-    actions: 'Xem chi tiết',
-  },
-  {
-    id: 3,
-    productName: 'Quần jean nam',
-    orderTotal: 30,
-    state: 'Đã giao',
-    delivery: 'Giao hàng tiết kiệm',
-    actions: 'Xem chi tiết',
-  },
-];
+// dữ liệu mẫu
+// {
+//   "code": 200,
+//   "message": "Success",
+//   "data": [
+//       {
+//           "id": 1,
+//           "orderId": 1,
+//           "skusId": 1,
+//           "quantity": 2,
+//           "price": 99.99,
+//           "createdAt": "2025-01-13T18:10:43.000Z",
+//           "updatedAt": "2025-01-13T18:10:43.000Z",
+//           "deletedAt": null,
+//           "sku": {
+//               "id": 1,
+//               "productId": 1,
+//               "price": "1000",
+//               "stock_quantity": 10,
+//               "color": "red",
+//               "size": null,
+//               "createdAt": "2025-01-13T18:10:42.000Z",
+//               "updatedAt": "2025-01-13T18:10:42.000Z",
+//               "product": {
+//                   "id": 1,
+//                   "productName": "Samsung Galaxy A20"
+//               }
+//           },
+//           "order": {
+//               "id": 1,
+//               "customerId": 1,
+//               "shopId": 3,
+//               "status": "pending",
+//               "fullName": "Nguyễn Văn Bảo",
+//               "phoneNumber": "0977466534",
+//               "shippingAddress": "38, Bùi Thị Xuân, Quận 1, TP.HCM",
+//               "shippingType": "standard",
+//               "totalAmount": 300000,
+//               "orderNote": "Please handle with care",
+//               "paymentMethod": "credit card",
+//               "shippingCompany": "UPS",
+//               "shippingFee": 20000,
+//               "createdAt": "2025-01-13T18:10:43.000Z",
+//               "updatedAt": "2025-01-13T18:10:43.000Z",
+//               "deletedAt": null,
+//               "customer": {
+//                   "id": 1,
+//                   "fullName": "Nguyễn Văn Bảo",
+//                   "email": "VanBao113@gmail.com",
+//                   "avatar": "https://i.pinimg.com/736x/6e/af/1a/6eaf1a844ae4b6fa6eeb6ff17f468cc0.jpg",
+//                   "phone": "0977466534",
+//                   "address": "38, Bùi Thị Xuân, Quận 1, TP.HCM"
+//               }
+//           }
+//       },
+//       {
+//           "id": 2,
+//           "orderId": 1,
+//           "skusId": 2,
+//           "quantity": 1,
+//           "price": 999.99,
+//           "createdAt": "2025-01-13T18:10:43.000Z",
+//           "updatedAt": "2025-01-13T18:10:43.000Z",
+//           "deletedAt": null,
+//           "sku": {
+//               "id": 2,
+//               "productId": 1,
+//               "price": "1000",
+//               "stock_quantity": 15,
+//               "color": "blue",
+//               "size": null,
+//               "createdAt": "2025-01-13T18:10:42.000Z",
+//               "updatedAt": "2025-01-13T18:10:42.000Z",
+//               "product": {
+//                   "id": 1,
+//                   "productName": "Samsung Galaxy A20"
+//               }
+//           },
+//           "order": {
+//               "id": 1,
+//               "customerId": 1,
+//               "shopId": 3,
+//               "status": "pending",
+//               "fullName": "Nguyễn Văn Bảo",
+//               "phoneNumber": "0977466534",
+//               "shippingAddress": "38, Bùi Thị Xuân, Quận 1, TP.HCM",
+//               "shippingType": "standard",
+//               "totalAmount": 300000,
+//               "orderNote": "Please handle with care",
+//               "paymentMethod": "credit card",
+//               "shippingCompany": "UPS",
+//               "shippingFee": 20000,
+//               "createdAt": "2025-01-13T18:10:43.000Z",
+//               "updatedAt": "2025-01-13T18:10:43.000Z",
+//               "deletedAt": null,
+//               "customer": {
+//                   "id": 1,
+//                   "fullName": "Nguyễn Văn Bảo",
+//                   "email": "VanBao113@gmail.com",
+//                   "avatar": "https://i.pinimg.com/736x/6e/af/1a/6eaf1a844ae4b6fa6eeb6ff17f468cc0.jpg",
+//                   "phone": "0977466534",
+//                   "address": "38, Bùi Thị Xuân, Quận 1, TP.HCM"
+//               }
+//           }
+//       }
+//   ],
+//   "total": 4,
+//   "page": 1,
+//   "perPage": 2,
+//   "totalPage": 2
+// }
 
 function AdminOrderManagement() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+        const response = await axios.get('https://lazapee-jivl.onrender.com/admin/order', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log('Orders:', response.data.data);
+
+        setData(response.data.data);
+
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const columns = [
     { header: 'ID', accessorKey: 'id' },
-    { header: 'Tên sản phẩm', accessorKey: 'productName' },
-    {
-      header: 'Tổng đơn hàng',
-      accessorKey: 'orderTotal',
+    { header: 'Ngày lập đơn', accessorKey: 'createdAt',
       cell: ({ row }) => {
-        const total = parseFloat(row.getValue('orderTotal'));
-        const formatted = CurrencyFormatter.formatWithLocaleInfo(total, 'VND');
-        return <p className='text-sm text-muted-foreground'>{formatted}</p>;
+        const date = new Date(row.original.createdAt);
+        return <p className='text-sm text-muted-foreground'>{date.toLocaleString()}</p>;
       },
     },
-    { header: 'Trạng thái', accessorKey: 'state' },
-    { header: 'Vận chuyển', accessorKey: 'delivery' },
+    { header: 'Tên sản phẩm', accessorKey: 'productName',
+      cell: ({ row }) => (
+        <div className='space-y-1'>
+          <p className='font-medium'>{row.original.sku.product.productName}</p>
+        </div>
+      ),
+    },
+    { header: 'Tổng đơn hàng', accessorKey: 'totalAmount',
+      cell: ({ row }) => {
+        const total = parseFloat(row.original.order.totalAmount);
+        const formatted = CurrencyFormatter.formatWithLocaleInfo(total, 'VND');
+        return <p className='text-sm text-muted-foreground'>{formatted}</p>;
+      }
+    },
     {
       accessorKey: 'actions',
       header: 'Thao tác',
       cell: ({ row }) => {
-        const rowData = row.original;
         return (
           <p
             className='cursor-pointer text-blue-600'
-            onClick={() => handleAction(rowData)}
+            onClick={() => handleViewDetail(row.original.id)}
           >
-            {row.getValue('actions')}
+            Xem chi tiết
           </p>
         );
       },
     },
   ];
 
-  const handleAction = (order) => {
-    setSelectedOrder({
-      ...order,
-      renderInfo: {
-        title: 'Chuẩn bị hàng',
-        description: `Chuẩn bị hàng cho đơn hàng #${order.id}`,
-        rederComponent: (
-          <PrepareOrderDialog
-            onConfirmOption={(option) => handleOptionSelect(option)}
-          />
-        ),
-      },
-    });
-    setIsOpen(true);
+  const handleViewDetail = (id) => {
+    navigate(`./detail/${id}`);
   };
 
-  const handleOptionSelect = (option) => {
-    switch (option) {
-      case 'self':
-        setIsOpen(false);
-        // Do nothing for now
-        break;
-      case 'delivery':
-        setSelectedOrder((prev) => {
-          return {
-            ...prev,
-            renderInfo: {
-              title: 'Chuẩn bị hàng',
-              description: null,
-              rederComponent: (
-                <SelectDelivery
-                  onCancel={() => {
-                    setIsOpen(false);
-                    // clear selected order
-                    setSelectedOrder(null);
-                  }}
-                  onConfirm={() => {
-                    setIsOpen(false);
-                    // Do nothing for now
-                  }}
-                />
-              ),
-            },
-          };
-        });
-        break;
-      default:
-        break;
-    }
-  };
   return (
     <SidebarMaincontentLayout>
       <Tabs defaultValue='all' onValueChange={(value) => console.log(value)}>
@@ -186,18 +225,6 @@ function AdminOrderManagement() {
           />
         </TabsContent>
       </Tabs>
-      <>
-        {selectedOrder && (
-          <ResponsiveDialog
-            title={selectedOrder.renderInfo.title}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            description={selectedOrder.renderInfo.description}
-          >
-            {selectedOrder.renderInfo.rederComponent}
-          </ResponsiveDialog>
-        )}
-      </>
     </SidebarMaincontentLayout>
   );
 }

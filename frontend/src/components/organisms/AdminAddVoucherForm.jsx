@@ -3,57 +3,12 @@ import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
 import TextInput from '../atoms/TextInput';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ShopTitleSection from '../molecules/ShopTitleSection';
-import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function UpdateVoucherForm() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+function AdminAddVoucherForm() {
   const [loading, setLoading] = useState(false);
-  const [voucherData, setVoucherData] = useState({
-    code: '',
-    discount: '',
-    startDate: '',
-    endDate: '',
-    quantity: '',
-  });
-
-  useEffect(() => {
-    const fetchVoucher = async () => {
-      try {
-        const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-        const response = await axios.get(
-          `https://lazapee-jivl.onrender.com/admin/voucher`, // Lấy tất cả voucher
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-  
-        const foundVoucher = response.data.find(voucher => voucher.id === parseInt(id));
-        if (foundVoucher) {
-          setVoucherData(foundVoucher);
-        } else {
-          toast.error('Voucher không tìm thấy', {
-            className: 'bg-red-500 text-white',
-            position: 'top-right',
-            closeButton: true,
-          });
-        }
-      } catch (error) {
-        console.error('Failed to fetch voucher:', error);
-        toast.error('Không thể tải dữ liệu voucher', {
-          className: 'bg-red-500 text-white',
-          position: 'top-right',
-          closeButton: true,
-        });
-      }
-    };
-  
-    fetchVoucher();
-  }, [id]);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,7 +54,7 @@ function UpdateVoucherForm() {
       return;
     }
 
-    const updatedVoucherData = {
+    const voucherData = {
       code,
       discount,
       startDate,
@@ -107,33 +62,49 @@ function UpdateVoucherForm() {
       quantity,
     };
 
+    // const voucherData = {
+    //   code: 'CXVB12312',
+    //   discount: 0.4,
+    //   startDate: '2024-12-26',
+    //   endDate: '2024-12-30',
+    //   quantity: 102,
+    // };
+
+    // console.log('Voucher data:', voucherData);
+
     try {
       const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-      const response = await axios.patch(
-        `https://lazapee-jivl.onrender.com/admin/voucher/update/${id}`,
-        updatedVoucherData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.post('https://lazapee-jivl.onrender.com/admin/voucher/create', voucherData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      if (response.status === 200) {
-        toast.success('Voucher đã được cập nhật thành công', {
+      if (response.data.code === 201) {
+        toast.success('Voucher đã được thêm thành công', {
           className: 'bg-green-500 text-white',
           position: 'top-right',
           closeButton: true,
         });
-        navigate('/admin/voucher');
-      } else {
-        throw new Error('Có lỗi xảy ra khi cập nhật voucher');
+      } 
+      else
+       {
+        toast.error('Có lỗi xảy ra khi thêm voucher', {
+          className: 'bg-red-500 text-white',
+          position: 'top-right',
+          closeButton: true,
+        });
       }
+
     } catch (error) {
-      toast.error(error.message, {
+      console.error('Failed to add voucher:', error);
+      toast.error('Voucher đã tồn tại', {
         className: 'bg-red-500 text-white',
         position: 'top-right',
         closeButton: true,
       });
-    } finally {
+
+      } finally {
       setLoading(false);
     }
   };
@@ -141,17 +112,16 @@ function UpdateVoucherForm() {
   return (
     <SidebarMaincontentLayout>
       <form
-        className="w-full space-y-8 p-6 font-primary"
-        method="POST"
+        className='w-full space-y-8 p-6 font-primary'
+        method='POST'
         onSubmit={handleSubmit}
       >
-        <ShopTitleSection title={'Chỉnh sửa voucher'}>
+        <ShopTitleSection title={'Thông tin voucher'}>
           <InputField title={'Mã giảm giá'}>
             <TextInput
-              placeholder="Nhập mã giảm giá"
+              placeholder='Nhập mã giảm giá'
               className={'max-w-[45ch]'}
-              name="code"
-              defaultValue={voucherData.code}
+              name='code'
             />
           </InputField>
           <InputField
@@ -159,43 +129,35 @@ function UpdateVoucherForm() {
             helperText={'Nhập giá trị giảm (0.1 = 10%, 0.4 = 40%)'}
           >
             <TextInput
-              type="number"
-              step="0.01"
-              placeholder="Nhập giá trị giảm"
+              type='number'
+              step='0.01'
+              placeholder='Nhập giá trị giảm'
               className={'max-w-[45ch]'}
-              name="discount"
-              defaultValue={voucherData.discount}
+              name='discount'
             />
           </InputField>
           <InputField title={'Ngày bắt đầu'}>
             <TextInput
-              type="date"
+              type='date'
               className={'max-w-[45ch]'}
-              name="startDate"
-              defaultValue={voucherData.startDate}
+              name='startDate'
             />
           </InputField>
           <InputField title={'Ngày kết thúc'}>
-            <TextInput
-              type="date"
-              className={'max-w-[45ch]'}
-              name="endDate"
-              defaultValue={voucherData.endDate}
-            />
+            <TextInput type='date' className={'max-w-[45ch]'} name='endDate' />
           </InputField>
           <InputField title={'Số lượng'}>
             <TextInput
-              type="number"
-              placeholder="Nhập số lượng"
+              type='number'
+              placeholder='Nhập số lượng'
               className={'max-w-[45ch]'}
-              name="quantity"
-              defaultValue={voucherData.quantity}
+              name='quantity'
             />
           </InputField>
         </ShopTitleSection>
-        <div className="flex items-center justify-end">
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
+        <div className='flex items-center justify-end'>
+          <Button type='submit' disabled={loading}>
+            {loading ? 'Đang lưu...' : 'Lưu voucher'}
           </Button>
         </div>
       </form>
@@ -203,4 +165,4 @@ function UpdateVoucherForm() {
   );
 }
 
-export default UpdateVoucherForm;
+export default AdminAddVoucherForm;
