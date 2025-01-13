@@ -1,5 +1,6 @@
 import { CircleArrowDown, CircleArrowUp } from 'lucide-react';
 import { Card } from '../ui/card';
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -13,13 +14,13 @@ function StatisticCard({ cardInfo, isSelected, selectColor, ...props }) {
       <div className='flex items-center justify-between text-slate-400'>
         <span>so với tháng trước</span>
         <div className='flex items-center gap-1'>
-          {cardInfo.isIncreased ? (
+          {cardInfo.isIncreased === true ? (
             <CircleArrowUp className='h-3 w-3 text-green-400' />
-          ) : (
+          ) : cardInfo.isIncreased === false ? (
             <CircleArrowDown className='h-3 w-3 text-red-400' />
-          )}
+          ) : null}
           <span
-            className={`${cardInfo.isIncreased ? 'text-green-400' : 'text-red-400'}`}
+            className={`${cardInfo.isIncreased === true ? 'text-green-400' : cardInfo.isIncreased === false ? 'text-red-400' : 'text-neutral'}`}
           >
             {cardInfo.compareValue}
           </span>
@@ -39,6 +40,7 @@ const CONFIG = {
   2: 'bg-chart-2',
   3: 'bg-chart-3',
   4: 'bg-chart-4',
+  5: 'bg-chart-5',
 };
 
 function StatisticCardList({ cards, onCardSelected }) {
@@ -61,24 +63,30 @@ function StatisticCardList({ cards, onCardSelected }) {
     }
   };
   return (
-    <div className='grid grid-cols-4 gap-4'>
-      {cards.map((card, index) => (
-        <StatisticCard
-          selectColor={CONFIG[index + 1]}
-          key={index}
-          cardInfo={card}
-          isSelected={
-            selectedCards?.find(
-              (selectedCard) => selectedCard.key === card.key
-            ) !== undefined
-          }
-          onClick={() => {
-            handleSelectCard(card);
-            onCardSelected(card);
-          }}
-        />
-      ))}
-    </div>
+    <Carousel className='w-full' opts={{ align: 'start', slidesToScroll: 2 }}>
+      <CarouselContent>
+        {cards.map((card, index) => (
+          <CarouselItem
+            key={index}
+            className='sm:basis-1/2 md:basis-1/3 lg:basis-1/4'
+          >
+            <StatisticCard
+              selectColor={CONFIG[index + 1]}
+              cardInfo={card}
+              isSelected={
+                selectedCards?.find(
+                  (selectedCard) => selectedCard.key === card.key
+                ) !== undefined
+              }
+              onClick={() => {
+                handleSelectCard(card);
+                onCardSelected(card);
+              }}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+    </Carousel>
   );
 }
 StatisticCard.propTypes = {

@@ -7,7 +7,7 @@ const fetchWithInstance = async (endPoint, options) => {
       url: endPoint,
       ...options,
     });
-    console.log(response);
+    //console.log(response);
     if (!response) {
       console.error(`Undefined response fetching api from ${endPoint}`);
       return null;
@@ -48,10 +48,17 @@ const put = async (endPoint, body) => {
   });
 };
 
+const patch = async (endPoint, body) => {
+  return fetchWithInstance(endPoint, {
+    method: 'PATCH',
+    data: body,
+  });
+};
+
 const del = async (endPoint) => {
   return fetchWithInstance(endPoint, {
     method: 'DELETE',
   });
 };
 
-export { fetchWithInstance, get, post, put, del, instance };
+export { fetchWithInstance, get, post, patch, put, del, instance };
