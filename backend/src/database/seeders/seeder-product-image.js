@@ -210,6 +210,150 @@ module.exports = {
                 updatedAt: new Date()
             },
             {
+                productId: 18,
+                url: 'https://challengeyachts.com/media/catalog/product/cache/90537d7511caa395e1323b416e1bcab3/0/8/0848_270l_fridge_freezer_front.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 18,
+                url: 'https://challengeyachts.com/media/catalog/product/cache/eec8f5df8ff8f79144a81af32667aae9/0/8/0870_500l_freestanding_fridge.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 19,
+                url: 'https://i.ebayimg.com/images/g/XAkAAOSwYVVm6hix/s-l1200.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 19,
+                url: 'https://prominencehome.com/cdn/shop/files/04-50585_2000x.jpg?v=1722367267',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 20,
+                url: 'https://m.media-amazon.com/images/I/31FctJgyBSL._AC_UF894,1000_QL80_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 20,
+                url: 'https://cdn.shopify.com/s/files/1/0630/5362/7541/files/F4Y913BCTA1.jpg?v=1726252796',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 21,
+                url: 'https://m.media-amazon.com/images/I/71jVEjU17nL._AC_UF894,1000_QL80_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 21,
+                url: 'https://m.media-amazon.com/images/I/71mnsQS0n1L._AC_SL1500_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 22,
+                url: 'https://m.media-amazon.com/images/I/715U1DsZazL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 22,
+                url: 'https://m.media-amazon.com/images/I/61wnUN-HHML.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 23,
+                url: 'https://m.media-amazon.com/images/I/81zDsudg8pL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 23,
+                url: 'https://m.media-amazon.com/images/I/91WJ8mVLJuL._AC_UF1000,1000_QL80_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 24,
+                url: 'https://images-na.ssl-images-amazon.com/images/I/51elei2FwLL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 24,
+                url: 'https://m.media-amazon.com/images/I/61KkKDPPY1L._AC_UF1000,1000_QL80_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 25,
+                url: 'https://i.ebayimg.com/images/g/0koAAOSwK~5h6Mhk/s-l1200.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 25,
+                url: 'https://popupkids.in/cdn/shop/files/WoodenAlphabetEducationalPuzzleToy1_1024x1024.jpg?v=1687236082',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 26,
+                url: 'https://m.media-amazon.com/images/I/715HkDqG7wL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 26,
+                url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj5KegHv0wvgAIDN3iHIry6E6M902TV7nLwQ&s',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 27,
+                url: 'https://m.media-amazon.com/images/I/41B-YfcGDJL._AC_UF1000,1000_QL80_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 27,
+                url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lsrfo8ouv9ok22',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 28,
+                url: 'https://images-na.ssl-images-amazon.com/images/I/813J0DBqCTL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 28,
+                url: 'https://cdp-api.printgo.vn/uploads/images/z5919090459181_24632245552c1592e51f9c90e6bbf56e.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 29,
+                url: 'https://images-na.ssl-images-amazon.com/images/I/71CLgZVGwjL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 29,
+                url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9mBX72YTwHYsis3nJoclQlOfVo2gqxt7CvA&s',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
                 productId: 30,
                 url: 'https://bom.so/JlOeru',
                 createdAt: new Date(),
