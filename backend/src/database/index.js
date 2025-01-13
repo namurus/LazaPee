@@ -9,6 +9,7 @@ import orderModel from "./models/order";
 import orderItemModel from "./models/order_item";
 import skusModel from './models/skus';
 import postOfficeModel from './models/post_office';
+import shippingCompanyModel from './models/shipping_company';
 
 import * as config from '@/config/sequelize';
 import productImage from './models/product-image';
@@ -21,6 +22,7 @@ import reviewsModel from './models/reviews';
 import UserAdressModel from './models/user-address';
 import permissionModel from './models/permission';
 import adminPermissionModel from './models/admin-permission';
+
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -43,6 +45,7 @@ const modelDefiners = [
 	paymentModel,
 	skusModel,
 	postOfficeModel,
+	shippingCompanyModel,
 	voucherModel,
 	userVoucherModel,
 	shopModel,

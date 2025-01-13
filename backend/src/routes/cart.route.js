@@ -10,7 +10,7 @@ router.get('/', authenticate, fetchAllCartItems);
 
 router.post('/add', authenticate, upload.none(), addCartItem); 
 
-router.delete('/remove', authenticate, upload.none(), deleteCartItem);
+router.delete('/remove/:id', authenticate, upload.none(), deleteCartItem);
 
 router.put('/update', authenticate, upload.none(), updateCartItem);
 
