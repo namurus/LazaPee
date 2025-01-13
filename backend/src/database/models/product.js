@@ -104,6 +104,13 @@ module.exports = (sequelize, DataTypes) => {
 			paranoid: true,
 			modelName: 'Product',
 			tableName: 'product',
+			hooks: {
+				beforeCreate: async (products) => { 
+					products.forEach((product) => {
+						product.slug = product.productName.toLowerCase().replace(/\s+/g, '-');
+					});
+				}
+			}
 		}
 	);
 	Product.addHook('beforeSave', async (instance) => {

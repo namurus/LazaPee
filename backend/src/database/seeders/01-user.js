@@ -73,7 +73,7 @@ module.exports = {
         address: '118 Bùi Thị Xuân, Cát Lái, Bình Dương',
         role: 'seller',
         created_at: new Date(),
-        update_at: new Date(),
+        updated_at: new Date(),
       }
     ]);
   },
