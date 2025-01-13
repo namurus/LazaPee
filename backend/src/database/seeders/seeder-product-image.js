@@ -79,67 +79,133 @@ module.exports = {
             },
             {
                 productId: 7,
-                url: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                productId: 8,
-                url: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                productId: 9,
-                url: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                productId: 10,
-                url: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                productId: 4,
-                url: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                productId: 5,
-                url: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                productId: 6,
-                url: '',
+                url: 'https://i.pcmag.com/imagery/reviews/04yXpm5uyjix6ORSzFZVOrA-1.fit_lim.size_919x518.v1693014357.jpg',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
             {
                 productId: 7,
-                url: '',
+                url: 'https://www.digitaltigers.com/images/product/gallery/uvduo32-wid1260.jpg',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
             {
                 productId: 8,
-                url: '',
+                url: 'https://gamingworldexperience.com/wp-content/uploads/2024/10/aa0928fa6407f60ccffb81e46804089a.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 8,
+                url: 'https://gamingedgehubx.com/wp-content/uploads/2024/09/3a129a49b10ea2b9b96a7d5dd85fe2fd.jpg',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
             {
                 productId: 9,
-                url: '',
+                url: 'https://images-na.ssl-images-amazon.com/images/I/91YfRIy7kYL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 9,
+                url: 'https://thietbiluutru.com.vn/media/product/1403_t3_1.jpg',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
             {
                 productId: 10,
-                url: '',
+                url: 'https://m.media-amazon.com/images/I/61jM52DhS+L.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 10,
+                url: 'https://s.alicdn.com/@sc04/kf/H1fc34014c7b44def8bdeb07d41b751adH.jpg_720x720q50.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 11,
+                url: 'https://cdn.shopify.com/s/files/1/0577/0392/3805/files/X200Jet_M_EN_01.jpg?v=1702274408',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 11,
+                url: 'https://shop.roidmi.com/cdn/shop/files/6_b50204e3-c361-4bc5-bbf5-78ed312cb168_x368@2x.jpg?v=1702274100',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 12,
+                url: 'https://bizweb.dktcdn.net/100/381/588/products/cleanair-488.jpg?v=1600413915117',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 12,
+                url: 'https://bizweb.dktcdn.net/100/381/588/files/cleanair-488-1.jpg?v=1600413086310',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 13,
+                url: 'https://5.imimg.com/data5/SELLER/Default/2024/8/440808946/QS/OZ/ZT/185148248/wyzr-500w-powermix-mixer-grinder.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 13,
+                url: 'https://www.electroluxgroup.com/wp-content/uploads/sites/2/2010/07/Powermix-Silent-by-Electrolux-2.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 14,
+                url: 'https://images.samsung.com/is/image/samsung/p6pim/africa_en/mg23k3575as-ef/gallery/africa-en-mw3500k-grill-with-heat-wave-grill-2-3-cu-ft-393054-mg23k3575as-ef-460197671?$684_547_PNG$',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 14,
+                url: 'https://images.samsung.com/is/image/samsung/p6pim/africa_en/mg23k3575as-ef/gallery/africa-en-mw3500k-grill-with-heat-wave-grill-2-3-cu-ft-393054-mg23k3575as-ef-460197650?$684_547_PNG$',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 15,
+                url: 'https://m.media-amazon.com/images/I/61k5qe88LHL._AC_UF894,1000_QL80_.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 15,
+                url: 'https://m.media-amazon.com/images/I/51s5W9EWfrL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 16,
+                url: 'https://ae01.alicdn.com/kf/S9baaf7492b90443f8b514de707881be87.jpg_640x640q90.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 16,
+                url: 'https://m.media-amazon.com/images/I/71gUOx77YwL.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 17,
+                url: 'https://linhviet.vn/wp-content/uploads/z4464551252437_abd67295d8449bf16d0443e16240ca18.jpg',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                productId: 17,
+                url: 'https://media.miele.com/images/2000017/200001731/20000173128.png?d=540&impolicy=boxed',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },

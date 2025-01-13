@@ -31,7 +31,7 @@ module.exports = {
                 price: 1500,
                 stock_quantity: 20,
                 color: 'silver',
-                size: '15-inch',
+                size: 'X',
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -41,7 +41,7 @@ module.exports = {
                 price: 1500,
                 stock_quantity: 25,
                 color: 'black',
-                size: '17-inch',
+                size: 'X',
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -52,7 +52,7 @@ module.exports = {
                 price: 800,
                 stock_quantity: 30,
                 color: 'gold',
-                size: '10-inch',
+                size: 'X',
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -62,7 +62,7 @@ module.exports = {
                 price: 800,
                 stock_quantity: 35,
                 color: 'gray',
-                size: null,
+                size: 'X',
                 created_at: new Date(),
                 updated_at: new Date()
             },
