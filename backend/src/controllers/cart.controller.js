@@ -59,7 +59,6 @@ export const fetchAllCartItems = async (req, res, next) => {
             }))),
             total: await cart.getTotal(),
             discountedTotal: await cart.getDiscountedTotal(),
-            userId: req.user.id,
             totalProducts: await cart.getTotalProducts(),
         };
         res.status(200).json(result);
@@ -71,17 +70,27 @@ export const fetchAllCartItems = async (req, res, next) => {
 
 export const addCartItem = async (req, res, next) => {
     try {
-        console.log(req.body);
-        const skusId = parseInt(req.body.skusId)
-        const quantity = parseInt(req.body.quantity)
+        const productId = parseInt(req.body.productId);
+        const quantity = parseInt(req.body.quantity);
+        const sku = req.body.sku;
+        let skus = null;
+        if(!sku) {
+            skus = await db.models.Skus.findOne({
+                where: { productId: productId, color: null, size: null },
+            })
+        }
+        else{
+            skus = await db.models.Skus.findOne({
+                where: { productId: productId, color: sku.color, size: sku.size },
+            })
+        }
+
         const userId = req.user.id
-        const skus = await db.models.Skus.findOne({
-            where: { id: skusId },
-        })
+
         if (!skus) {
             return res.status(404).json({ code: 404, message: 'Product not found' })
         }
-
+        console.log(skus)
         if (skus.stock_quantity < quantity) {
             return res.status(400).json({ code: 400, message: 'Not enough stock available' })
         }
@@ -91,7 +100,7 @@ export const addCartItem = async (req, res, next) => {
         });
         // Kiểm tra xem cart có cartItem nào có productId trùng với req.body.productId không
         const existingCartItem = await db.models.CartItem.findOne({
-            where: { cartId: cart.id, skusId: skusId },
+            where: { cartId: cart.id, skusId: skus.id },
         });
         
         if (existingCartItem) {
@@ -101,7 +110,7 @@ export const addCartItem = async (req, res, next) => {
         } else {
             // Nếu chưa tồn tại, tạo mới
             const [cartItem, created] = await db.models.CartItem.findOrCreate({
-                where: { cartId: cart.id, skusId: skusId },
+                where: { cartId: cart.id, skusId: skus.id },
                 defaults: { quantity, price: skus.price },
             });
 
@@ -117,7 +126,8 @@ export const updateCartItem = async (req, res, next) => {
         const cartItemId = parseInt(req.body.cartItemId)
         const quantity = parseInt(req.body.quantity)
 
-        const userId = req.user.id
+        const userId = req.user.id;
+       
         const cartItem = await db.models.CartItem.findOne({
             where: { id: cartItemId },
         })
@@ -138,9 +148,31 @@ export const updateCartItem = async (req, res, next) => {
             return res.status(400).json({ code: 400, message: 'Not enough stock available' })
         }
 
-        await cartItem.update({ quantity })
+        await cartItem.update({ quantity });
+        const cart = await db.models.Cart.findOne({
+            where: { userId: userId },
+            include: [
+                {
+                    model: db.models.CartItem,
+                    as: 'cartItems',
+                    attributes: ['id', 'quantity'],
+                    include: [
+                        {
+                            model: db.models.Skus,
+                            as: 'skus',
+                            attributes: ['price', 'color', 'size', 'stock_quantity'],
+                        },
+                    ],
+                },
+            ],
+        })
+        const result = {
+            total: await cart.getTotal(),
+            discountedTotal: await cart.getDiscountedTotal(),
+            totalProducts: await cart.getTotalProducts(),
+        };
 
-        return res.status(200).json(cartItem)
+        return res.status(200).json(result);
     } catch (err) {
         next(err)
     }
@@ -148,25 +180,38 @@ export const updateCartItem = async (req, res, next) => {
 
 export const deleteCartItem = async (req, res, next) => {
     try {
-        const cart = await db.models.Cart.findOne({
-            where: { userId: req.user.id },
-        })
-
-        if (!cart) {
-            return res.status(404).json({ code: 404, message: 'Cart not found' })
-        }
-
         const cartItem = await db.models.CartItem.findOne({
-            where: { id: req.body.cartItemId, cartId: cart.id },
-        })
-
+            where: { id: req.body.cartItemId },
+        });
+        console.log(cartItem);
         if (!cartItem) {
             return res.status(404).json({ code: 404, message: 'Cart item not found' })
         }
 
-        await cartItem.destroy()
-
-        return res.status(204).end("Cart item deleted.")
+        await cartItem.destroy();
+        const cart = await db.models.Cart.findOne({
+            where: { userId: req.user.id },
+            include: [
+                {
+                    model: db.models.CartItem,
+                    as: 'cartItems',
+                    attributes: ['id', 'quantity'],
+                    include: [
+                        {
+                            model: db.models.Skus,
+                            as: 'skus',
+                            attributes: ['price', 'color', 'size', 'stock_quantity'],
+                        },
+                    ],
+                },
+            ],
+        })
+        const result = {
+            total: await cart.getTotal(),
+            discountedTotal: await cart.getDiscountedTotal(),
+            totalProducts: await cart.getTotalProducts(),
+        };
+        return res.status(204).json(result);
 
     } catch (err) {
         next(err)
