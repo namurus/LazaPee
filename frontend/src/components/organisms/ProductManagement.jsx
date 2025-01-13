@@ -15,6 +15,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
+import { deleteProduct } from '../../api/admin/product';
+import { toast } from 'sonner';
 
 // Data format:
 
@@ -152,22 +154,29 @@ function ProductManagement() {
     {
       id: 'actions',
       header: 'Thao tác',
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <MoreHorizontal className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {/* <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem> */}
-            <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
-              Xóa sản phẩm
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
+      cell: ({ row }) => {
+        const status = row.original.status;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>Open menu</span>
+                <MoreHorizontal className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {status === 'available' ? (
+                <DropdownMenuItem>Ngừng bán sản phẩm</DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem>Bán sản phẩm</DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
+                Xóa sản phẩm
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 
@@ -184,11 +193,19 @@ function ProductManagement() {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     try {
       console.log('delete', id);
-      // await deleteProduct(id);
-      // fetchData();
+      const response = await deleteProduct(id);
+      console.log(response);
+      if (response.code === 200) {
+        setProducts(products.filter((product) => product.id !== id));
+      }
+      toast.success('Xóa sản phẩm thành công', {
+        className: 'bg-green-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
     } catch (error) {
       console.log('Error deleting product:', error);
     }

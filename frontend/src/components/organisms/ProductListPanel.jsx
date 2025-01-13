@@ -42,10 +42,12 @@ function ProductListPanel({
         </div>
       )}
       <div className='md:flex md:justify-between'>
-        <h1 className='text-[2rem] font-semibold capitalize'>{listTitle}</h1>
+        {listTitle && (
+          <h1 className='text-[2rem] font-semibold capitalize'>{listTitle}</h1>
+        )}
         <div className='flex items-center gap-3 text-sm font-light text-opacity-60'>
           <p>
-            Showing {currentPage + 1}-{totalPages} of {totalProducts} Products
+            Showing {currentPage}/{totalPages} page of {totalProducts} Products
           </p>
           <div
             className={'ml-auto w-fit rounded-full bg-neutral p-2 md:hidden'}

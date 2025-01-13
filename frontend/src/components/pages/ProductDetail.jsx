@@ -18,13 +18,13 @@ function ProductDetail() {
       >
         <TabsList className='flex justify-center bg-neutral-50'>
           <TabsTrigger className='px-4 py-2 text-xl' value='details'>
-            Details
+            Chi tiết sản phẩm
           </TabsTrigger>
           <TabsTrigger className='px-4 py-2 text-xl' value='rating-review'>
-            Rating & Review
+            Đánh giá &amp; Nhận xét
           </TabsTrigger>
           <TabsTrigger className='px-4 py-2 text-xl' value='shop'>
-            Shop
+            Thông tin Shop
           </TabsTrigger>
         </TabsList>
         <TabsContent className='mt-4' value='details'>

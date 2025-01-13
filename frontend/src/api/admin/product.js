@@ -26,6 +26,16 @@ const getCategoryProducts = (category, queryParams = {}) => {
   });
 };
 
+const searchProducts = (search, queryParams = {}) => {
+  // return fetchWithInstance(`search?search=${search}`, {
+  //   params: queryParams,
+  // });
+  // Use mock data for now
+  const page = queryParams.page || 1;
+  const limit = queryParams.limit || 6;
+  return getCategoryProducts('1', { page, limit });
+};
+
 const addProduct = (product) => {
   return post('products', product);
 };
@@ -69,5 +79,6 @@ export {
   getProductReviews,
   createReview,
   deleteReview,
+  searchProducts,
   editReview,
 };

@@ -7,6 +7,7 @@ import QuantitySelector from '../atoms/QuantitySelector';
 import InverseButton from '../atoms/InverseButton';
 import { discountPercentageToPrice } from '../../helpers/CaculationHelper';
 import config from '../../config/config';
+import { useState } from 'react';
 
 const colorConfig = config.colors;
 const sizeConfig = config.sizes;
@@ -47,6 +48,27 @@ function constructVariantListFromProductSKU(product) {
 
 function ProductDetailInfo({ product }) {
   const variantList = constructVariantListFromProductSKU(product);
+  const [selectedVariant, setSelectedVariant] = useState({
+    ...variantList,
+    quantity: 1,
+  });
+
+  const handleColorPick = (color) => {
+    setSelectedVariant({ ...selectedVariant, color });
+  };
+
+  const handleSizePick = (size) => {
+    setSelectedVariant({ ...selectedVariant, size });
+  };
+
+  const handleQuantityChange = (quantity) => {
+    setSelectedVariant({ ...selectedVariant, quantity });
+  };
+
+  const handleAddToCart = () => {
+    // Add to cart logic here
+    console.log(selectedVariant);
+  };
   return (
     <div className='flex flex-col gap-4 *:py-6'>
       <div className='line-below space-y-3'>
@@ -87,18 +109,26 @@ function ProductDetailInfo({ product }) {
       {variantList.color && (
         <div className='line-below'>
           <h2 className='mb-4 text-sm opacity-60'>Chọn màu</h2>
-          <ColorPicker onPickColor={() => {}} colorList={variantList.color} />
+          <ColorPicker
+            onPickColor={handleColorPick}
+            colorList={variantList.color}
+          />
         </div>
       )}
       {variantList.size && (
         <div className='line-below'>
           <h2 className='mb-4 text-sm opacity-60'>Kích cỡ</h2>
-          <SizeList sizeList={variantList.size} onPickSize={() => {}} />
+          <SizeList sizeList={variantList.size} onPickSize={handleSizePick} />
         </div>
       )}
       <div className='flex gap-3'>
-        <QuantitySelector defaultQuantity={1} className='h-[52px] px-4 py-3' />
+        <QuantitySelector
+          defaultQuantity={1}
+          className='h-[52px] px-4 py-3'
+          handleQuantityChange={handleQuantityChange}
+        />
         <InverseButton
+          onClick={handleAddToCart}
           style={'rounded-full py-4 px-[3.375rem] leading-none text-sm'}
         >
           Add to Cart

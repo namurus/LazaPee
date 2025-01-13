@@ -59,7 +59,7 @@ function constructSKUData(categories, tableData) {
       skus.push({
         [headerNameMap[headers[0]]]: headerMap[key] || key,
         price: rows[key].price,
-        stock: rows[key].stock,
+        stock_quantity: rows[key].stock,
       });
     });
   } else {
@@ -69,7 +69,7 @@ function constructSKUData(categories, tableData) {
           [headerNameMap[headers[0]]]: headerMap[key] || key,
           [headerNameMap[headers[1]]]: headerMap[subKey] || subKey,
           price: rows[key][subKey].price,
-          stock: rows[key][subKey].stock,
+          stock_quantity: rows[key][subKey].stock,
         });
       });
     });
@@ -138,18 +138,30 @@ function CategoryAdderInput() {
       </div>
       {tableData && <CategoryTable data={tableData} setData={setTableData} />}
       {categories.length === 0 ? (
-        <InputField title={'Giá bán'} className='mt-4'>
-          <InputNumber
-            placeholder='Nhập giá bán'
-            className='flex w-full min-w-40 max-w-72 items-center px-4 before:mr-2 before:text-gray-500 before:content-["đ|"]'
-            name='price'
-            min={0}
-          />
-        </InputField>
+        <>
+          <InputField title={'Giá bán'} className='mt-4'>
+            <InputNumber
+              placeholder='Nhập giá bán'
+              className='flex w-full min-w-40 max-w-72 items-center px-4 before:mr-2 before:text-gray-500 before:content-["đ|"]'
+              name='price'
+              min={0}
+              step={1000}
+            />
+          </InputField>
+          <InputField title={'Tồn kho'} className='mt-4'>
+            <InputNumber
+              placeholder='Nhập số lượng tồn kho'
+              className='flex w-full min-w-40 max-w-72 items-center px-4'
+              name='stock_quantity'
+              step={1}
+              min={0}
+            />
+          </InputField>
+        </>
       ) : (
         <textarea
           type='hidden'
-          name='sku'
+          name='skus'
           value={JSON.stringify(constructSKUData(categories, tableData))}
           className='hidden'
         />

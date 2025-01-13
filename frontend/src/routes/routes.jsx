@@ -10,6 +10,8 @@ import RoleBasedGuard from '../guards/RoleBasedGuard';
 import { rootAction, rootLoader } from './rootRoutes';
 import shopRoutes from './shopRoutes';
 import CheckoutPage from '../components/pages/CheckoutPage';
+import ProductPage from '../components/pages/ProductPage';
+import { searchLoader } from './searchRoutes';
 
 const routes = [
   {
@@ -33,15 +35,26 @@ const routes = [
             <CheckoutPage />
           </AuthGuard>
         ),
+        handle: {
+          crumb: () => ({
+            path: '/checkout',
+            name: 'Thanh toán',
+          }),
+        },
       },
       ...authRoutes,
       {
         path: 'admin',
         element: (
-          <RoleBasedGuard roles={['admin']}>
+          <RoleBasedGuard role={['admin']}>
             <div>Admin element Placeholder</div>
           </RoleBasedGuard>
         ),
+      },
+      {
+        path: 'search',
+        element: <ProductPage />,
+        loader: searchLoader,
       },
     ],
   },

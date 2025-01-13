@@ -122,6 +122,9 @@ function AddProductForm() {
           <InputField title={'Mô tả sản phẩm'} className={'max-w-[45ch]'}>
             <LargeTextInputField name='description' maxLength={500} />
           </InputField>
+          <InputField title={'Thương hiệu'} className={'max-w-[45ch]'}>
+            <TextInput placeholder='Nhập thương hiệu' name='brand' />
+          </InputField>
           <InputField title={'Chọn ngành hàng'}>
             <Select name='categoryId'>
               <SelectTrigger>
