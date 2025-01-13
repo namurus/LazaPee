@@ -22,7 +22,7 @@ function ProductItem({ product }) {
         <div className='flex flex-wrap gap-4 text-xl font-semibold lg:text-2xl'>
           <p>
             {CurrencyFormatter.formatWithLocaleInfo(
-              isNaN(product.price) ? 0 : product.price,
+              product.skus[0]?.price || 0,
               'VND'
             )}
           </p>

@@ -74,7 +74,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
                       key={unit.id}
                       value={unit.id}
                       onSelect={(currentValue) => {
-                        setSelectedShippingUnit(currentValue);
+                        setSelectedShippingUnit(unit);
                         setOpen(false);
                       }}
                     >
@@ -93,7 +93,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
             </Command>
           ) : (
             <p className='text-sm text-muted-foreground'>
-              {selectedShippingUnit}
+              {selectedShippingUnit.name}
             </p>
           )}
         </div>
@@ -111,7 +111,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
         <Button className='font-normal' onClick={onCancel}>
           Huỷ
         </Button>
-        <Button className='font-normal' onClick={handleConfirm}>
+        <Button className='font-normal' onClick={() => handleConfirm()}>
           Xác nhận
         </Button>
       </DialogFooter>

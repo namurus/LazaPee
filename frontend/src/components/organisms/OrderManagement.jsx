@@ -15,7 +15,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import ValueConverter from '../../helpers/ValueConverter';
-import { get } from '../../api/config';
+import { get, patch } from '../../api/config';
+import { toast } from 'sonner';
 
 const OrderDetailDialog = ({ order, onClose, open, setOpen }) => {
   return (
@@ -241,12 +242,44 @@ function OrderManagement() {
     });
   };
 
-  const handleOptionSelect = (option) => {
+  const handleComfirmOrder = async (shippingCompany) => {
+    const orderId = selectedOrder.id;
+    try {
+      const res = await patch(`/order/${orderId}`, {
+        status: 'waiting for delivery',
+        shippingCompany,
+      });
+      console.log(res);
+      return true;
+    } catch (error) {
+      console.error('Error updating order:', error);
+    }
+  };
+
+  const handleOptionSelect = async (option) => {
     switch (option) {
-      case 'self':
-        setIsOpen(false);
+      case 'self': {
+        const sucess = await handleComfirmOrder();
+        if (sucess) {
+          setIsOpen(false);
+          toast.success('Đã xác nhận đơn hàng thành công', {
+            className: 'bg-green-500 text-white',
+            position: 'top-right',
+            closeButton: true,
+          });
+        } else {
+          toast.error(
+            'Có lỗi xảy ra khi xác nhận đơn hàng, vui lòng thử lại sau',
+            {
+              className: 'bg-red-500 text-white',
+              position: 'top-right',
+              closeButton: true,
+            }
+          );
+        }
         // Do nothing for now
         break;
+      }
       case 'delivery':
         setSelectedOrder((prev) => {
           return {
@@ -261,9 +294,28 @@ function OrderManagement() {
                     // clear selected order
                     setSelectedOrder(null);
                   }}
-                  onConfirm={() => {
-                    setIsOpen(false);
-                    // Do nothing for now
+                  onConfirm={async (shippingCompany) => {
+                    const sucess = await handleComfirmOrder(
+                      shippingCompany.name
+                    );
+                    if (sucess) {
+                      setIsOpen(false);
+                      toast.success('Đã xác nhận đơn hàng thành công', {
+                        className: 'bg-green-500 text-white',
+                        position: 'top-right',
+                        closeButton: true,
+                      });
+                    } else {
+                      toast.error(
+                        'Có lỗi xảy ra khi xác nhận đơn hàng, vui lòng thử lại sau',
+                        {
+                          className: 'bg-red-500 text-white',
+                          position: 'top-right',
+                          closeButton: true,
+                        }
+                      );
+                      // Do nothing for now
+                    }
                   }}
                 />
               ),
