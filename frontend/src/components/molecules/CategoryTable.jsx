@@ -12,6 +12,7 @@ function CategoryTable({ data, setData }) {
       processedData.push({
         col1: key,
         price: value.price,
+        stock: value.stock,
         rowSpan: 1,
       });
     });
@@ -23,6 +24,7 @@ function CategoryTable({ data, setData }) {
           col1: col1,
           col2: key,
           price: col2Data[key].price,
+          stock: col2Data[key].stock,
           rowSpan: index === 0 ? col2Keys.length : 0,
         });
       });
@@ -65,6 +67,39 @@ function CategoryTable({ data, setData }) {
                 } else {
                   if (Object.keys(a[key]).includes('price')) {
                     a[key].price = e;
+                    setData({
+                      headers: data.headers,
+                      rows: rows,
+                    });
+                  } else {
+                    a = a[key];
+                  }
+                }
+              });
+            }}
+          />
+        );
+      },
+    },
+    {
+      title: 'Tồn kho',
+      dataIndex: 'stock',
+      render: (value, record) => {
+        return (
+          <InputNumber
+            placeholder='Nhập số lượng tồn kho'
+            className='flex w-full items-center px-4 before:mr-2 before:text-gray-500'
+            min={0}
+            onChange={(e) => {
+              const rows = data.rows;
+              let a = rows;
+              const values = Object.values(record);
+              values.forEach((key) => {
+                if (a[key] === undefined) {
+                  // Do nothing
+                } else {
+                  if (Object.keys(a[key]).includes('stock')) {
+                    a[key].stock = e;
                     setData({
                       headers: data.headers,
                       rows: rows,

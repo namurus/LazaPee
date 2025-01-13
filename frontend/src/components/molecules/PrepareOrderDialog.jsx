@@ -1,4 +1,11 @@
-import { Edit, Milestone, Package2 } from 'lucide-react';
+import {
+  Check,
+  CheckCheck,
+  CircleCheck,
+  Edit,
+  Milestone,
+  Package2,
+} from 'lucide-react';
 import IconCircle from '../atoms/IconCircle';
 import { Button } from '../ui/button';
 import { DialogFooter } from '../ui/dialog';
@@ -122,9 +129,12 @@ function PrepareOrderDialog({ onConfirmOption }) {
           <p className='text-center text-sm'>
             Bạn có thể gửi hàng tại bất kỳ bưu cục nào thuộc cùng Tỉnh/Thành phố
           </p>
+          {selectedOption === 'self' && (
+            <CircleCheck className='absolute -right-2 -top-2 rounded-full fill-primary text-secondary' />
+          )}
         </div>
         <div
-          className='flex cursor-pointer flex-col items-center gap-y-3 border bg-neutral-200 p-2'
+          className='relative flex cursor-pointer flex-col items-center gap-y-3 border bg-neutral-200 p-2'
           onClick={() => setSelectedOption('delivery')}
         >
           <IconCircle icon={<Package2 />} color={'blue'} />
@@ -135,6 +145,9 @@ function PrepareOrderDialog({ onConfirmOption }) {
             Đơn vị vận chuyển sẽ đến lấy hàng theo địa chỉ lấy hàng mà bạn đã
             xác nhận
           </p>
+          {selectedOption === 'delivery' && (
+            <CircleCheck className='absolute -right-2 -top-2 rounded-full fill-primary text-secondary' />
+          )}
         </div>
       </div>
       <DialogFooter>

@@ -1,4 +1,5 @@
-import instance from '../lib/axios';
+import axios from 'axios';
+import instance, { baseURL } from '../lib/axios';
 
 const fetchWithInstance = async (endPoint, options) => {
   try {
@@ -6,6 +7,7 @@ const fetchWithInstance = async (endPoint, options) => {
       url: endPoint,
       ...options,
     });
+    console.log(response);
     if (!response) {
       console.error(`Undefined response fetching api from ${endPoint}`);
       return null;
@@ -31,10 +33,12 @@ const get = async (endPoint) => {
 };
 
 const post = async (endPoint, body) => {
-  return fetchWithInstance(endPoint, {
-    method: 'POST',
-    data: body,
-  });
+  try {
+    const response = await axios.post(`${baseURL}/${endPoint}`, body);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 const put = async (endPoint, body) => {
