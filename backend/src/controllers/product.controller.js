@@ -9,7 +9,7 @@ export const fetchAllProducts = async (req, res, next) => {
 				{
 					model: db.models.Skus,
 					as: 'skus',
-					attributes: ['price'], // Chỉ lấy giá
+					attributes: ['id','price'], // Chỉ lấy giá
 				},
 				{
 					model: db.models.ProductImage,
@@ -56,7 +56,7 @@ export const fetchProductById = async (req, res, next) => {
 				{
 					model: db.models.Skus,
 					as: 'skus',
-					attributes: ['price', 'stock_quantity', 'color', 'size'],
+					attributes: ['id', 'price', 'stock_quantity', 'color', 'size'],
 				},
 				{
 					model: db.models.ProductImage,
