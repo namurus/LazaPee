@@ -72,7 +72,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
                   {shippingUnits.map((unit) => (
                     <CommandItem
                       key={unit.id}
-                      value={unit.id}
+                      value={unit.name}
                       onSelect={(currentValue) => {
                         setSelectedShippingUnit(unit);
                         setOpen(false);
@@ -93,7 +93,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
             </Command>
           ) : (
             <p className='text-sm text-muted-foreground'>
-              {selectedShippingUnit.name}
+              {selectedShippingUnit?.name}
             </p>
           )}
         </div>

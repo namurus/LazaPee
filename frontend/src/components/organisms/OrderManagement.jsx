@@ -144,6 +144,7 @@ function OrderManagement() {
         const statusText = {
           pending: 'Chờ xử lý',
           canceled: 'Đã hủy',
+          'waiting for delivery': 'Chờ giao hàng',
           delivering: 'Đang giao',
           completed: 'Hoàn thành',
         };
@@ -243,6 +244,7 @@ function OrderManagement() {
   };
 
   const handleComfirmOrder = async (shippingCompany) => {
+    console.log(selectedOrder);
     const orderId = selectedOrder.id;
     try {
       const res = await patch(`/order/${orderId}`, {
@@ -305,6 +307,7 @@ function OrderManagement() {
                         position: 'top-right',
                         closeButton: true,
                       });
+                      fetchData();
                     } else {
                       toast.error(
                         'Có lỗi xảy ra khi xác nhận đơn hàng, vui lòng thử lại sau',

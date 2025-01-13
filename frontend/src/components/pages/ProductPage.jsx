@@ -91,8 +91,8 @@ function ProductPage() {
   };
 
   const onFilterButtonClick = () => {
-    searchParams.set('color', pickedColor.text);
-    searchParams.set('size', pickedSize.value);
+    if (pickedColor) searchParams.set('color', pickedColor.value);
+    if (pickedSize) searchParams.set('size', pickedSize.value);
     searchParams.set('priceMin', priceRange[0]);
     searchParams.set('priceMax', priceRange[1]);
     searchParams.set('sortBy', sortBy);
