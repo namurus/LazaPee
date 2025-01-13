@@ -3,7 +3,8 @@ import Fuse from 'fuse.js';
 
 export const searchProducts = async (req, res, next) => {
     try {
-        const { facet, keyword, maxPrice, minPrice, page, color, size, brands } = req.query;
+        const { keyword, maxPrice, minPrice, color, size, brands, order } = req.query;
+        const page = parseInt(req.query.page) || 0;
 
         if (!keyword) {
             return res.status(400).json({ code: 400, message: 'Keyword is required' });
@@ -66,6 +67,15 @@ export const searchProducts = async (req, res, next) => {
                 )
             );
         }
+
+        if (order) {
+            if (order === 'asc') {
+                result = result.sort((a, b) => a.skus[0].price - b.skus[0].price);
+            } else if (order === 'desc') {
+                result = result.sort((a, b) => b.skus[0].price - a.skus[0].price);
+            }
+        }
+
         result = result.map((product) => ({
             id: product.id,
             productName: product.productName,
@@ -75,13 +85,27 @@ export const searchProducts = async (req, res, next) => {
             price: product.skus.length > 0 ? product.skus[0].price : null,
             images: product.images,
         }));
+
+        // Tính tổng số kết quả
+        const totalResults = result.length;
+        const totalPages = Math.ceil(totalResults / limit);
+
         // Phân trang kết quả
         const paginatedResult = result.slice(offset, offset + limit);
 
         if (paginatedResult.length > 0) {
-            return res.status(200).json({ code: 200, data: paginatedResult });
-        } else {
-            return res.status(404).json({ code: 404, message: 'No products found' });
+            return res.status(200).json({
+                code: 200,
+                data: paginatedResult,
+                pagination: {
+                    totalResults,
+                    totalPages,
+                    currentPage: page,
+                    limit,
+                },
+        })}
+        else {
+            return res.status(404).json({ code: 404, message: 'No products found, please use more specific keyword!.' });
         }
     } catch (err) {
         return next(err);
