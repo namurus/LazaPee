@@ -6,9 +6,10 @@ import productRoutes from './productRoutes';
 import authRoutes from './authRoutes';
 import cartRoute from './cartRoute';
 import AuthGuard from '../guards/AuthGuard';
-import RoleBasedGuard from '../guards/RoleBasedGuard';
+// import RoleBasedGuard from '../guards/RoleBasedGuard';
 import { rootAction, rootLoader } from './rootRoutes';
 import shopRoutes from './shopRoutes';
+import adminRoutes from './adminRoutes';
 
 const routes = [
   {
@@ -34,17 +35,19 @@ const routes = [
         ),
       },
       ...authRoutes,
-      {
-        path: 'admin',
-        element: (
-          <RoleBasedGuard roles={['admin']}>
-            <div>Admin element Placeholder</div>
-          </RoleBasedGuard>
-        ),
-      },
+      // {
+      //   path: 'admin',
+      //   element: (
+      //     // <RoleBasedGuard roles={['admin']}>
+      //     //   <div>Admin element Placeholder</div>
+      //     // </RoleBasedGuard>
+      //     []
+      //   ),
+      // },
     ],
   },
   ...shopRoutes,
+  ...adminRoutes,
 ];
 
 export default routes;
