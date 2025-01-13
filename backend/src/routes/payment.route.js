@@ -4,6 +4,7 @@ import {
     createPayment,
     processPayment,
     getAllPayments,
+    cancelPayment,
 } from '../controllers/payment.controller';
 
 const router = Router();
@@ -14,10 +15,15 @@ router.get('/', getPaymentsByUser);
 // Route to process payment
 router.post('/process', processPayment);
 
-// Route to create a new payment
-router.post('/:orderID', createPayment);
 
 // Route to get all payments (admin only)
 router.get('/all', getAllPayments);
+
+// Route to cancel a payment
+router.post('/cancel', cancelPayment);
+
+// Route to create a new payment
+router.post('/:orderID', createPayment);
+
 
 export default router;
