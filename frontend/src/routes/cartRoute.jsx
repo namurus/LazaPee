@@ -1,4 +1,5 @@
 import { getMyCart } from '../api/admin/cart';
+import CartCheckoutPage from '../components/pages/CartCheckoutPage';
 import CartPage from '../components/pages/CartPage';
 import AuthGuard from '../guards/AuthGuard';
 
@@ -6,7 +7,7 @@ const route = {
   path: '/cart',
   element: (
     <AuthGuard>
-      <CartPage />
+      <CartCheckoutPage />
     </AuthGuard>
   ),
   loader: loader,

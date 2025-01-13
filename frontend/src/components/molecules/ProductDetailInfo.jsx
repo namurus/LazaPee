@@ -129,7 +129,10 @@ function ProductDetailInfo({ product }) {
         <h1 className='line-clamp-2 font-display text-2xl leading-tight lg:text-[2.5rem]'>
           {product.productName}
         </h1>
-        <StarRating rating={product.rating} name={`${product.id}-product`} />
+        <StarRating
+          rating={product.rating || 0}
+          name={`${product.id}-product`}
+        />
         <div className='flex gap-3 text-2xl font-semibold'>
           <p>
             {CurrencyFormatter.formatWithLocaleInfo(

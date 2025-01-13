@@ -2,6 +2,7 @@ import { ChevronsUp, Truck } from 'lucide-react';
 import Image from '../atoms/Image';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
+import { useState } from 'react';
 
 const shippingMethodVariants = {
   ['FAST']: {
@@ -48,10 +49,15 @@ function ShippingMethod({ variant, id, value }) {
 }
 
 function ShippingMethodList() {
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('fast');
   return (
-    <RadioGroup defaultValue='fast'>
+    <RadioGroup
+      defaultValue='fast'
+      onValueChange={(value) => setSelectedShippingMethod(value)}
+    >
       <ShippingMethod variant={'FAST'} id='r1' value='fast' />
       <ShippingMethod variant={'EXPRESS'} id='r2' value='express' />
+      <input type='hidden' name='shippingType' value={selectedShippingMethod} />
     </RadioGroup>
   );
 }

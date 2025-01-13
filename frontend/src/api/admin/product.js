@@ -26,6 +26,10 @@ const getCategoryProducts = (category, queryParams = {}) => {
   });
 };
 
+const getShippingUnits = () => {
+  return get('shop/shipment/shippingCompany');
+};
+
 const searchProducts = (search, queryParams = {}) => {
   // return fetchWithInstance(`search?search=${search}`, {
   //   params: queryParams,
@@ -81,4 +85,5 @@ export {
   deleteReview,
   searchProducts,
   editReview,
+  getShippingUnits,
 };

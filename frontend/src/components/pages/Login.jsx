@@ -67,7 +67,7 @@ const Login = () => {
               placeholder='Enter your username'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className='w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500'
+              className='focus:ring-primary-500 w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2'
             />
           </div>
           <div className='mb-4'>
@@ -108,7 +108,7 @@ const Login = () => {
         {message && <p className='mt-4 text-green-500'>{message}</p>}
         <p className='mt-4 text-gray-700'>
           Don&apos;t have an account?{' '}
-          <Link to='../signup' className='text-red-500'>
+          <Link to='../signup' className='text-primary-500'>
             Sign up for free!
           </Link>
         </p>

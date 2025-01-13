@@ -60,6 +60,13 @@ function PaymentMethodList() {
           onClick={handlePaymentMethodClick}
         />
       ))}
+      <input
+        type='hidden'
+        name='paymentMethod'
+        value={
+          activePaymentMethod === 'MOMO' ? 'credit card' : activePaymentMethod
+        }
+      />
     </div>
   );
 }

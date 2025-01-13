@@ -5,7 +5,7 @@ import ShippingMethodList from '../molecules/ShippingMethodList';
 import DataTable from '../molecules/DataTable';
 import { TableCell, TableRow } from '../ui/table';
 import ProductImage from '../atoms/ProductImage';
-import { Link } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 import ValueConverter from '../../helpers/ValueConverter';
 import { Button } from '../ui/button';
 
@@ -15,22 +15,23 @@ const columns = [
     accessorKey: 'product',
 
     cell: ({ row }) => {
-      const product = row.getValue('product');
+      const productName = row.original.productName;
+      const productThumbnail = row.original.thumbnail;
       return (
         <div className='space-y-2'>
-          <Link
+          {/* <Link
             to={product.shopInfo.shopLink}
             className='text-base font-semibold'
           >
             {product.shopInfo.shopName}
-          </Link>
+          </Link> */}
           <div className='flex items-center gap-4'>
             <ProductImage
-              src={product.image}
-              alt={product.name}
+              src={productThumbnail}
+              alt={productName}
               className='w-10 rounded-lg p-1'
             />
-            <p className='text-base'>{product.name}</p>
+            <p className='text-base'>{productName}</p>
           </div>
         </div>
       );
@@ -66,37 +67,58 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    product: {
-      name: 'Áo thun nam',
-      image: 'https://via.placeholder.com/150',
-      shopInfo: {
-        shopName: 'Shop ABC',
-        shopLink: '#',
-      },
-    },
-    quantity: 2,
-    price: 150000,
-    discount: 30000,
-    total: 270000,
-  },
-];
+import PropTypes from 'prop-types';
+import { toast } from 'sonner';
+import { post } from '../../api/config';
 
-function CheckoutPage() {
-  const dataInfo = {
-    total: data.reduce((acc, cur) => acc + cur.total, 0),
-  };
-
-  const handleSubmit = (e) => {
+function CheckoutPage({ checkoutInfo }) {
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle submit
     const formData = new FormData(e.target);
-    console.log(Object.fromEntries(formData));
+    try {
+      const response = await post('/order', formData);
+
+      console.log(response);
+      if (!response) {
+        throw new Error('Error creating order');
+      }
+      if (formData.get('paymentMethod') === 'COD') {
+        toast.success('Đặt hàng thành công', {
+          className: 'bg-green-500 text-white',
+          position: 'top-right',
+          closeButton: true,
+        });
+        navigate('/');
+      } else {
+        navigate('/qr_payment', {
+          state: {
+            qrCode: response.qrCode,
+            orderIds: response.orderIds.split(', ').map((id) => {
+              return parseInt(id);
+            }),
+            paymentId: response.paymentId,
+          },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Có lỗi xảy ra khi thanh toán, vui lòng thử lại sau', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <input
+        type='hidden'
+        name='voucherCode'
+        value={checkoutInfo.voucherCode}
+      />
       <div className='sm:container sm:mx-auto'>
         <Breadcrumbs />
         <h1 className='font-display text-[2rem]'>Thanh toán</h1>
@@ -107,11 +129,26 @@ function CheckoutPage() {
               <AddressTag
                 addressInfo={{
                   user: {
-                    name: 'Nguyễn Văn A',
-                    number: '0123456789',
+                    name: checkoutInfo.userInfo.fullName,
+                    number: checkoutInfo.userInfo.phone,
                   },
-                  address: '123 Đường ABC, Quận XYZ, TP HCM',
+                  address: checkoutInfo.userInfo.address,
                 }}
+              />
+              <input
+                type='hidden'
+                name='shippingAddress'
+                value={checkoutInfo.userInfo.address}
+              />
+              <input
+                type='hidden'
+                name='phoneNumber'
+                value={checkoutInfo.userInfo.phone}
+              />
+              <input
+                type='hidden'
+                name='fullName'
+                value={checkoutInfo.userInfo.fullName}
               />
             </div>
             <div className='space-y-2'>
@@ -127,7 +164,10 @@ function CheckoutPage() {
             <h2 className='text-base'>Danh sách sản phẩm</h2>
             <DataTable
               columns={columns}
-              data={data}
+              data={checkoutInfo.products.map((product) => ({
+                ...product,
+                discount: checkoutInfo.discountPercentage * product.price,
+              }))}
               options={{
                 search: {
                   allowSearch: false,
@@ -135,9 +175,16 @@ function CheckoutPage() {
               }}
               footer={
                 <TableRow>
-                  <TableCell colSpan={4}>Tổng tiền</TableCell>
+                  <TableCell colSpan={3}>Tổng tiền</TableCell>
                   <TableCell>
-                    {ValueConverter.formatCurrency(dataInfo.total, 'VND')}
+                    -
+                    {ValueConverter.formatCurrency(
+                      checkoutInfo.discountPercentage * checkoutInfo.total,
+                      'VND'
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {ValueConverter.formatCurrency(checkoutInfo.total, 'VND')}
                   </TableCell>
                 </TableRow>
               }
@@ -153,5 +200,33 @@ function CheckoutPage() {
     </form>
   );
 }
+CheckoutPage.propTypes = {
+  checkoutInfo: PropTypes.shape({
+    voucherCode: PropTypes.string.isRequired,
+    userInfo: PropTypes.shape({
+      fullName: PropTypes.string.isRequired,
+      phone: PropTypes.string.isRequired,
+      address: PropTypes.string.isRequired,
+    }).isRequired,
+    products: PropTypes.arrayOf(
+      PropTypes.shape({
+        product: PropTypes.shape({
+          shopInfo: PropTypes.shape({
+            shopLink: PropTypes.string.isRequired,
+            shopName: PropTypes.string.isRequired,
+          }).isRequired,
+          thumbnail: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+        }).isRequired,
+        quantity: PropTypes.number.isRequired,
+        price: PropTypes.number.isRequired,
+        discount: PropTypes.number.isRequired,
+        total: PropTypes.number.isRequired,
+      }).isRequired
+    ).isRequired,
+    discountPercentage: PropTypes.number.isRequired,
+    total: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default CheckoutPage;

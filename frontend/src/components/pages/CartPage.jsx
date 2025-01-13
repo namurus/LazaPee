@@ -74,8 +74,7 @@ CartItem.propTypes = {
   handleRemoveItem: PropTypes.func,
 };
 
-function CartPage() {
-  const cartData = useLoaderData();
+function CartPage({ cartData, setCheckoutPage }) {
   const [cartItems, setCartItems] = useState(cartData.cartItems);
   const [total, setTotal] = useState(cartData.total);
   const [discountedTotal, setDiscountedTotal] = useState(
@@ -143,10 +142,17 @@ function CartPage() {
       const response = await checkoutFromCart(
         voucherCode.isCorrectedCode ? voucherCode.code : null
       );
-      console.log(response);
+      if (!response) {
+        throw new Error('Error checking out');
+      }
+      setCheckoutPage(response);
     } catch (error) {
       console.error(error);
-      toast.error('Có lỗi xảy ra, vui lòng thử lại sau');
+      toast.error('Có lỗi xảy ra khi thanh toán, vui lòng thử lại sau', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
     }
   };
 

@@ -7,7 +7,6 @@ const fetchWithInstance = async (endPoint, options) => {
       url: endPoint,
       ...options,
     });
-    console.log(response);
     if (!response) {
       console.error(`Undefined response fetching api from ${endPoint}`);
       return null;

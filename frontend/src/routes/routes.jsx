@@ -12,6 +12,8 @@ import shopRoutes from './shopRoutes';
 import CheckoutPage from '../components/pages/CheckoutPage';
 import ProductPage from '../components/pages/ProductPage';
 import { searchLoader } from './searchRoutes';
+import path from 'path';
+import QRPage from '../components/pages/QRPage';
 
 const routes = [
   {
@@ -41,6 +43,14 @@ const routes = [
             name: 'Thanh toán',
           }),
         },
+      },
+      {
+        path: '/qr_payment',
+        element: (
+          <AuthGuard>
+            <QRPage />
+          </AuthGuard>
+        ),
       },
       ...authRoutes,
       {
