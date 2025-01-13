@@ -123,7 +123,7 @@ function UpdateVoucherForm() {
           position: 'top-right',
           closeButton: true,
         });
-        navigate('/admin/voucher'); // Điều hướng về trang quản lý voucher
+        navigate('/admin/voucher');
       } else {
         throw new Error('Có lỗi xảy ra khi cập nhật voucher');
       }

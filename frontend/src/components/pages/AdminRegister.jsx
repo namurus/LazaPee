@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { post } from '../../api/config';
 import Image from '../atoms/Image';
 import { loginBanner } from '../../assets';

@@ -13,43 +13,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-
-const userData = [
-  {
-    id: 1,
-    fullName: 'Nguyễn Văn A',
-    username: "janesmith",
-    email: 'nguyenvana@example.com',
-    avatar: 'https://via.placeholder.com/150',
-    role: 'superadmin',
-    updatedAt: '2024-12-25T12:00:00.000Z',
-    createdAt: '2024-12-20T12:00:00.000Z',
-    status: 'active',
-  },
-  {
-    id: 2,
-    fullName: 'Trần Thị B',
-    email: 'tranthib@example.com',
-    avatar: 'https://via.placeholder.com/150',
-    role: 'admin',
-    updatedAt: '2024-12-24T10:30:00.000Z',
-    createdAt: '2024-12-15T14:20:00.000Z',
-    status: 'active',
-  },
-  {
-    id: 3,
-    fullName: 'Lê Văn C',
-    email: 'levanc@example.com',
-    avatar: 'https://via.placeholder.com/150',
-    role: 'user',
-    updatedAt: '2024-12-23T08:45:00.000Z',
-    createdAt: '2024-12-10T11:00:00.000Z',
-    status: 'banned',
-  },
-];
+import axios from 'axios';
 
 function AdminUserManagement() {
-  const [users, setUsers] = useState(userData);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+        const response = await axios.get('https://lazapee-jivl.onrender.com/admin/user?perPage=10&page=1', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('Users:', response.data.users);
+        setUsers(response.data.users);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const columns = [
     {
@@ -75,11 +61,13 @@ function AdminUserManagement() {
       cell: ({ row }) => {
         switch (row.original.role) {
           case 'superadmin':
-            return <Badge variant="success">Siêu quản trị viên</Badge>;
+            return <Badge variant="success">Quản trị viên</Badge>;
           case 'admin':
-            return <Badge variant="info">Quản trị viên</Badge>;
-          case 'user':
-            return <Badge variant="neutral">Người dùng</Badge>;
+            return <Badge variant="success">Quản trị viên</Badge>;
+          case 'seller':
+            return <Badge variant="success">Người bán hàng</Badge>;
+          case 'customer':
+            return <Badge variant="success">Người dùng</Badge>;
         }
       },
     },
@@ -142,17 +130,32 @@ function AdminUserManagement() {
   ];
 
   const handleDelete = (id) => {
-    setUsers((prev) => prev.filter((user) => user.id !== id));
+    // setUsers((prev) => prev.filter((user) => user.id !== id));
+    // del/admin/user/:id
+    try {
+      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+      axios.delete(`https://lazapee-jivl.onrender.com/admin/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsers((prev) => prev.filter((user) => user.id !== id));
+    }
+    catch (error) {
+      console.error('Failed to delete user:', error);
+    }
+
   };
 
   return (
     <SidebarMaincontentLayout>
       <div className="flex flex-col space-y-6">
         <Tabs defaultValue="all">
-          <TabsList className="mb-6 grid w-max grid-cols-3 gap-4">
+          <TabsList className="mb-6 grid w-max grid-cols-4 gap-4">
             <TabsTrigger value="all">Tất cả</TabsTrigger>
             <TabsTrigger value="system">Hệ thống</TabsTrigger>
-            <TabsTrigger value="banned">Bị cấm</TabsTrigger>
+            <TabsTrigger value="seller">Người bán hàng</TabsTrigger>
+            <TabsTrigger value="customer">Người dùng</TabsTrigger>
           </TabsList>
           <TabsContent value="all">
             <DataTable
@@ -171,19 +174,21 @@ function AdminUserManagement() {
               searchColumn={'fullName'}
             />
           </TabsContent>
-          <TabsContent value="banned">
+          <TabsContent value="seller">
             <DataTable
               columns={columns}
-              data={users.filter((user) => user.status === 'banned')}
+              data={users.filter((user) => user.role === 'seller')}
+              searchColumn={'fullName'}
+            />
+          </TabsContent>
+          <TabsContent value="customer">
+            <DataTable
+              columns={columns}
+              data={users.filter((user) => user.role === 'customer')}
               searchColumn={'fullName'}
             />
           </TabsContent>
         </Tabs>
-        <Link to="./new" className="self-end">
-          <Button>
-            Thêm người dùng mới <Plus />
-          </Button>
-        </Link>
       </div>
     </SidebarMaincontentLayout>
   );
