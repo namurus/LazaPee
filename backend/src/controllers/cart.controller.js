@@ -13,7 +13,7 @@ export const fetchAllCartItems = async (req, res, next) => {
             });
             return res.status(200).json(cart);
         }
-        const userId = req.user.id
+        const userId = req.user.id;
         const cart = await db.models.Cart.findOne({
             where: { userId: req.user.id }, 
             attributes: ['id'],
@@ -193,7 +193,7 @@ export const updateCartItem = async (req, res, next) => {
 export const deleteCartItem = async (req, res, next) => {
     try {
         const cartItem = await db.models.CartItem.findOne({
-            where: { id: req.body.cartItemId },
+            where: { id: req.params.id },
         });
         console.log(cartItem);
         if (!cartItem) {
