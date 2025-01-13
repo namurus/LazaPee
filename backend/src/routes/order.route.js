@@ -10,12 +10,12 @@ import {addProductToOrderCheckout,
 
 const router = Router();
 
-router.get('/checkout', getCartItemAndUserInfo);
+router.get('/user', getUserOrders);
+router.post('/checkout', getCartItemAndUserInfo);
 router.post('/addItem', addProductToOrderCheckout);
 router.post('/', createOrders);
 router.get('/:id', getOrderDetailsById);
 router.patch('/:id', updateOrderByID);
 router.delete('/:id', cancelledOrderByID);
-router.get('/user/:id', getUserOrders);
 
 export default router;
