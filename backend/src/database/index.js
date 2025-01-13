@@ -18,6 +18,7 @@ import userVoucherModel from './models/user-voucher';
 import paymentModel from './models/payment';
 import shopModel from './models/shop';
 import reviewsModel from './models/reviews';
+import UserAdressModel from './models/user-address';
 // Configuration
 const env = process.env.NODE_ENV;
 const sequelizeConfig = config[env];
@@ -43,7 +44,8 @@ const modelDefiners = [
 	voucherModel,
 	userVoucherModel,
 	shopModel,
-	reviewsModel
+	reviewsModel,
+	UserAdressModel
 ];
 
 for (const modelDefiner of modelDefiners) {

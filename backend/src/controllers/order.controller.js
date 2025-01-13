@@ -115,8 +115,8 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
                   include: [
                       {
                           model: db.models.Skus,
-                          as: 'sku',
-                          attributes: ['price', 'attributeName', 'value', 'stock_quantity'],
+                          as: 'skus',
+                          attributes: ['price', 'color', 'size', 'stock_quantity'],
                           include: [
                               {
                                   model: db.models.Product,
@@ -137,17 +137,19 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
           ],
       });
 
-      if (!cart) {
-          return res.status(404).json({ message: 'Cart not found' });
-      }
+        // Xử lý giỏ hàng không tồn tại hoặc trống
+    if (!cart || !cart.cartItems || cart.cartItems.length === 0) {
+      console.log('Your cart is empty!');
+      return res.status(400).json({ message: 'Your cart is empty!' });
+    }
 
       const user = await db.models.User.findOne({
-          where: { id: req.user.id },
+          where: {id: req.user.id },
           attributes: ['fullName', 'phone', 'address'],
           include: [
               {
                   model: db.models.UserAddress,
-                  as: 'userAddress',
+                  as: 'user_addresses',
                   attributes: ['fullName', 'phone', 'address'],
               },
           ],
@@ -160,7 +162,7 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
       const result = {
           id: cart.id,
           products: await Promise.all(cart.cartItems.map(async (cartItem) => {
-              const { product, price, attributeName, stock_quantity, value } = cartItem.sku;
+              const { product, price, attributeName, stock_quantity, value } = cartItem.skus;
               const shop = product.shop;
 
               return {
@@ -178,28 +180,27 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
                   shopOff: shop.status === 'off' ? 'yes' : 'no',
                   shopName: shop.shopName,
                   total: await cartItem.getTotal(),
-                  discountedTotal: await cartItem.getDiscountedTotal(),
               };
           })),
           total: await cart.getTotal(),
-          discountedTotal: await cart.getDiscountedTotal(),
           userId: req.user.id,
           totalProducts: await cart.getTotalProducts(),
           userInfo: {
               fullName: user.fullName,
               phone: user.phone,
               address: user.address,
-              secondaryInfo: {
-                  secondaryFullName: user.userAddress?.secondaryFullName,
-                  secondaryPhone: user.userAddress?.secondaryPhone,
-                  secondaryAddress: user.userAddress?.secondaryAddress,
-              },
+              secondaryInfo: user.user_addresses.map((address) => ({
+                secondaryFullName: address.fullName,
+                secondaryPhone: address.phone,
+                secondaryAddress: address.address,
+              })),
           },
       };
 
       res.status(200).json(result);
-  } catch (err) {
-      return next(err);
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    res.status(500).json({ message: 'Internal server error'});
   }
 };
 
@@ -207,79 +208,69 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
 
 export const createOrders = async (req, res, next) => {
   try {
-    const { shippingAddress, shippingCompany, phoneNumber, paymentMethod, shippingFee, selectItems, voucherId } = req.body;
+    const { fullName, phoneNumber, shippingAddress, shippingType,  paymentMethod} = req.body;
 
-     // Fetch user's cart
-     const cart = await db.models.Cart.findOne({
+
+    // Fetch user's cart and related items
+    const cart = await db.models.Cart.findOne({
       where: { userId: req.user.id },
       include: {
         model: db.models.CartItem,
         as: 'cartItems',
-      },
+        include: [
+          {
+            model: db.models.Skus,
+            as: 'skus',
+            // attributes: ['i'productId', 'price', 'color', 'size', 'stock_quantity'],
+          },
+        ],
+      },  
+
     });
 
     if (!cart || !cart.cartItems.length) {
       return res.status(400).json({ message: 'Your cart is empty!' });
     }
     
-    // Map items by shopId
+    // Organize cart items by shopId
     const shopOrders = {};
-    const itemsToRemove = [];
     
-    for (const item of selectItems) {
-      const sku = await db.models.Skus.findOne({ where: { id: item.skusId } });
-
-      if (!sku) {
-        return res.status(404).json({ message: `SKU with ID ${item.skusId} not found` });
-      }
-
-      if (sku.stock_quantity < item.quantity) {
-        return res.status(400).json({ message: `Insufficient stock for SKU ${item.skusId}` });
-      }
+    for (let cartItem of cart.cartItems) {
+      const sku = cartItem.skus;
 
       const product = await db.models.Product.findOne({ where: { id: sku.productId } });
+
       if (!shopOrders[product.shopId]) {
         shopOrders[product.shopId] = [];
       }
 
       // Deduct stock quantity
-      sku.stock_quantity -= item.quantity;
-      await sku.save(); 
+      sku.stock_quantity -= cartItem.quantity;
+      await sku.save();
 
-      shopOrders[product.shopId].push({ sku, quantity: item.quantity, price: sku.price });
-
-      // Find cart item and mark it for removal
-      const productIncartItem = cart.cartItems.find((ci) => ci.skusId === item.skusId);
-      if (productIncartItem) {
-        itemsToRemove.push(productIncartItem.id);
-      }
+      shopOrders[product.shopId].push({
+        sku,
+        quantity: cartItem.quantity,
+        price: sku.price,
+      });
     }
 
     const createdOrders = [];
     for (const [shopId, items] of Object.entries(shopOrders)) {
       const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      // // Apply voucher if provided
-      // let discount = 0;
-      // if (voucherId) {
-      //   const voucher = await db.models.Voucher.findOne({ where: { id: voucherId, status: true } });
-      //   if (voucher) {
-      //     discount = (totalAmount * voucher.discount) / 100;
-      //     voucher.quantity -= 1;
-      //     if (voucher.quantity <= 0) voucher.status = false;
-      //     await voucher.save();
-      //   }
-      // }
-
       const order = await db.models.Order.create({
         customerId: req.user.id,
         shopId: parseInt(shopId),
-        shippingAddress,
-        shippingCompany,
+        status: 'pending',
+        fullName,
         phoneNumber,
-        paymentMethod,
-        shippingFee,
+        shippingAddress,
+        shippingType,
+        paymentMethod: paymentMethod,
         totalAmount: totalAmount,
+        shippingFee: 0,
+        shippingCompany: 'GHN',
       });
 
       for (const { sku, quantity } of items) {
@@ -293,18 +284,62 @@ export const createOrders = async (req, res, next) => {
 
       createdOrders.push(order);
     }
-    // Remove purchased items from the cart
+
+  // Handle payment method after creating all orders
+  if (paymentMethod === 'credit card') {
+    // Generate payment and QR code for credit card
+    const bankInfo = {
+      id: process.env.BANK_ID,
+      accountNo: process.env.ACCOUNT_NO,
+      accountName: process.env.ACCOUNT_NAME,
+      template: process.env.TEMPLATE,
+    };
+
+    const totalAmount = createdOrders.reduce((sum, order) => sum + order.totalAmount, 0); // Calculate total for all orders
+    const orderIds = createdOrders.map((o) => o.id).join(',')
+
+    const newPayment = await db.models.Payment.create({
+      orderId: orderIds,
+      customerId: req.user.id,
+      amount: totalAmount,
+      paymentMethod,
+      description: 'Temporary description', // Temporary placeholder
+    });
+
+    // Update payment description
+    await newPayment.update({
+      description: `Orders-${createdOrders.map((o) => o.id)}-Pays-${newPayment.id}`,
+    });
+
+    // Generate QR code data
+    const qrCodeData = `https://img.vietqr.io/image/${bankInfo.id}-${bankInfo.accountNo}-${bankInfo.template}.png?amount=${totalAmount}&addInfo=${encodeURIComponent(
+      newPayment.description
+    )}&accountName=${bankInfo.accountName}&paymentId=${newPayment.id}`;
+
+    return res.status(201).json({
+      message: 'Order successful please pay',
+      qrCode: qrCodeData,
+      paymentId: newPayment.id,
+      orderIds: orderIds,
+      orders: createdOrders,
+    });
+  } else if (paymentMethod === 'COD') {
+
     await db.models.CartItem.destroy({
       where: {
-        id: itemsToRemove,
+        cartId: cart.id,
       },
     });
 
-    res.status(201).json({ message: 'Orders created successfully', orders: createdOrders });
-  } catch (error) {
-    console.error('Error creating orders:', error);
-    next(error);
+    return res.status(201).json({
+      message: 'Orders created successfully',
+      orders: createdOrders,
+    });
   }
+} catch (error) {
+  console.error('Error creating orders:', error);
+  next(error);
+}
 };
 
 

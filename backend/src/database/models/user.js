@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'userId',
 				as: 'reviews',
 			});
+			User.hasMany(models.UserAddress, {
+				foreignKey: 'userId',
+				as: 'user_addresses',
+			});
 		}
 		validatePassword(plainPassword) {
 			return compare(plainPassword, this.password);

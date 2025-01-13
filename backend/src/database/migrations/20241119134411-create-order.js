@@ -33,6 +33,11 @@ module.exports = {
         default: 'pending',
         field: 'status',
       },
+      fullName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'full_name',
+      },
       phoneNumber: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -42,6 +47,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         field: 'shipping_address', 
+      },
+      shippingType: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'shipping_type',
       },
       totalAmount: {
         type: Sequelize.FLOAT,
