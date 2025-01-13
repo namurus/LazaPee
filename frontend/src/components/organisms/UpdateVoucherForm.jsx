@@ -21,10 +21,9 @@ function UpdateVoucherForm() {
   });
 
   useEffect(() => {
-    // Fetch voucher data by ID
     const fetchVoucher = async () => {
       try {
-        const token = localStorage.getItem('ACCESS_TOKEN');
+        const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
         const response = await axios.get(
           `https://lazapee-jivl.onrender.com/admin/voucher/${id}`,
           {
@@ -98,7 +97,7 @@ function UpdateVoucherForm() {
     };
 
     try {
-      const token = localStorage.getItem('ACCESS_TOKEN');
+      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
       const response = await axios.put(
         `https://lazapee-jivl.onrender.com/admin/voucher/update/${id}`,
         updatedVoucherData,

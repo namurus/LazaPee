@@ -18,17 +18,6 @@ import {
 } from '../ui/dropdown-menu';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 
-const data = [
-  {
-    id: 1,
-    code: 'CXVB12312',
-    discount: 0.4,
-    startDate: '2024-12-26',
-    endDate: '2025-12-30',
-    quantity: 102,
-  },
-];
-
 function AdminVoucherManagement() {
   const [vouchers, setVouchers] = useState([]);
   const navigate = useNavigate();
@@ -36,12 +25,14 @@ function AdminVoucherManagement() {
   useEffect(() => {
     const fetchVouchers = async () => {
       try {
-        const token = localStorage.getItem('ACCESS_TOKEN');
+        const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+        console.log(token);
         const response = await axios.get('https://lazapee-jivl.onrender.com/admin/voucher', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+        // console.log('Vouchers:', response);
         setVouchers(response.data);
       } catch (error) {
         console.error('Failed to fetch vouchers:', error);
@@ -134,15 +125,17 @@ function AdminVoucherManagement() {
   
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('ACCESS_TOKEN'); // ?
+      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
       const response = await axios.delete(`https://lazapee-jivl.onrender.com/admin/voucher/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log('Delete voucher:', response);
       
-      if (response.code === 200) {
+      if (response.status === 204) {
         setVouchers((prev) => prev.filter((voucher) => voucher.id !== id));
+        navigate('./');
       } else {  
         console.error('Failed to delete voucher:', response.data);
       }

@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import ShopTitleSection from '../molecules/ShopTitleSection';
+import axios from 'axios';
 
 function AddVoucherForm() {
   const [loading, setLoading] = useState(false);
@@ -61,33 +62,48 @@ function AddVoucherForm() {
       quantity,
     };
 
+    // const voucherData = {
+    //   code: 'CXVB12312',
+    //   discount: 0.4,
+    //   startDate: '2024-12-26',
+    //   endDate: '2024-12-30',
+    //   quantity: 102,
+    // };
+
+    // console.log('Voucher data:', voucherData);
+
     try {
-      const token = localStorage.getItem('ACCESS_TOKEN');
-      console.log(token);
-      const response = await fetch('https://lazapee-jivl.onrender.com/admin/voucher/create', {
-        method: 'POST',
+      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+      const response = await axios.post('https://lazapee-jivl.onrender.com/admin/voucher/create', voucherData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(voucherData),
       });
 
-      if (response.ok) {
+      if (response.data.code === 201) {
         toast.success('Voucher đã được thêm thành công', {
           className: 'bg-green-500 text-white',
           position: 'top-right',
           closeButton: true,
         });
-      } else {
-        throw new Error('Có lỗi xảy ra khi thêm voucher');
+      } 
+      else
+       {
+        toast.error('Có lỗi xảy ra khi thêm voucher', {
+          className: 'bg-red-500 text-white',
+          position: 'top-right',
+          closeButton: true,
+        });
       }
+
     } catch (error) {
-      toast.error(error.message, {
+      toast.error('Voucher đã tồn tại', {
         className: 'bg-red-500 text-white',
         position: 'top-right',
         closeButton: true,
       });
-    } finally {
+
+      } finally {
       setLoading(false);
     }
   };
