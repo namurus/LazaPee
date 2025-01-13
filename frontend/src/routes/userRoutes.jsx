@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Address from '../components/organisms/Address';
 import ChangePassword from '../components/organisms/ChangePassword';
 import ProfileInfo from '../components/organisms/ProfileInfo';
+import CustomerOrder from '../components/organisms/CustomerOrder';
 
 const userRoutes = [
   {
@@ -40,7 +41,7 @@ const userRoutes = [
       },
       {
         path: 'orders',
-        element: <div>Orders element Placeholder</div>,
+        element: <CustomerOrder/>,
       },
       {
         path: 'logout',
