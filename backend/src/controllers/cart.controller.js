@@ -44,6 +44,7 @@ export const fetchAllCartItems = async (req, res, next) => {
             id: cart.id,
             cartItems: await Promise.all(cart.cartItems.map(async (cartItem) => ({
                 cartItemId: cartItem.id,
+                productId: cartItem.skus.product.id,
                 productName: cartItem.skus.product.productName,
                 price: cartItem.skus.price,
                 color: cartItem.skus.color,
