@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SidebarMaincontentLayout from '../templates/SidebarMaincontentLayout';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
+import { Button } from '../ui/button';
+import ShopTitleSection from '../molecules/ShopTitleSection';
 
 function AdminViewOrderDetail() {
   const { id } = useParams();
@@ -60,7 +62,7 @@ function AdminViewOrderDetail() {
   } = orderDetail;
 
   const renderCustomerInfo = () => (
-    <div className="mb-6">
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4">Thông tin khách hàng</h2>
       <p><strong>Họ và tên:</strong> {order.customer.fullName}</p>
       <p><strong>Email:</strong> {order.customer.email}</p>
@@ -70,8 +72,8 @@ function AdminViewOrderDetail() {
   );
 
   const renderOrderInfo = () => (
-    <div className="mb-6">
-      <h2 className="text-xl font-bold mb-4">Thông tin đơn hàng</h2>
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
+    <h2 className="text-xl font-bold mb-4">Thông tin đơn hàng</h2>
       <p><strong>ID Đơn hàng:</strong> {order.id}</p>
       <p><strong>Trạng thái:</strong> {order.status}</p>
       <p><strong>Tổng tiền:</strong> {CurrencyFormatter.formatWithLocaleInfo(order.totalAmount, 'VND')}</p>
@@ -85,7 +87,7 @@ function AdminViewOrderDetail() {
   );
 
   const renderProductInfo = () => (
-    <div className="mb-6">
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4">Thông tin sản phẩm</h2>
       <p><strong>Tên sản phẩm:</strong> {product.productName}</p>
       <p><strong>Màu sắc:</strong> {orderDetail.sku.color}</p>
@@ -97,15 +99,18 @@ function AdminViewOrderDetail() {
   return (
     <SidebarMaincontentLayout>
       <div className="p-4">
-        <button
-          className="mb-4 text-blue-600 underline"
-          onClick={() => navigate(-1)}
-        >
-          Quay lại
-        </button>
+        
         {renderOrderInfo()}
         {renderCustomerInfo()}
         {renderProductInfo()}
+        <div className='flex items-center justify-end'>
+        <Button
+          className="mb-4 bg-gray-900 hover:bg-gray-500"
+          onClick={() => navigate(-1)}
+        >
+          Quay lại
+        </Button>
+        </div>
       </div>
     </SidebarMaincontentLayout>
   );
