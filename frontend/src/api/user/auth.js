@@ -29,7 +29,10 @@ const getMe = async () => {
       if (!user) {
         return Promise.reject(new Error('Failed to fetch user data'));
       }
-      return Promise.resolve(user);
+      return Promise.resolve({
+        ...user.data,
+        accessToken: localStorage.getItem('ACCESS_TOKEN'),
+      });
     } catch (error) {
       console.log(error.message);
       return Promise.reject(new Error('Failed to fetch user data'));

@@ -31,21 +31,15 @@ function CategoryShowcase() {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      const imageResponse = await fetch(
-        'https://via.assets.so/shoe.png?id=1&q=95&fit=fill'
-      );
       try {
-        if (!imageResponse.ok) {
-          throw new Error(`${imageResponse.status}`);
-        }
         const json = await getCategories();
-        if (!json) {
+        if (json.code !== 200) {
           throw new Error('No categories found');
         }
-        const objectData = json.slice(0, 4).map((category) => {
+        const objectData = json.categories.slice(0, 4).map((category) => {
           return {
-            name: category,
-            image: imageResponse.url,
+            ...category,
+            image: category.thumbnail,
           };
         });
         setCategories(objectData);
@@ -65,10 +59,7 @@ function CategoryShowcase() {
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-3 lg:grid-rows-2 lg:[&>*:nth-child(2)]:col-span-2 lg:[&>*:nth-child(3)]:col-span-2'>
           {categories.map((category) => {
             return (
-              <Link
-                to={`/product/${stringToId(category.name)}`}
-                key={category.name}
-              >
+              <Link to={`/product/${category.id}`} key={category.name}>
                 <CategoryCard category={category} />
               </Link>
             );
