@@ -146,6 +146,20 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
       return res.status(400).json({ message: 'Your cart is empty!' });
     }
 
+    // Kiểm tra từng sản phẩm trong giỏ hàng
+    for (const cartItem of cart.cartItems) {
+      const sku = cartItem.skus;
+      if (sku.stock_quantity < cartItem.quantity) {
+        return res.status(400).json({
+          message: 'Some items are out of stock',
+          productId: sku.product.id,
+          productName: sku.product.productName,
+          availableStock: sku.stock_quantity,
+          requestedQuantity: cartItem.quantity,
+        });
+      }
+    }
+
       const user = await db.models.User.findOne({
           where: {id: req.user.id },
           attributes: ['id','fullName', 'phone', 'address'],
@@ -191,6 +205,9 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
             return res.status(400).json({ code: 400, message: 'Voucher has been used' });
           }
       }
+      else{
+        voucher = { discount: 0 };
+      }
 
       const result = {
           id: cart.id,
@@ -218,6 +235,7 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
           total: await cart.getTotal(),
           userId: req.user.id,
           totalProducts: await cart.getTotalProducts(),
+          voucherCode: voucherCode,
           discountPercentage: voucher.discount,
           userInfo: {
               fullName: user.fullName,
@@ -273,6 +291,16 @@ export const createOrders = async (req, res, next) => {
         voucher = await db.models.Voucher.findOne({
           where: { code: voucherCode },
         });
+
+        // Ghi lại thông tin người dùng đã sử dụng voucher
+        await db.models.UserVoucher.create({
+          userId: req.user.id,
+          voucherId: voucher.id,
+        });
+
+        // Cập nhật số lượng voucher còn lại
+        voucher.quantity -= 1;
+        await voucher.save();
       }
 
     // Determine shipping fee
