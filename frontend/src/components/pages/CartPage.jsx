@@ -9,6 +9,7 @@ import { ArrowRight, Tag, Trash2 } from 'lucide-react';
 import ValueConverter from '../../helpers/ValueConverter';
 import { toast } from 'sonner';
 import {
+  checkoutFromCart,
   checkVoucher,
   deleteProductFromCart,
   updateCartQuantity,
@@ -80,7 +81,10 @@ function CartPage() {
   const [discountedTotal, setDiscountedTotal] = useState(
     cartData.discountedTotal
   );
-  const [voucherCode, setVoucherCode] = useState('');
+  const [voucherCode, setVoucherCode] = useState({
+    code: '',
+    isCorrectedCode: false,
+  });
   const [discount, setDiscount] = useState(0);
 
   const handleQuantityChange = async (id, quantity) => {
@@ -104,8 +108,12 @@ function CartPage() {
   const handleRemoveItem = async (id) => {
     try {
       const response = await deleteProductFromCart(id);
-      console.log(response);
-      // setCartItems(cartItems.filter((item) => item.cartItemId !== id));
+      setCartItems(cartItems.filter((item) => item.cartItemId !== id));
+      const deletedItem = cartItems.find((item) => item.cartItemId === id);
+      setTotal(total - deletedItem.price * deletedItem.quantity);
+      setDiscountedTotal(
+        discountedTotal - deletedItem.price * deletedItem.quantity
+      );
     } catch (error) {
       console.error(error);
       toast.error('Có lỗi xảy ra, vui lòng thử lại sau');
@@ -115,10 +123,11 @@ function CartPage() {
   const handleVoucherApply = async () => {
     try {
       // Apply voucher logic here
-      const response = await checkVoucher(voucherCode);
+      const response = await checkVoucher(voucherCode.code);
       if (!response) {
         throw new Error('Invalid voucher code');
       }
+      setVoucherCode({ ...voucherCode, isCorrectedCode: true });
     } catch (error) {
       console.error(error);
       toast.error('Mã giảm giá không hợp lệ', {
@@ -126,6 +135,18 @@ function CartPage() {
         position: 'top-right',
         closeButton: true,
       });
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const response = await checkoutFromCart(
+        voucherCode.isCorrectedCode ? voucherCode.code : null
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      toast.error('Có lỗi xảy ra, vui lòng thử lại sau');
     }
   };
 
@@ -184,8 +205,10 @@ function CartPage() {
                   type='text'
                   className='bg-transparent outline-none'
                   placeholder='Nhập mã giảm giá'
-                  value={voucherCode}
-                  onChange={(e) => setVoucherCode(e.target.value)}
+                  value={voucherCode.code}
+                  onChange={(e) =>
+                    setVoucherCode({ ...voucherCode, code: e.target.value })
+                  }
                 />
               </div>
               <Button
@@ -198,6 +221,7 @@ function CartPage() {
               </Button>
             </div>
             <Button
+              onClick={handleCheckout}
               className={
                 'mt-5 rounded-full border-2 border-black bg-black px-4 py-3 font-light text-white transition-colors hover:bg-transparent hover:font-normal hover:text-black'
               }

@@ -33,12 +33,10 @@ const get = async (endPoint) => {
 };
 
 const post = async (endPoint, body) => {
-  try {
-    const response = await axios.post(`${baseURL}/${endPoint}`, body);
-    return response.data;
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  return fetchWithInstance(endPoint, {
+    method: 'POST',
+    data: body,
+  });
 };
 
 const put = async (endPoint, body) => {

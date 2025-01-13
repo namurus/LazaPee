@@ -44,11 +44,7 @@ const updateCartQuantity = (id, quantity) => {
 };
 
 const deleteProductFromCart = (productID) => {
-  return del('cart/remove', {
-    data: {
-      cartItemId: productID,
-    },
-  });
+  return del(`cart/remove/${productID}`);
 };
 
 const deleteCart = (id) => {
@@ -58,6 +54,12 @@ const deleteCart = (id) => {
 const checkVoucher = (voucher) => {
   return post('voucher/check', {
     code: voucher,
+  });
+};
+
+const checkoutFromCart = (voucher = null) => {
+  return post('/order/checkout', {
+    voucherCode: voucher,
   });
 };
 
@@ -75,4 +77,5 @@ export {
   getMyCart,
   updateCartQuantity,
   checkVoucher,
+  checkoutFromCart,
 };

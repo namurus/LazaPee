@@ -16,7 +16,7 @@ function ProductImage({ src, alt, ...rest }) {
       <Image
         src={src}
         alt={alt}
-        className='h-full w-full bg-[#F0EEED] object-cover'
+        className='aspect-square h-full w-full bg-[#F0EEED] object-cover'
       />
     </div>
   );

@@ -53,7 +53,7 @@ function ProductDetailInfo({ product }) {
   const [selectedVariant, setSelectedVariant] = useState({
     quantity: 1,
   });
-  const [renderPrice, setRenderPrice] = useState(product.skus[0].price);
+  const [renderPrice, setRenderPrice] = useState(product.skus[0]?.price || 0);
 
   const handleColorPick = (color) => {
     setSelectedVariant({ ...selectedVariant, color });
