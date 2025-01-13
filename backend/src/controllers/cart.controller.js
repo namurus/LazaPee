@@ -21,7 +21,7 @@ export const fetchAllCartItems = async (req, res, next) => {
                 {
                     model: db.models.CartItem,
                     as: 'cartItems',
-                    attributes: ['quantity'],
+                    attributes: ['id', 'quantity'],
                     include: [
                         {
                             model: db.models.Skus,
@@ -42,8 +42,8 @@ export const fetchAllCartItems = async (req, res, next) => {
 
         const result = {
             id: cart.id,
-            products: await Promise.all(cart.cartItems.map(async (cartItem) => ({
-                id: cartItem.skus.product.id,
+            cartItems: await Promise.all(cart.cartItems.map(async (cartItem) => ({
+                cartItemId: cartItem.id,
                 productName: cartItem.skus.product.productName,
                 price: cartItem.skus.price,
                 color: cartItem.skus.color,
@@ -165,7 +165,7 @@ export const deleteCartItem = async (req, res, next) => {
 
         await cartItem.destroy()
 
-        return res.status(204).end()
+        return res.status(204).end("Cart item deleted.")
 
     } catch (err) {
         next(err)
