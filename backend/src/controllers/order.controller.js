@@ -148,7 +148,7 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
 
       const user = await db.models.User.findOne({
           where: {id: req.user.id },
-          attributes: ['fullName', 'phone', 'address'],
+          attributes: ['id','fullName', 'phone', 'address'],
           include: [
               {
                   model: db.models.UserAddress,
@@ -161,6 +161,7 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
       if (!user) {
           return res.status(404).json({ message: 'User not found' });
       }
+      console.log('User:', user); 
 
 
       // Lấy thông tin voucher
@@ -315,6 +316,7 @@ export const createOrders = async (req, res, next) => {
         paymentMethod: paymentMethod,
         totalAmount: totalAmount - (voucher ? totalAmount * voucher.discount / 100 : 0) + shippingFee,
         shippingFee: shippingFee,
+        shippingCompany: 'GHN', // Temporary placeholder
       });
 
       for (const { sku, quantity } of items) {
@@ -348,7 +350,6 @@ export const createOrders = async (req, res, next) => {
       amount: totalAmount,
       paymentMethod,
       description: 'Temporary description', // Temporary placeholder
-      shipingCompany: 'Temporary shipping company', // Temporary placeholder
       shippingFee
     });
 

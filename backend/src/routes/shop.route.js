@@ -19,9 +19,9 @@ const upload = multer();
 
 const router = Router();
 
-router.post('/:shopId/temporary-closure', authentication, setTemporaryClosure);
+router.post('/temporary-closure', isSeller, setTemporaryClosure);
 
-router.delete('/:shopId/temporary-closure', authentication, clearTemporaryClosure);
+router.delete('/temporary-closure', isSeller, clearTemporaryClosure);
 
 router.post('/open-shop', authentication, upload.single('background'), uploadCloud, openShop);
 router.get("/detail", isSeller, getShopDetails);

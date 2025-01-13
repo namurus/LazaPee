@@ -3,7 +3,7 @@ import db from '@/database';
 // Controller to set temporary closure for a shop
 export const setTemporaryClosure = async (req, res, next) => {
 	try {
-		const { shopId } = req.params; // Shop ID passed as a URL parameter
+		const shopId = req.shopInfo.shopId;
 		const { temporaryClosurePeriod, temporaryClosureReason } = req.body; // Closure details in request body
 
 		// // Validate temporary closure period
@@ -53,7 +53,7 @@ export const setTemporaryClosure = async (req, res, next) => {
 // Controller to clear temporary closure for a shop
 export const clearTemporaryClosure = async (req, res, next) => {
     try {
-        const { shopId } = req.params; 
+		const shopId = req.shopInfo.shopId;
 
 		// Find the shop
 		const shop = await db.models.Shop.findByPk(shopId);
