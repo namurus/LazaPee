@@ -146,6 +146,20 @@ export const getCartItemAndUserInfo = async (req, res, next) => {
       return res.status(400).json({ message: 'Your cart is empty!' });
     }
 
+    // Kiểm tra từng sản phẩm trong giỏ hàng
+    for (const cartItem of cart.cartItems) {
+      const sku = cartItem.skus;
+      if (sku.stock_quantity < cartItem.quantity) {
+        return res.status(400).json({
+          message: 'Some items are out of stock',
+          productId: sku.product.id,
+          productName: sku.product.productName,
+          availableStock: sku.stock_quantity,
+          requestedQuantity: cartItem.quantity,
+        });
+      }
+    }
+
       const user = await db.models.User.findOne({
           where: {id: req.user.id },
           attributes: ['id','fullName', 'phone', 'address'],
