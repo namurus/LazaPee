@@ -27,7 +27,7 @@ function SidebarLayout({ data, ...props }) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
-              <Link to='dashboard'>
+              <Link to='/'>
                 <span className='w-full font-display text-[2rem] font-bold leading-9 text-black'>
                   LAZAPEE
                 </span>

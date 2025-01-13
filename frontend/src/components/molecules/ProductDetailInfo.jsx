@@ -8,6 +8,8 @@ import InverseButton from '../atoms/InverseButton';
 import { discountPercentageToPrice } from '../../helpers/CaculationHelper';
 import config from '../../config/config';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { addProductToCart } from '../../api/admin/cart';
 
 const colorConfig = config.colors;
 const sizeConfig = config.sizes;
@@ -49,37 +51,89 @@ function constructVariantListFromProductSKU(product) {
 function ProductDetailInfo({ product }) {
   const variantList = constructVariantListFromProductSKU(product);
   const [selectedVariant, setSelectedVariant] = useState({
-    ...variantList,
     quantity: 1,
   });
+  const [renderPrice, setRenderPrice] = useState(product.skus[0].price);
 
   const handleColorPick = (color) => {
     setSelectedVariant({ ...selectedVariant, color });
+    product.skus.forEach((sku) => {
+      if (sku.color === color.value) {
+        if (sku.size && !selectedVariant.size) {
+          return;
+        }
+        setRenderPrice(sku.price);
+      }
+    });
   };
 
   const handleSizePick = (size) => {
     setSelectedVariant({ ...selectedVariant, size });
+    product.skus.forEach((sku) => {
+      if (sku.size === size.value) {
+        if (sku.color && !selectedVariant.color) {
+          return;
+        }
+        setRenderPrice(sku.price);
+      }
+    });
   };
 
   const handleQuantityChange = (quantity) => {
     setSelectedVariant({ ...selectedVariant, quantity });
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     // Add to cart logic here
-    console.log(selectedVariant);
+    if (
+      (!selectedVariant.color && variantList.color) ||
+      (!selectedVariant.size && variantList.size)
+    ) {
+      toast.error('Vui lòng chọn phân loại cho sản phẩm', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+      return;
+    }
+    try {
+      const response = await addProductToCart({
+        productId: product.id,
+        quantity: selectedVariant.quantity,
+        sku: {
+          color: selectedVariant.color?.value,
+          size: selectedVariant.size?.value,
+        },
+      });
+      console.log(response);
+      if (!response) {
+        throw new Error('Error adding product to cart');
+      }
+      toast.success('Đã thêm sản phẩm vào giỏ hàng', {
+        className: 'bg-green-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error('Có lỗi xảy ra, vui lòng thử lại sau', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+    }
   };
   return (
     <div className='flex flex-col gap-4 *:py-6'>
       <div className='line-below space-y-3'>
-        <h1 className='font-display text-2xl leading-7 lg:text-[2.5rem]'>
+        <h1 className='line-clamp-2 font-display text-2xl leading-tight lg:text-[2.5rem]'>
           {product.productName}
         </h1>
         <StarRating rating={product.rating} name={`${product.id}-product`} />
         <div className='flex gap-3 text-2xl font-semibold'>
           <p>
             {CurrencyFormatter.formatWithLocaleInfo(
-              isNaN(product.skus[0].price) ? 0 : product.skus[0].price,
+              isNaN(renderPrice) ? 0 : renderPrice,
               'VND'
             )}
           </p>

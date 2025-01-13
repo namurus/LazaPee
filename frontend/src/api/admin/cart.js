@@ -1,7 +1,11 @@
-import { del, fetchWithInstance, post, put } from '../config';
+import { del, fetchWithInstance, get, post, put } from '../config';
 
 const getCarts = () => {
   return fetchWithInstance('carts');
+};
+
+const getMyCart = () => {
+  return get('cart');
 };
 
 const getCart = (id) => {
@@ -25,19 +29,36 @@ const getUserCarts = (user) => {
 };
 
 const addProductToCart = (product) => {
-  return post('carts', product);
+  return post('cart/add', product);
 };
 
 const updateProductInCart = (id, product) => {
   return put(`carts/${id}`, product);
 };
 
-const deleteProductFromCart = (id, productID) => {
-  return del(`carts/${id}/${productID}`);
+const updateCartQuantity = (id, quantity) => {
+  return put('cart/update', {
+    cartItemId: id,
+    quantity,
+  });
+};
+
+const deleteProductFromCart = (productID) => {
+  return del('cart/remove', {
+    data: {
+      cartItemId: productID,
+    },
+  });
 };
 
 const deleteCart = (id) => {
   return del(`carts/${id}`);
+};
+
+const checkVoucher = (voucher) => {
+  return post('voucher/check', {
+    code: voucher,
+  });
 };
 
 export {
@@ -51,4 +72,7 @@ export {
   updateProductInCart,
   deleteProductFromCart,
   deleteCart,
+  getMyCart,
+  updateCartQuantity,
+  checkVoucher,
 };

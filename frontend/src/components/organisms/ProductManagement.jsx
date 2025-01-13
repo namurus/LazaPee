@@ -17,6 +17,7 @@ import {
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 import { deleteProduct } from '../../api/admin/product';
 import { toast } from 'sonner';
+import Image from '../atoms/Image';
 
 // Data format:
 
@@ -72,11 +73,11 @@ function ProductManagement() {
       accessorKey: 'thumbnail',
       header: 'Sản phẩm',
       cell: ({ row }) => (
-        <img
-          src={row.original.thumbnail}
-          alt={row.original.productName}
-          className='h-16 w-16 rounded-md object-cover'
-        />
+        <div className='grid h-32 w-32 grid-cols-2 gap-1'>
+          {row.original.images.map((image, index) => (
+            <Image key={index} src={image.url} alt={row.original.productName} />
+          ))}
+        </div>
       ),
     },
     {
@@ -166,9 +167,19 @@ function ProductManagement() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {status === 'available' ? (
-                <DropdownMenuItem>Ngừng bán sản phẩm</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    handleStatusChange(row.original.id, 'inactive')
+                  }
+                >
+                  Ngừng bán sản phẩm
+                </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem>Bán sản phẩm</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleStatusChange(row.original.id, 'active')}
+                >
+                  Bán sản phẩm
+                </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Xóa sản phẩm
@@ -187,9 +198,18 @@ function ProductManagement() {
   const fetchData = async () => {
     try {
       const res = await get('/shop/product');
+      console.log(res);
       setProducts(res.data);
     } catch (error) {
       console.log('Error fetching categories:', error);
+    }
+  };
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      console.log('status change', id, status);
+    } catch (error) {
+      console.log('Error changing status:', error);
     }
   };
 

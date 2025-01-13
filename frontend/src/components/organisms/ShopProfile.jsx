@@ -43,11 +43,13 @@ function ShopProfile() {
       joinDate: ValueConverter.formatDateTime(response.data.shopInfo.createdAt),
       state: {
         active: response.data.shopInfo.status === 'open' ? true : false,
-        returnDate: ValueConverter.formatDateTime(
-          add(parseJSON(response.data.shopInfo.dateClosed), {
-            months: response.data.shopInfo.temporaryClosurePeriod,
-          })
-        ),
+        returnDate:
+          response.data.shopInfo.dateClosed &&
+          ValueConverter.formatDateTime(
+            add(parseJSON(response.data.shopInfo.dateClosed), {
+              months: response.data.shopInfo.temporaryClosurePeriod,
+            })
+          ),
       },
       id: response.data.shopInfo.shopId,
     });
