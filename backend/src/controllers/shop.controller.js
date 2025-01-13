@@ -96,6 +96,58 @@ export const clearTemporaryClosure = async (req, res, next) => {
     }
 };
 
+//[GET] /shop/shop-orders
+export const getShopOrders = async (req, res) => {
+	try {
+		const { shopInfo } = req;
+
+		const orders = await db.models.Order.findAll({
+			where: { shopId: shopInfo.shopId },
+			include:[
+				{
+				model: db.models.OrderItem,
+				as: 'OrderItems',
+				attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+				include: [
+				{
+					model: db.models.Skus,
+					as: 'sku', 
+					attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+					include: [
+					{
+						model: db.models.Product,
+						as: 'product',
+						attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+						include: [
+						{
+							model: db.models.ProductImage,
+							as: 'images',
+							attributes: ['url'],
+						},
+						],
+					},
+					],
+					
+				},
+				],
+			},
+			],
+		});
+
+		return res.status(200).json({
+			code: 200,
+			message: 'Orders fetched successfully',
+			data: orders,
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			code: 500,
+			message: error.message,
+		});
+	}
+};
+
 // [POST] /shop/open-shop
 export const openShop = async (req, res) => {
 	try {

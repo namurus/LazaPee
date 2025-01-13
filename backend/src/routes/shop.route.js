@@ -5,7 +5,8 @@ import {
 		openShop,
 		getShopDetails,
 		updateShop,
-		getShopProducts
+		getShopProducts,
+		getShopOrders,
 } from '../controllers/shop.controller';
 import authentication from '@/middlewares/authentication';
 
@@ -26,5 +27,7 @@ router.post('/open-shop', authentication, upload.single('background'), uploadClo
 router.get("/detail", isSeller, getShopDetails);
 router.patch("/update", isSeller, upload.single('background'), uploadCloud, updateShop);
 router.get('/product', isSeller, getShopProducts);
+router.get('/orders', isSeller, getShopOrders);
+
 
 export default router;
