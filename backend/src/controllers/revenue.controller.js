@@ -4,7 +4,8 @@ import moment from 'moment';
 
 export const getRevenue = async (req, res) => {
     try {
-        const { startDate, endDate, shopId } = req.query;
+        const { startDate, endDate } = req.query;
+        const { shopId } = req.shopInfo;
         // shopId lấy từ token, hiện tại lấy từ query để kiểm định
         // Lấy tất cả đơn hàng trong khoảng thời gian
         const orders = await db.models.Order.findAll({
