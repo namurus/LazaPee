@@ -90,11 +90,6 @@ module.exports = (sequelize, DataTypes) => {
 						category.slug = await createUniqueSlug(category.name);
 					}
 				},
-				beforeCreate: async (categories) => { 
-					for (const category of categories) {
-						category.slug = await createUniqueSlug(category.name);
-					}
-				}
 			},
 		}
 	);
