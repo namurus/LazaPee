@@ -80,9 +80,21 @@ export const addCartItem = async (req, res, next) => {
             })
         }
         else{
-            skus = await db.models.Skus.findOne({
-                where: { productId: productId, color: sku.color, size: sku.size },
-            })
+            if(sku.color && sku.size) {
+                skus = await db.models.Skus.findOne({
+                    where: { productId: productId, color: sku.color, size: sku.size },
+                })
+            }
+            else if(sku.color) {
+                skus = await db.models.Skus.findOne({
+                    where: { productId: productId, color: sku.color, size: null },
+                })
+            }
+            else if(sku.size) {
+                skus = await db.models.Skus.findOne({
+                    where: { productId: productId, color: null, size: sku.size },
+                })
+            }
         }
 
         const userId = req.user.id
