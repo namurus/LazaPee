@@ -18,6 +18,7 @@ import userVoucherModel from './models/user-voucher';
 import paymentModel from './models/payment';
 import shopModel from './models/shop';
 import reviewsModel from './models/reviews';
+import UserAdressModel from './models/user-address';
 import permissionModel from './models/permission';
 import adminPermissionModel from './models/admin-permission';
 // Configuration
@@ -46,6 +47,7 @@ const modelDefiners = [
 	userVoucherModel,
 	shopModel,
 	reviewsModel,
+	UserAdressModel,
 	permissionModel,
 	adminPermissionModel,
 ];
