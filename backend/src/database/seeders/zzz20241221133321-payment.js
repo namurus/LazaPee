@@ -15,20 +15,29 @@ module.exports = {
     await queryInterface.bulkInsert('payements', [{
     customer_id: 1,
     order_id: 1,
-    amount: 299.99,
-    status: 'completed',
+    amount: 320000,
+    status: 'pending',
     description: 'Payment for order 1',
     created_at: new Date(),
     updated_at: new Date(),
     }, {
     customer_id: 1,
-    order_id: 2,
-    amount: 999.99,
+    order_id: 3,
+    amount: 120000,
     status: 'completed',
     description: 'Payment for order 2',
     created_at: new Date(),
     updated_at: new Date(),
     }, 
+    {
+      customer_id: 2,
+      order_id: 5,
+      amount: 370000,
+      status: 'completed',
+      description: 'Payment for order 3',
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
     ], {});
   },
   

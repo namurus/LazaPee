@@ -264,3 +264,52 @@ export const getAllPayments = async (req, res, next) =>{
 
 
 
+// Controller to cancel a payment
+export const cancelPayment = async (req, res, next) => {
+    try {
+        const paymentID = req.body.paymentID;
+        console.log('paymentID:', paymentID);
+
+        if (!paymentID) {
+            return res.status(400).json({ message: 'Payment ID is required' });
+        }
+
+        // Tìm kiếm payment
+        const payment = await db.models.Payment.findByPk(paymentID);
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment not found' });
+        }
+
+        // Kiểm tra nếu trạng thái hiện tại của payment không phải "pending"
+        if (payment.status !== 'pending') {
+            return res.status(400).json({ message: 'Only pending payments can be canceled' });
+        }
+
+        // Tách các orderIDs từ payment.orderId
+        const orderIDs = payment.orderId.split(',').map(id => id.trim());
+
+        // Cập nhật trạng thái payment thành "failed"
+        payment.status = 'failed';
+        await payment.save();
+
+        // Cập nhật trạng thái của từng đơn hàng thành "canceled"
+        for (const orderId of orderIDs) {
+            const order = await db.models.Order.findByPk(orderId);
+            if (order) {
+                order.status = 'canceled';
+                await order.save(); // Lưu lại thay đổi trạng thái
+            } else {
+                console.warn(`Order with ID ${orderId} not found`);
+            }
+        }
+
+        return res.status(200).json({
+            message: 'Payment and related orders have been canceled',
+            payment,
+        });
+    } catch (error) {
+        console.error('Error canceling payment:', error);
+        res.status(500).json({ message: 'Error canceling payment', error });
+    }
+};
+

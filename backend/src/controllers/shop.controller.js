@@ -3,7 +3,7 @@ import db from '@/database';
 // Controller to set temporary closure for a shop
 export const setTemporaryClosure = async (req, res, next) => {
 	try {
-		const { shopId } = req.params; // Shop ID passed as a URL parameter
+		const shopId = req.shopInfo.shopId;
 		const { temporaryClosurePeriod, temporaryClosureReason } = req.body; // Closure details in request body
 
 		// // Validate temporary closure period
@@ -53,7 +53,7 @@ export const setTemporaryClosure = async (req, res, next) => {
 // Controller to clear temporary closure for a shop
 export const clearTemporaryClosure = async (req, res, next) => {
     try {
-        const { shopId } = req.params; 
+		const shopId = req.shopInfo.shopId;
 
 		// Find the shop
 		const shop = await db.models.Shop.findByPk(shopId);
@@ -94,6 +94,58 @@ export const clearTemporaryClosure = async (req, res, next) => {
         console.error('Error clearing shop temporary closure:', error);
         next(error);
     }
+};
+
+//[GET] /shop/shop-orders
+export const getShopOrders = async (req, res) => {
+	try {
+		const { shopInfo } = req;
+
+		const orders = await db.models.Order.findAll({
+			where: { shopId: shopInfo.shopId },
+			include:[
+				{
+				model: db.models.OrderItem,
+				as: 'OrderItems',
+				attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+				include: [
+				{
+					model: db.models.Skus,
+					as: 'sku', 
+					attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+					include: [
+					{
+						model: db.models.Product,
+						as: 'product',
+						attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+						include: [
+						{
+							model: db.models.ProductImage,
+							as: 'images',
+							attributes: ['url'],
+						},
+						],
+					},
+					],
+					
+				},
+				],
+			},
+			],
+		});
+
+		return res.status(200).json({
+			code: 200,
+			message: 'Orders fetched successfully',
+			data: orders,
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			code: 500,
+			message: error.message,
+		});
+	}
 };
 
 // [POST] /shop/open-shop
