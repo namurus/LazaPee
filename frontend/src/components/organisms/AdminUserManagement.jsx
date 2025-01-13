@@ -18,6 +18,7 @@ const userData = [
   {
     id: 1,
     fullName: 'Nguyễn Văn A',
+    username: "janesmith",
     email: 'nguyenvana@example.com',
     avatar: 'https://via.placeholder.com/150',
     role: 'superadmin',

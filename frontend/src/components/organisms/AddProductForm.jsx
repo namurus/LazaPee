@@ -66,7 +66,7 @@ function AddProductForm() {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    console.log(response);
+
     if (response.ok) {
       toast.success('Sản phẩm đã được thêm thành công', {
         className: 'bg-green-500 text-white',

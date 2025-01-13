@@ -5,6 +5,7 @@ import AdminOrderManagement from '../components/organisms/AdminOrderManagement';
 import AdminVoucherManagement from '../components/organisms/AdminVoucherManagement';
 import AdminUserManagement from '../components/organisms/AdminUserManagement';
 import AddVoucherForm from '../components/organisms/AddVoucherForm';
+import UpdateVoucherForm from '../components/organisms/UpdateVoucherForm';
 
 const adminRoutes = [
   {
@@ -38,6 +39,16 @@ const adminRoutes = [
           crumb: () => ({
             path: '/admin/voucher/new',
             name: 'Thêm mã giảm giá',
+          }),
+        },
+      },
+      {
+        path: 'voucher/update/:id',
+        element: <UpdateVoucherForm />,
+        handle: {
+          crumb: (id) => ({
+            path: `/admin/voucher/update/${id}`,
+            name: `Chỉnh sửa mã giảm giá`,
           }),
         },
       },

@@ -7,7 +7,9 @@ import { MoreHorizontal, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,21 +18,22 @@ import {
 } from '../ui/dropdown-menu';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
 
-// const data = [
-//   {
-//     code: 'CXVB12312',
-//     discount: 0.4,
-//     startDate: '2024-12-26',
-//     endDate: '2025-12-30',
-//     quantity: 102,
-//   },
-// ];
+const data = [
+  {
+    id: 1,
+    code: 'CXVB12312',
+    discount: 0.4,
+    startDate: '2024-12-26',
+    endDate: '2025-12-30',
+    quantity: 102,
+  },
+];
 
 function AdminVoucherManagement() {
   const [vouchers, setVouchers] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all vouchers from the API
     const fetchVouchers = async () => {
       try {
         const token = localStorage.getItem('ACCESS_TOKEN');
@@ -49,6 +52,11 @@ function AdminVoucherManagement() {
   }, []);
 
   const columns = [
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      cell: ({ row }) => <span>{row.original.id}</span>,
+    },
     {
       accessorKey: 'code',
       header: 'Mã giảm giá',
@@ -78,10 +86,13 @@ function AdminVoucherManagement() {
     {
       accessorKey: 'discount',
       header: 'Giá trị',
-      cell: ({ row }) =>
-        row.original.discountType === 'percentage'
-          ? `${row.original.discount * 100}%`
-          : CurrencyFormatter.formatWithLocaleInfo(row.original.discount, 'VND'),
+      cell: ({ row }) => {
+        const discount = row.original.discount;
+        if (discount > 0 && discount < 1) {
+          return `${discount * 100}%`;
+        }
+        return CurrencyFormatter.formatWithLocaleInfo(discount, 'VND');
+      },
     },
     {
       accessorKey: 'status',
@@ -109,6 +120,9 @@ function AdminVoucherManagement() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => handleUpdate(row.original.id)}>
+              Chỉnh sửa
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
               Xóa voucher
             </DropdownMenuItem>
@@ -117,9 +131,28 @@ function AdminVoucherManagement() {
       ),
     },
   ];
-
-  const handleDelete = (id) => {
-    setVouchers((prev) => prev.filter((voucher) => voucher.id !== id));
+  
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('ACCESS_TOKEN'); // ?
+      const response = await axios.delete(`https://lazapee-jivl.onrender.com/admin/voucher/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (response.code === 200) {
+        setVouchers((prev) => prev.filter((voucher) => voucher.id !== id));
+      } else {  
+        console.error('Failed to delete voucher:', response.data);
+      }
+    } catch (error) {
+      console.error('Error deleting voucher:', error);
+    }
+  };
+  
+  const handleUpdate = (id) => {
+    navigate(`./update/${id}`);
   };
 
   return (
