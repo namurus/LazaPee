@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 
 function Image({ src, alt, ...props }) {
+  if (typeof src === 'object') {
+    return src;
+  }
+
   return (
     <img
       src={src}

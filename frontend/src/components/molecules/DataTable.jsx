@@ -4,6 +4,7 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 
 import {
@@ -13,13 +14,15 @@ import {
   TableHead,
   TableBody,
   TableCell,
+  TableFooter,
 } from '../ui/table';
 import PropTypes from 'prop-types';
 import { Input } from '../ui/input';
 import { useState } from 'react';
 import DataTablePagination from './DataTablePagination';
 
-function DataTable({ columns, data, searchColumn }) {
+function DataTable({ columns, data, options = {}, footer }) {
+  const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const table = useReactTable({
     data,
@@ -28,24 +31,33 @@ function DataTable({ columns, data, searchColumn }) {
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
       columnFilters,
+      sorting,
     },
   });
   return (
     <div className='space-y-4'>
-      <div className='flex items-center py-4'>
-        <Input
-          placeholder='Tìm kiếm theo tên'
-          value={table.getColumn(`${searchColumn}`)?.getFilterValue() ?? ''}
-          onChange={(event) =>
-            table
-              .getColumn(`${searchColumn}`)
-              ?.setFilterValue(event.target.value)
-          }
-          className='max-w-sm'
-        />
-      </div>
+      {options.search.allowSearch && (
+        <div className='flex items-center py-4'>
+          <Input
+            placeholder='Tìm kiếm theo tên'
+            value={
+              table
+                .getColumn(`${options.search.searchColumn}`)
+                ?.getFilterValue() ?? ''
+            }
+            onChange={(event) =>
+              table
+                .getColumn(`${options.search.searchColumn}`)
+                ?.setFilterValue(event.target.value)
+            }
+            className='max-w-sm'
+          />
+        </div>
+      )}
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -94,6 +106,7 @@ function DataTable({ columns, data, searchColumn }) {
               </TableRow>
             )}
           </TableBody>
+          {footer && <TableFooter>{footer}</TableFooter>}
         </Table>
       </div>
       <DataTablePagination table={table} />
@@ -103,7 +116,8 @@ function DataTable({ columns, data, searchColumn }) {
 DataTable.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  searchColumn: PropTypes.string.isRequired,
+  options: PropTypes.object,
+  footer: PropTypes.node,
 };
 
 export default DataTable;

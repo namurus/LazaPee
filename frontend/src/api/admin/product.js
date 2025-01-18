@@ -1,4 +1,4 @@
-import { del, fetchWithInstance, post, put } from '../config';
+import { del, get, fetchWithInstance, post, put, patch } from '../config';
 
 const getProducts = () => {
   return fetchWithInstance('products');
@@ -17,15 +17,23 @@ const getProductsWithSort = (sort) => {
 };
 
 const getCategories = () => {
-  return fetch('https://fakestoreapi.com/products/categories').then((res) =>
-    res.json()
-  );
-
-  // return fetchWithInstance('category');
+  return get('category');
 };
 
-const getCategoryProducts = (category) => {
-  return fetchWithInstance(`products/category/${category}`);
+const getCategoryProducts = (category, queryParams = {}) => {
+  return fetchWithInstance(`category/${category}`, {
+    params: queryParams,
+  });
+};
+
+const getShippingUnits = () => {
+  return get('shop/shipment/shippingCompany');
+};
+
+const searchProducts = (search, queryParams = {}) => {
+  return fetchWithInstance(`search?keyword=${search}`, {
+    params: queryParams,
+  });
 };
 
 const addProduct = (product) => {
@@ -40,6 +48,24 @@ const deleteProduct = (id) => {
   return del(`products/${id}`);
 };
 
+const getProductReviews = (id, queryParams = {}) => {
+  return get(`review/${id}`, {
+    params: queryParams,
+  });
+};
+
+const createReview = (productID, review) => {
+  return post(`review/${productID}`, review);
+};
+
+const deleteReview = (reviewID) => {
+  return del(`review/${reviewID}`);
+};
+
+const editReview = (reviewID, review) => {
+  return patch(`review/${reviewID}`, review);
+};
+
 export {
   getProducts,
   getProduct,
@@ -50,4 +76,10 @@ export {
   addProduct,
   updateProduct,
   deleteProduct,
+  getProductReviews,
+  createReview,
+  deleteReview,
+  searchProducts,
+  editReview,
+  getShippingUnits,
 };

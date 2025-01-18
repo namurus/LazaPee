@@ -22,23 +22,30 @@ function ProductItem({ product }) {
         <div className='flex flex-wrap gap-4 text-xl font-semibold lg:text-2xl'>
           <p>
             {CurrencyFormatter.formatWithLocaleInfo(
-              isNaN(product.price) ? 0 : product.price * 25000,
+              product.price || product.skus[0]?.price || 0,
               'VND'
             )}
           </p>
-          <p className='line-through opacity-40'>
-            {CurrencyFormatter.formatWithLocaleInfo(
-              Math.round(
-                isNaN(product.discount)
-                  ? 0
-                  : discountPercentageToPrice(product.price, product.discount)
-              ) / 10,
-              'VND'
-            )}
-          </p>
-          <Badge className='justify-center rounded-full bg-red-400 bg-opacity-10 px-2 py-2 text-sm text-red-500'>
-            {isNaN(product.discount) ? 0 : product.discount}%
-          </Badge>
+          {product.discount && (
+            <>
+              <p className='line-through opacity-40'>
+                {CurrencyFormatter.formatWithLocaleInfo(
+                  Math.round(
+                    isNaN(product.discount)
+                      ? 0
+                      : discountPercentageToPrice(
+                          product.price,
+                          product.discount
+                        )
+                  ) / 10,
+                  'VND'
+                )}
+              </p>
+              <Badge className='justify-center rounded-full bg-red-400 bg-opacity-10 px-2 py-2 text-sm text-red-500'>
+                {isNaN(product.discount) ? 0 : product.discount}%
+              </Badge>
+            </>
+          )}
         </div>
       </div>
     </div>

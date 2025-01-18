@@ -17,9 +17,9 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         {Array.from({ length: totalPages }, (_, i) => (
           <button
             key={i}
-            className={`aspect-square rounded-lg p-3 text-center leading-none ${currentPage === i ? 'bg-neutral' : ''}`}
+            className={`aspect-square rounded-lg p-3 text-center leading-none ${currentPage === i + 1 ? 'bg-neutral' : ''}`}
             onClick={() => {
-              onPageChange(i);
+              onPageChange(i + 1);
             }}
           >
             {i + 1}
@@ -43,8 +43,6 @@ Pagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   totalPages: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
-  onPreviousClick: PropTypes.func.isRequired,
-  onNextClick: PropTypes.func.isRequired,
 };
 
 export default Pagination;

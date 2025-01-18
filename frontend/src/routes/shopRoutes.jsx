@@ -5,21 +5,23 @@ import ProductManagement from '../components/organisms/ProductManagement';
 import ShopPage from '../components/pages/ShopPage';
 import ShopProfile from '../components/organisms/ShopProfile';
 import Statistic from '../components/organisms/Statistic';
+import ShopGuard from '../guards/ShopGuard';
+import { get } from '../api/config';
+import AuthGuard from '../guards/AuthGuard';
 const shopRoutes = [
   {
     path: 'shop',
-    element: <ShopPage />,
+    element: (
+      <AuthGuard>
+        <ShopGuard>
+          <ShopPage />
+        </ShopGuard>
+      </AuthGuard>
+    ),
     children: [
       {
         path: 'products/new',
         element: <AddProductForm />,
-        action: async ({ request }) => {
-          let formData = await request.formData();
-          formData.keys().forEach((key) => {
-            console.log(key, formData.get(key));
-          });
-          return {};
-        },
         handle: {
           crumb: () => ({
             path: '/shop/products/new',

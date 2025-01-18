@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
             Skus.hasMany(models.OrderItem, {
                 foreignKey: 'skusId',
                 as: 'orderItems' });
-
         }
     }
 
@@ -39,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             stock_quantity: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 defaultValue: 0,
             },
             color: {

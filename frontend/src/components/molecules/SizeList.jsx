@@ -4,11 +4,11 @@ import config from '../../config/config';
 
 const sizes = Object.values(config.sizes);
 
-function SizeList({ pickedSize, onPickSize }) {
+function SizeList({ pickedSize, onPickSize, sizeList = sizes }) {
   const [pickSize, setPickSize] = useState(pickedSize);
   return (
     <div className='flex flex-wrap gap-2 text-sm'>
-      {sizes.map((size) => {
+      {sizeList.map((size) => {
         return (
           <button
             key={size.value}
@@ -35,6 +35,7 @@ function SizeList({ pickedSize, onPickSize }) {
 SizeList.propTypes = {
   pickedSize: PropTypes.string,
   onPickSize: PropTypes.func,
+  sizeList: PropTypes.array,
 };
 
 export default SizeList;

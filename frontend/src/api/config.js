@@ -1,4 +1,5 @@
-import instance from '../lib/axios';
+import axios from 'axios';
+import instance, { baseURL } from '../lib/axios';
 
 const fetchWithInstance = async (endPoint, options) => {
   try {
@@ -44,10 +45,17 @@ const put = async (endPoint, body) => {
   });
 };
 
+const patch = async (endPoint, body) => {
+  return fetchWithInstance(endPoint, {
+    method: 'PATCH',
+    data: body,
+  });
+};
+
 const del = async (endPoint) => {
   return fetchWithInstance(endPoint, {
     method: 'DELETE',
   });
 };
 
-export { fetchWithInstance, get, post, put, del, instance };
+export { fetchWithInstance, get, post, patch, put, del, instance };

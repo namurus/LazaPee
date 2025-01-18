@@ -16,7 +16,13 @@ export default function AuthProvider({ children }) {
         console.log(user);
         dispatch(initialize({ isAuthenticated: true, user: user }));
       } catch {
-        dispatch(initialize({ isAuthenticated: false, user: null }));
+        dispatch(
+          initialize({
+            isAuthenticated: false,
+            user: null,
+            isInitialized: true,
+          })
+        );
       }
     };
     fetchMe();

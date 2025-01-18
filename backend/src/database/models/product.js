@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			Product.hasMany(models.CartItem, {
-				foreignKey: 'productId',
-				as: 'cartItems',
-			});
 			Product.belongsTo(models.Category, {
 				foreignKey: 'categoryId',
 				as: 'category',
@@ -79,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
 				field: 'category_id',
 			},
 			status: {
-				type: DataTypes.ENUM('available', 'out of stock'),
+				type: DataTypes.ENUM('available', 'out of stock','active', 'inactive'),
 				field: 'status',
 			},
 			soldQuantity: {

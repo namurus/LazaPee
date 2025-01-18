@@ -8,8 +8,8 @@ import ResponsiveDialog from './ResonsiveDialog';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function TemporaryClosureOptions({ onSelected }) {
-  const [active, setActive] = useState(null);
+function TemporaryClosureOptions({ activeID, onSelected }) {
+  const [active, setActive] = useState(activeID);
   const options = [
     {
       id: 1,
@@ -17,11 +17,11 @@ function TemporaryClosureOptions({ onSelected }) {
     },
     {
       id: 2,
-      value: '3 tháng',
+      value: '2 tháng',
     },
     {
       id: 3,
-      value: '6 tháng',
+      value: '3 tháng',
     },
   ];
   return (
@@ -48,6 +48,7 @@ function TemporaryClosureDialog({ open, setOpen, onConfirmed }) {
     description: '',
     option: null,
   });
+  const [isSelected, setIsSelected] = useState(false);
   return (
     <ResponsiveDialog isOpen={open} setIsOpen={setOpen} title={'Tạm nghỉ Shop'}>
       <DialogDescription>
@@ -63,12 +64,16 @@ function TemporaryClosureDialog({ open, setOpen, onConfirmed }) {
           </AlertDescription>
         </Alert>
         <TemporaryClosureOptions
-          onSelected={(option) => setInfo({ ...info, option: option })}
+          activeID={info.option?.id}
+          onSelected={(option) => {
+            setIsSelected(true);
+            setInfo({ ...info, option: option });
+          }}
         />
         <InputField title={'Lý do tạm nghỉ'}>
           <LargeTextInputField
             placeholder='Nhập lý do nghỉ của bạn để thông báo với khách hàng'
-            name='description'
+            name='temporaryClosureReason'
             value={info.description}
             onChange={(e) => setInfo({ ...info, description: e.target.value })}
             maxLength={500}
@@ -81,7 +86,15 @@ function TemporaryClosureDialog({ open, setOpen, onConfirmed }) {
             Huỷ
           </Button>
         </DialogClose>
-        <Button className='font-normal' onClick={onConfirmed}>
+        <Button
+          className='font-normal'
+          onClick={() => {
+            onConfirmed({
+              ...info,
+              option: isSelected ? info.option : null,
+            });
+          }}
+        >
           Xác nhận
         </Button>
       </DialogFooter>

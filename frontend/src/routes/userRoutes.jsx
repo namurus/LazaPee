@@ -1,25 +1,37 @@
 import AuthGuard from '../guards/AuthGuard';
+import Profile from '../components/pages/Profile';
+import { Outlet } from 'react-router-dom';
+import Address from '../components/organisms/Address';
+import ChangePassword from '../components/organisms/ChangePassword';
+import ProfileInfo from '../components/organisms/ProfileInfo';
+import CustomerOrder from '../components/organisms/CustomerOrder';
 
 const userRoutes = [
   {
     path: '/user',
     element: (
       <AuthGuard>
-        <div>User element Placeholder</div>,
+        <Outlet />
       </AuthGuard>
     ),
     children: [
       {
         path: 'account',
-        element: <div>Account element Placeholder</div>,
+        element: (
+            <Profile />
+        ),
         children: [
           {
             path: 'profile',
-            element: <div>Profile element Placeholder</div>,
+            element: <ProfileInfo />
           },
           {
             path: 'address',
-            element: <div>Address element Placeholder</div>,
+            element: <Address />,
+          },
+          {
+            path: 'change-password',
+            element: <ChangePassword />,
           },
         ],
       },
@@ -29,7 +41,7 @@ const userRoutes = [
       },
       {
         path: 'orders',
-        element: <div>Orders element Placeholder</div>,
+        element: <CustomerOrder/>,
       },
       {
         path: 'logout',

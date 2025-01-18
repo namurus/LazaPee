@@ -47,10 +47,15 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('pending', 'waiting for delivery', 'shipping', 'shipped', 'canceled'),
         allowNull: false,
         defaultValue: 'pending',
         field: 'status',
+      },
+      fullName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'full_name',
       },
       phoneNumber: {
         type: DataTypes.STRING,
@@ -61,6 +66,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'shipping_address',
+      },
+      shippingType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'shipping_type',
       },
       totalAmount: {
         type: DataTypes.FLOAT,

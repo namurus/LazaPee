@@ -4,6 +4,8 @@ import GuestGuard from '../guards/GuestGuard';
 import Login from '../components/pages/Login';
 import Logout from '../components/pages/Logout';
 import Signup from '../components/pages/Signup';
+import AdminLogin from '../components/pages/AdminLogin';
+import AdminRegister from '../components/pages/AdminRegister';
 
 const authRoutes = [
   {
@@ -39,6 +41,28 @@ const authRoutes = [
         ),
       },
     ],
+  },
+  {
+    path: '/admin/auth',
+    element: (
+      <>
+        <Outlet />
+      </>
+    ),
+    children: [
+      {
+        path: 'login',
+        element: (
+            <AdminLogin />
+        ),
+      },
+      {
+        path: 'register',
+        element: (
+            <AdminRegister />
+        ),
+      },
+    ]
   },
 ];
 

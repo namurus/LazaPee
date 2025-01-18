@@ -31,7 +31,7 @@ function ProductDetailImageGrid({ images, ...rest }) {
       className={`${cn('mt-5 flex flex-col gap-3 lg:flex-row', classStyling)}`}
     >
       <ProductImage
-        src={images[activeImageIndex]}
+        src={images[activeImageIndex].url}
         alt={`product-${activeImageIndex}`}
         className='h-full flex-1 p-4 lg:order-last'
       />
@@ -44,7 +44,7 @@ function ProductDetailImageGrid({ images, ...rest }) {
             return (
               <CarouselItem key={index} className='basis-1/3'>
                 <ProductImage
-                  src={image}
+                  src={image.url}
                   alt={`product-${index}`}
                   onClick={() => handleImageClick(index)}
                   className='h-full w-full object-cover'

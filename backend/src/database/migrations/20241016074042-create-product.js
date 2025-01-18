@@ -26,7 +26,6 @@ module.exports = {
 			brand: {
 				type: Sequelize.STRING,
 				allowNull: false,
-				unique: true,
 				field: 'brand',
 			},
 			thumbnail: {
@@ -50,7 +49,7 @@ module.exports = {
 				},
 			},
 			status: {
-				type: Sequelize.ENUM('available', 'out of stock'),
+				type: Sequelize.ENUM('available', 'out of stock','active', 'inactive'),
 				field: 'status',
 			},
 			soldQuantity: {

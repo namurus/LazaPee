@@ -18,6 +18,9 @@ import shopShipmentRoutes from "./shipment.route";
 import voucherRoutes from './voucher.route';
 import shopRevenueRoutes from './revenue.route';
 import reviewRoutes from './review.route';
+import orderAdminRoutes from './admin/order.route';
+import userAdminRoute from '@/routes/admin/user.route'
+
 
 export default (app) => { 
 	app.use("/auth", authRoutes);
@@ -34,8 +37,10 @@ export default (app) => {
 	//router for admin
 	app.use('/admin/auth', adminCAuthRoutes);
 	app.use('/admin/category', isAdmin, adminCategoryRoutes);
-	app.use('/admin/product', isAdmin, adminProductRoutes);
+	app.use('/admin/product', adminProductRoutes);
 	app.use('/admin/voucher', isAdmin, adminVoucherRoutes);
+	app.use('/admin/order', isAdmin, orderAdminRoutes);
+	app.use('/admin/user', isAdmin, userAdminRoute);
 
 	app.use("/category", customerCategoryRoutes);
 

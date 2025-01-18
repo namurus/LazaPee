@@ -25,7 +25,8 @@ module.exports = {
       },
       stock_quantity: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       color: {
         type: Sequelize.STRING,

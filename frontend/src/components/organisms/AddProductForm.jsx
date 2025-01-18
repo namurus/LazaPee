@@ -1,4 +1,3 @@
-import { useSubmit } from 'react-router-dom';
 import InputField from '../molecules/InputField';
 import LargeTextInputField from '../atoms/LargeTextInputField';
 
@@ -8,24 +7,32 @@ import TextInput from '../atoms/TextInput';
 import ImageInput from '../molecules/ImageInput';
 import CategoryAdderInput from './CategoryAdderInput';
 import { Button } from '../ui/button';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { getCategories } from '../../api/admin/product';
+import { useAuth } from '../../hooks/useAuth';
 
 function AddProductForm() {
   const [files, setFiles] = useState([]);
-  const formRef = useRef();
-  const submit = useSubmit();
-
-  const handleSubmit = (e) => {
+  const [categories, setCategories] = useState([]);
+  const { user } = useAuth();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {};
-    const formData = new FormData(formRef.current);
+    const formData = new FormData(e.target);
 
     files.forEach((file) => {
       formData.append('images', file);
     });
 
-    if (!formData.get('name')) {
+    if (!formData.get('productName')) {
       errors.name = 'Tên sản phẩm không được để trống';
     }
 
@@ -33,8 +40,12 @@ function AddProductForm() {
       errors.description = 'Mô tả sản phẩm không được để trống';
     }
 
-    if (!formData.get('category')) {
+    if (!formData.get('categoryId')) {
       errors.category = 'Ngành hàng không được để trống';
+    }
+
+    if (formData.getAll('images').length === 0) {
+      errors.images = 'Hình ảnh sản phẩm không được để trống';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -48,13 +59,49 @@ function AddProductForm() {
       return;
     }
 
-    submit(formData, { method: 'post', encType: 'multipart/form-data' });
+    const response = await fetch('https://lazapee-jivl.onrender.com/products', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      toast.success('Sản phẩm đã được thêm thành công', {
+        className: 'bg-green-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+    } else {
+      toast.error('Có lỗi xảy ra khi thêm sản phẩm', {
+        className: 'bg-red-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const json = await getCategories();
+        console.log(json);
+        if (json.code !== 200) {
+          throw new Error('No categories found');
+        }
+        setCategories(json.categories);
+      } catch (error) {
+        console.log('Error fetching categories:', error);
+        setCategories([]);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <SidebarMaincontentLayout>
       <form
-        ref={formRef}
         className='w-full space-y-8 p-6 font-primary'
         method='POST'
         onSubmit={handleSubmit}
@@ -69,18 +116,28 @@ function AddProductForm() {
             <TextInput
               placeholder='Nhập tên sản phẩm'
               className={'max-w-[45ch]'}
-              name='name'
+              name='productName'
             />
           </InputField>
           <InputField title={'Mô tả sản phẩm'} className={'max-w-[45ch]'}>
             <LargeTextInputField name='description' maxLength={500} />
           </InputField>
+          <InputField title={'Thương hiệu'} className={'max-w-[45ch]'}>
+            <TextInput placeholder='Nhập thương hiệu' name='brand' />
+          </InputField>
           <InputField title={'Chọn ngành hàng'}>
-            <TextInput
-              name='category'
-              placeholder='Nhập ngành hàng cho sản phẩm'
-              className={'max-w-[45ch]'}
-            />
+            <Select name='categoryId'>
+              <SelectTrigger>
+                <SelectValue placeholder='Chọn ngành hàng' />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </InputField>
           <InputField
             title={'Thêm hình ảnh sản phẩm'}
