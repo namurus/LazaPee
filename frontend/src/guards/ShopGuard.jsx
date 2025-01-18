@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 function ShopGuard({ children }) {
   const { user, isAuthenticated } = useAuth();
   if (!isAuthenticated) {
-    return <LoadingSpinner className='min-h-screen' />;
+    return <LoadingSpinner outerClassName='min-h-screen' />;
   }
   const hasShop = user.role === 'seller';
   return hasShop ? children : <OpenShopPage />;

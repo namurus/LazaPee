@@ -44,7 +44,7 @@ function OpenShopPage() {
       );
       if (response.ok) {
         user.role = 'shop'; // Temporary fix to update user role, will be corrected in the future
-        navigate('/shop/dashboard');
+        navigate('/shop');
       } else {
         console.log('Failed to create shop');
       }

@@ -59,7 +59,18 @@ function ProductRankingTable({ data }) {
       accessorKey: 'viewCount',
     },
   ];
-  return <DataTable data={data} columns={columns} searchColumn='productName' />;
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      options={{
+        search: {
+          searchColumn: 'productName',
+          allowSearch: true,
+        },
+      }}
+    />
+  );
 }
 
 export default ProductRankingTable;

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { cn } from '../../lib/utils';
 function Button({
   children,
   onClick,
@@ -13,7 +14,10 @@ function Button({
   };
   return (
     <button
-      className={`flex items-center justify-center rounded-md px-4 py-2 transition-colors ${variantStyles[variant]} ${className} `}
+      className={cn(
+        `flex items-center justify-center rounded-md px-4 py-2 transition-colors ${variantStyles[variant]}`,
+        className
+      )}
       onClick={onClick}
     >
       {Icon && <Icon className='mr-2 h-4 w-4' />}

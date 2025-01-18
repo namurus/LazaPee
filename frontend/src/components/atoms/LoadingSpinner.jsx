@@ -2,14 +2,17 @@ import PropTypes from 'prop-types';
 
 import { cn } from '../../lib/utils';
 
-function LoadingSpinner({ className }) {
+function LoadingSpinner({ className, outerClassName }) {
   return (
     <div
-      className={cn('flex w-full items-center justify-center', className)}
+      className={cn('flex w-full items-center justify-center', outerClassName)}
       aria-busy='true'
     >
       <div
-        className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
+        className={cn(
+          'inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]',
+          className
+        )}
         role='status'
       >
         <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
@@ -22,6 +25,7 @@ function LoadingSpinner({ className }) {
 
 LoadingSpinner.propTypes = {
   className: PropTypes.string,
+  outerClassName: PropTypes.string,
 };
 
 export default LoadingSpinner;

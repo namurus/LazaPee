@@ -10,6 +10,9 @@ import AuthGuard from '../guards/AuthGuard';
 import { rootAction, rootLoader } from './rootRoutes';
 import shopRoutes from './shopRoutes';
 import adminRoutes from './adminRoutes';
+import CheckoutPage from '../components/pages/CheckoutPage';
+import QRPage from '../components/pages/QRPage';
+import { route as searchRoute } from './searchRoutes';
 
 const routes = [
   {
@@ -26,11 +29,26 @@ const routes = [
       ...userRoutes,
       ...productRoutes,
       cartRoute,
+      searchRoute,
       {
         path: '/checkout',
         element: (
           <AuthGuard>
-            <div>Checkout element Placeholder</div>
+            <CheckoutPage />
+          </AuthGuard>
+        ),
+        handle: {
+          crumb: () => ({
+            path: '/checkout',
+            name: 'Thanh toán',
+          }),
+        },
+      },
+      {
+        path: '/qr_payment',
+        element: (
+          <AuthGuard>
+            <QRPage />
           </AuthGuard>
         ),
       },

@@ -15,11 +15,11 @@ function getBrightness(hex) {
 
 const colors = Object.values(config.colors);
 
-function ColorPicker({ pickedColor, onPickColor }) {
+function ColorPicker({ pickedColor, onPickColor, colorList = colors }) {
   const [selectedColor, setSelectedColor] = useState(pickedColor);
   return (
     <div className='flex flex-wrap gap-2'>
-      {colors.map((color) => (
+      {colorList.map((color) => (
         <button
           key={color.text}
           type='button'
@@ -49,6 +49,7 @@ function ColorPicker({ pickedColor, onPickColor }) {
 ColorPicker.propTypes = {
   pickedColor: PropTypes.object,
   onPickColor: PropTypes.func,
+  colorList: PropTypes.array,
 };
 
 export default ColorPicker;

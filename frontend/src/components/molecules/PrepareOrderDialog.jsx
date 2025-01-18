@@ -17,9 +17,12 @@ import {
   CommandItem,
   CommandList,
 } from '../ui/command';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddressTag from './AddressTag';
 import { toast } from 'sonner';
+import { getShippingUnits } from '../../api/admin/product';
+import Image from '../atoms/Image';
+import { useAuth } from '../../hooks/useAuth';
 
 function SelectDelivery({ onConfirm, onCancel }) {
   const [open, setOpen] = useState(false);
@@ -31,18 +34,21 @@ function SelectDelivery({ onConfirm, onCancel }) {
     }
     onConfirm(selectedShippingUnit);
   };
-  const shippingUnits = [
-    {
-      id: 1,
-      name: 'Giao hàng nhanh',
-      value: 'fast',
-    },
-    {
-      id: 2,
-      name: 'Giao hàng tiết kiệm',
-      value: 'saving',
-    },
-  ];
+  const [shippingUnits, setShippingUnits] = useState([]);
+  const { user } = useAuth();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const json = await getShippingUnits();
+        console.log(json);
+        setShippingUnits(json.shippingCompanies);
+      } catch (error) {
+        console.error(error);
+        toast.error('Có lỗi xảy ra, vui lòng thử lại sau');
+      }
+    }
+    fetchData();
+  }, []);
   return (
     <>
       <div className='space-y-5'>
@@ -68,11 +74,18 @@ function SelectDelivery({ onConfirm, onCancel }) {
                       key={unit.id}
                       value={unit.name}
                       onSelect={(currentValue) => {
-                        setSelectedShippingUnit(currentValue);
+                        setSelectedShippingUnit(unit);
                         setOpen(false);
                       }}
                     >
-                      {unit.name}
+                      <div className='flex items-center gap-2'>
+                        <Image
+                          src={unit.thumbnail}
+                          alt={unit.name}
+                          className='h-6 w-6'
+                        />
+                        <p>{unit.name}</p>
+                      </div>
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -80,7 +93,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
             </Command>
           ) : (
             <p className='text-sm text-muted-foreground'>
-              {selectedShippingUnit}
+              {selectedShippingUnit?.name}
             </p>
           )}
         </div>
@@ -88,8 +101,8 @@ function SelectDelivery({ onConfirm, onCancel }) {
           <h2 className='font-semibold'>Địa chỉ lấy hàng</h2>
           <AddressTag
             addressInfo={{
-              user: { name: 'Nguyễn Văn A', number: '0123456789' },
-              address: 'Số 1, Đại Cồ Việt, Hai Bà Trưng, Hà Nội',
+              user: { name: user.fullName, number: user.phone },
+              address: user.address,
             }}
           />
         </div>
@@ -98,7 +111,7 @@ function SelectDelivery({ onConfirm, onCancel }) {
         <Button className='font-normal' onClick={onCancel}>
           Huỷ
         </Button>
-        <Button className='font-normal' onClick={handleConfirm}>
+        <Button className='font-normal' onClick={() => handleConfirm()}>
           Xác nhận
         </Button>
       </DialogFooter>

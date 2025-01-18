@@ -9,11 +9,16 @@ import AdminUpdateVoucherForm from '../components/organisms/AdminUpdateVoucherFo
 import AdminUpdateProductForm from '../components/organisms/AdminUpdateProductForm';
 import AdminReviewManagement from '../components/organisms/AdminReviewManagement';
 import AdminViewOrderDetail from '../components/organisms/AdminViewOrderDetail';
-
+import RoleBasedGuard from '../guards/RoleBasedGuard';
+import AuthGuard from '../guards/AuthGuard';
 const adminRoutes = [
   {
     path: 'admin',
-    element: <AdminPage />,
+    element: (
+      <AuthGuard>
+        <AdminPage />
+      </AuthGuard>
+    ),
     children: [
       {
         path: 'product',
@@ -30,8 +35,8 @@ const adminRoutes = [
         element: <AdminUpdateProductForm />,
         handle: {
           crumb: (id) => ({
-          path: `/admin/product/update/${id}`,
-          name: `Chỉnh sửa sản phẩm`,
+            path: `/admin/product/update/${id}`,
+            name: `Chỉnh sửa sản phẩm`,
           }),
         },
       },
@@ -90,8 +95,8 @@ const adminRoutes = [
         element: <AdminViewOrderDetail />,
         handle: {
           crumb: (id) => ({
-          path: `/admin/order/detail/${id}`,
-          name: `Chi tiết đơn hàng`,
+            path: `/admin/order/detail/${id}`,
+            name: `Chi tiết đơn hàng`,
           }),
         },
       },
@@ -110,8 +115,8 @@ const adminRoutes = [
       crumb: () => ({
         path: '/admin',
         name: 'Admin',
-        }),
-    }
+      }),
+    },
   },
 ];
 

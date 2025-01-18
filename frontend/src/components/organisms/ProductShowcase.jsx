@@ -21,7 +21,7 @@ function ProductShowcase({ showcaseTitle }) {
       if (data.length > 4) {
         setCards(data.slice(0, 4));
       } else {
-        setCards(json.data);
+        setCards(data);
       }
       setLoading(false);
     }

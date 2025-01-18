@@ -126,7 +126,9 @@ function AdminOrderManagement() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-        const response = await axios.get('https://lazapee-jivl.onrender.com/admin/order', {
+        const response = await axios.get(
+          'https://lazapee-jivl.onrender.com/admin/order',
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -136,7 +138,6 @@ function AdminOrderManagement() {
         console.log('Orders:', response.data.data);
 
         setData(response.data.data);
-
       } catch (error) {
         console.error('Failed to fetch orders:', error);
       }
@@ -147,25 +148,35 @@ function AdminOrderManagement() {
 
   const columns = [
     { header: 'ID', accessorKey: 'id' },
-    { header: 'Ngày lập đơn', accessorKey: 'createdAt',
+    {
+      header: 'Ngày lập đơn',
+      accessorKey: 'createdAt',
       cell: ({ row }) => {
         const date = new Date(row.original.createdAt);
-        return <p className='text-sm text-muted-foreground'>{date.toLocaleString()}</p>;
+        return (
+          <p className='text-sm text-muted-foreground'>
+            {date.toLocaleString()}
+          </p>
+        );
       },
     },
-    { header: 'Tên sản phẩm', accessorKey: 'productName',
+    {
+      header: 'Tên sản phẩm',
+      accessorKey: 'productName',
       cell: ({ row }) => (
         <div className='space-y-1'>
           <p className='font-medium'>{row.original.sku.product.productName}</p>
         </div>
       ),
     },
-    { header: 'Tổng đơn hàng', accessorKey: 'totalAmount',
+    {
+      header: 'Tổng đơn hàng',
+      accessorKey: 'totalAmount',
       cell: ({ row }) => {
         const total = parseFloat(row.original.order.totalAmount);
         const formatted = CurrencyFormatter.formatWithLocaleInfo(total, 'VND');
         return <p className='text-sm text-muted-foreground'>{formatted}</p>;
-      }
+      },
     },
     {
       accessorKey: 'actions',
@@ -200,28 +211,48 @@ function AdminOrderManagement() {
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                allowSearch: true,
+                searchColumn: 'productName',
+              },
+            }}
           />
         </TabsContent>
         <TabsContent value='pending'>
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                allowSearch: true,
+                searchColumn: 'productName',
+              },
+            }}
           />
         </TabsContent>
         <TabsContent value='delivering'>
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                allowSearch: true,
+                searchColumn: 'productName',
+              },
+            }}
           />
         </TabsContent>
         <TabsContent value='completed'>
           <DataTable
             columns={columns}
             data={data}
-            searchColumn={'productName'}
+            options={{
+              search: {
+                allowSearch: true,
+                searchColumn: 'productName',
+              },
+            }}
           />
         </TabsContent>
       </Tabs>

@@ -14,186 +14,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { deleteProduct } from '../../api/admin/product';
 import CurrencyFormatter from '../../helpers/CurrencyFormatter';
-
-// const data = [
-//   {
-//     productName: 'Áo thun nam',
-//     productType: {
-//       'màu hồng': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//       'màu đen': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Áo thun nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Quần jean nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Quần jean nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Áo khoác nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Áo khoác nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Giày thể thao nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Giày thể thao nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Túi xách nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Túi xách nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Đồng hồ nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Đồng hồ nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Mắt kính nam',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-//   {
-//     productName: 'Mắt kính nữ',
-//     productType: {
-//       '-': {
-//         price: 100000,
-//         soldCount: 100,
-//       },
-//     },
-//   },
-// ];
+import { deleteProduct } from '../../api/admin/product';
+import { toast } from 'sonner';
+import Image from '../atoms/Image';
 
 // Data format:
 
-const data = [
-  {
-    id: 17,
-    productName: 'Smart phone',
-    shopId: 7,
-    brand: 'Smart phone',
-    thumbnail:
-      'http://res.cloudinary.com/dlao1onv5/image/upload/v1736395928/j39nqcnctiuc7tzf9yqn.jpg',
-    description: 'description Smart phone',
-    slug: 'smart-phone',
-    categoryId: 2,
-    status: null,
-    soldQuantity: 0,
-    createdAt: '2025-01-09T04:12:09.000Z',
-    updatedAt: '2025-01-09T04:12:09.000Z',
-    deletedAt: null,
-    category: {
-      name: 'Smartphone',
-      description: 'Smartphone',
-      thumbnail: 'https://via.placeholder.com/150',
-    },
-    images: [
-      {
-        url: 'http://res.cloudinary.com/dlao1onv5/image/upload/v1736395928/j39nqcnctiuc7tzf9yqn.jpg',
-      },
-    ],
-    skus: [
-      {
-        size: 'XL',
-        color: 'red',
-        stock_quantity: 0,
-        price: '500',
-      },
-      {
-        size: 'X',
-        color: 'green',
-        stock_quantity: 0,
-        price: '500',
-      },
-    ],
-  },
-];
 /*
 [
         {
@@ -240,17 +67,17 @@ const data = [
 */
 
 function ProductManagement() {
-  const [products, setProducts] = useState(data);
+  const [products, setProducts] = useState([]);
   const columns = [
     {
       accessorKey: 'thumbnail',
       header: 'Sản phẩm',
       cell: ({ row }) => (
-        <img
-          src={row.original.thumbnail}
-          alt={row.original.productName}
-          className='h-16 w-16 rounded-md object-cover'
-        />
+        <div className='grid h-32 w-32 grid-cols-2 gap-1'>
+          {row.original.images.map((image, index) => (
+            <Image key={index} src={image.url} alt={row.original.productName} />
+          ))}
+        </div>
       ),
     },
     {
@@ -328,22 +155,39 @@ function ProductManagement() {
     {
       id: 'actions',
       header: 'Thao tác',
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <MoreHorizontal className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {/* <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem> */}
-            <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
-              Xóa sản phẩm
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
+      cell: ({ row }) => {
+        const status = row.original.status;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>Open menu</span>
+                <MoreHorizontal className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {status === 'available' ? (
+                <DropdownMenuItem
+                  onClick={() =>
+                    handleStatusChange(row.original.id, 'inactive')
+                  }
+                >
+                  Ngừng bán sản phẩm
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => handleStatusChange(row.original.id, 'active')}
+                >
+                  Bán sản phẩm
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
+                Xóa sản phẩm
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 
@@ -354,18 +198,34 @@ function ProductManagement() {
   const fetchData = async () => {
     try {
       const res = await get('/shop/product');
-      console.log(res.data);
-      //setProducts(res.data);
+      console.log(res);
+      setProducts(res.data);
     } catch (error) {
       console.log('Error fetching categories:', error);
     }
   };
 
-  const handleDelete = (id) => {
+  const handleStatusChange = async (id, status) => {
+    try {
+      console.log('status change', id, status);
+    } catch (error) {
+      console.log('Error changing status:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
     try {
       console.log('delete', id);
-      // await deleteProduct(id);
-      // fetchData();
+      const response = await deleteProduct(id);
+      console.log(response);
+      if (response.code === 200) {
+        setProducts(products.filter((product) => product.id !== id));
+      }
+      toast.success('Xóa sản phẩm thành công', {
+        className: 'bg-green-500 text-white',
+        position: 'top-right',
+        closeButton: true,
+      });
     } catch (error) {
       console.log('Error deleting product:', error);
     }
@@ -384,24 +244,41 @@ function ProductManagement() {
             <DataTable
               columns={columns}
               data={products}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  searchColumn: 'productName',
+                  allowSearch: true,
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='available'>
             <DataTable
               columns={columns}
-              data={data.filter((product) => product.status === 'available')}
-              searchColumn={'productName'}
+              data={products.filter(
+                (product) => product.status === 'available'
+              )}
+              options={{
+                search: {
+                  searchColumn: 'productName',
+                  allowSearch: true,
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='out-of-stock'>
             <DataTable
               columns={columns}
-              data={data.filter(
+              data={products.filter(
                 (product) =>
                   product.status === 'out of stock' || product.status === null
               )}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  searchColumn: 'productName',
+                  allowSearch: true,
+                },
+              }}
             />
           </TabsContent>
         </Tabs>

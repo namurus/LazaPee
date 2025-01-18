@@ -1,3 +1,5 @@
+import { getMyCart } from '../api/admin/cart';
+import CartCheckoutPage from '../components/pages/CartCheckoutPage';
 import CartPage from '../components/pages/CartPage';
 import AuthGuard from '../guards/AuthGuard';
 
@@ -5,7 +7,7 @@ const route = {
   path: '/cart',
   element: (
     <AuthGuard>
-      <CartPage />
+      <CartCheckoutPage />
     </AuthGuard>
   ),
   loader: loader,
@@ -21,13 +23,9 @@ const route = {
 
 export async function loader() {
   try {
-    const response = await fetch('https://dummyjson.com/carts/3');
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error(`${response.status} ${response.statusText}`);
-    }
+    const response = await getMyCart();
+    console.log(response);
+    return response;
   } catch {
     throw new Error('Failed to fetch cart items');
   }

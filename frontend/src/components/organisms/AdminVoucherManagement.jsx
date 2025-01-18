@@ -26,11 +26,14 @@ function AdminVoucherManagement() {
       try {
         const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
         console.log(token);
-        const response = await axios.get('https://lazapee-jivl.onrender.com/admin/voucher', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          'https://lazapee-jivl.onrender.com/admin/voucher',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         // console.log('Vouchers:', response);
         setVouchers(response.data);
       } catch (error) {
@@ -79,7 +82,7 @@ function AdminVoucherManagement() {
       cell: ({ row }) => {
         const discount = row.original.discount;
         //if (discount > 0 && discount <= 1) {
-          return `${discount * 100}%`;
+        return `${discount * 100}%`;
         //}
         // return CurrencyFormatter.formatWithLocaleInfo(discount, 'VND');
       },
@@ -92,9 +95,9 @@ function AdminVoucherManagement() {
         const endDate = new Date(row.original.endDate);
         const diff = endDate - now;
         return diff > 0 ? (
-          <Badge variant="success">Đang hoạt động</Badge>
+          <Badge variant='success'>Đang hoạt động</Badge>
         ) : (
-          <Badge variant="destructive">Ngừng hoạt động</Badge>
+          <Badge variant='destructive'>Ngừng hoạt động</Badge>
         );
       },
     },
@@ -104,9 +107,9 @@ function AdminVoucherManagement() {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -121,64 +124,82 @@ function AdminVoucherManagement() {
       ),
     },
   ];
-  
+
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-      const response = await axios.delete(`https://lazapee-jivl.onrender.com/admin/voucher/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `https://lazapee-jivl.onrender.com/admin/voucher/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log('Delete voucher:', response);
-      
+
       if (response.status === 204) {
         setVouchers((prev) => prev.filter((voucher) => voucher.id !== id));
         navigate('./');
-      } else {  
+      } else {
         console.error('Failed to delete voucher:', response.data);
       }
     } catch (error) {
       console.error('Error deleting voucher:', error);
     }
   };
-  
+
   const handleUpdate = (id) => {
     navigate(`./update/${id}`);
   };
 
   return (
     <SidebarMaincontentLayout>
-      <div className="flex flex-col space-y-6">
-        <Tabs defaultValue="all">
-          <TabsList className="mb-6 grid w-max grid-cols-3 gap-4">
-            <TabsTrigger value="all">Tất cả</TabsTrigger>
-            <TabsTrigger value="pending">Chờ duyệt</TabsTrigger>
-            <TabsTrigger value="banned">Bị cấm</TabsTrigger>
+      <div className='flex flex-col space-y-6'>
+        <Tabs defaultValue='all'>
+          <TabsList className='mb-6 grid w-max grid-cols-3 gap-4'>
+            <TabsTrigger value='all'>Tất cả</TabsTrigger>
+            <TabsTrigger value='pending'>Chờ duyệt</TabsTrigger>
+            <TabsTrigger value='banned'>Bị cấm</TabsTrigger>
           </TabsList>
-          <TabsContent value="all">
+          <TabsContent value='all'>
             <DataTable
               columns={columns}
               data={vouchers}
-              searchColumn={'code'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'code',
+                },
+              }}
             />
           </TabsContent>
-          <TabsContent value="pending">
+          <TabsContent value='pending'>
             <DataTable
               columns={columns}
               data={vouchers.filter((voucher) => voucher.status === 'pending')}
-              searchColumn={'code'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'code',
+                },
+              }}
             />
           </TabsContent>
-          <TabsContent value="banned">
+          <TabsContent value='banned'>
             <DataTable
               columns={columns}
               data={vouchers.filter((voucher) => voucher.status === 'banned')}
-              searchColumn={'code'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'code',
+                },
+              }}
             />
           </TabsContent>
         </Tabs>
-        <Link to="./new" className="self-end">
+        <Link to='./new' className='self-end'>
           <Button>
             Thêm voucher mới <Plus />
           </Button>
