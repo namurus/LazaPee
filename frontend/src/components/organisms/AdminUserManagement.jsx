@@ -21,11 +21,14 @@ function AdminUserManagement() {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-        const response = await axios.get('https://lazapee-jivl.onrender.com/admin/user?perPage=10&page=1', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          'https://lazapee-jivl.onrender.com/admin/user?perPage=10&page=1',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         // console.log('Users:', response.data.users);
         setUsers(response.data.users);
       } catch (error) {
@@ -41,15 +44,15 @@ function AdminUserManagement() {
       accessorKey: 'fullName',
       header: 'Tên người dùng',
       cell: ({ row }) => (
-        <div className="flex items-center space-x-4">
+        <div className='flex items-center space-x-4'>
           <img
             src={row.original.avatar}
             alt={row.original.fullName}
-            className="h-12 w-12 rounded-full object-cover"
+            className='h-12 w-12 rounded-full object-cover'
           />
           <div>
-            <p className="font-medium">{row.original.fullName}</p>
-            <p className="text-sm text-gray-500">{row.original.email}</p>
+            <p className='font-medium'>{row.original.fullName}</p>
+            <p className='text-sm text-gray-500'>{row.original.email}</p>
           </div>
         </div>
       ),
@@ -60,13 +63,13 @@ function AdminUserManagement() {
       cell: ({ row }) => {
         switch (row.original.role) {
           case 'superadmin':
-            return <Badge variant="success">Quản trị viên</Badge>;
+            return <Badge variant='success'>Quản trị viên</Badge>;
           case 'admin':
-            return <Badge variant="success">Quản trị viên</Badge>;
+            return <Badge variant='success'>Quản trị viên</Badge>;
           case 'seller':
-            return <Badge variant="success">Người bán hàng</Badge>;
+            return <Badge variant='success'>Người bán hàng</Badge>;
           case 'customer':
-            return <Badge variant="success">Người dùng</Badge>;
+            return <Badge variant='success'>Người dùng</Badge>;
         }
       },
     },
@@ -74,14 +77,8 @@ function AdminUserManagement() {
       accessorKey: 'permissions',
       header: 'Quyền',
       cell: () => {
-        return (
-            <p
-              className='cursor-pointer text-blue-600'
-            >
-            Xem quyền
-            </p>
-          );
-      }
+        return <p className='cursor-pointer text-blue-600'>Xem quyền</p>;
+      },
     },
     {
       accessorKey: 'updatedAt',
@@ -113,9 +110,9 @@ function AdminUserManagement() {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -132,59 +129,76 @@ function AdminUserManagement() {
     // setUsers((prev) => prev.filter((user) => user.id !== id));
     // del/admin/user/:id
     try {
-      const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
+      const token = localStorage.getItem('ACCESS_TOKEN');
       axios.delete(`https://lazapee-jivl.onrender.com/admin/user/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setUsers((prev) => prev.filter((user) => user.id !== id));
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Failed to delete user:', error);
     }
-
   };
 
   return (
     <SidebarMaincontentLayout>
-      <div className="flex flex-col space-y-6">
-        <Tabs defaultValue="all">
-          <TabsList className="mb-6 grid w-max grid-cols-4 gap-4">
-            <TabsTrigger value="all">Tất cả</TabsTrigger>
-            <TabsTrigger value="system">Hệ thống</TabsTrigger>
-            <TabsTrigger value="seller">Người bán hàng</TabsTrigger>
-            <TabsTrigger value="customer">Người dùng</TabsTrigger>
+      <div className='flex flex-col space-y-6'>
+        <Tabs defaultValue='all'>
+          <TabsList className='mb-6 grid w-max grid-cols-4 gap-4'>
+            <TabsTrigger value='all'>Tất cả</TabsTrigger>
+            <TabsTrigger value='system'>Hệ thống</TabsTrigger>
+            <TabsTrigger value='seller'>Người bán hàng</TabsTrigger>
+            <TabsTrigger value='customer'>Người dùng</TabsTrigger>
           </TabsList>
-          <TabsContent value="all">
+          <TabsContent value='all'>
             <DataTable
               columns={columns}
               data={users}
-              searchColumn={'fullName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'fullName',
+                },
+              }}
             />
           </TabsContent>
-          <TabsContent value="system">
+          <TabsContent value='system'>
             <DataTable
               columns={columns}
               data={users.filter(
-                (user) =>
-                  user.role === 'superadmin' || user.role === 'admin'
+                (user) => user.role === 'superadmin' || user.role === 'admin'
               )}
-              searchColumn={'fullName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'fullName',
+                },
+              }}
             />
           </TabsContent>
-          <TabsContent value="seller">
+          <TabsContent value='seller'>
             <DataTable
               columns={columns}
               data={users.filter((user) => user.role === 'seller')}
-              searchColumn={'fullName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'fullName',
+                },
+              }}
             />
           </TabsContent>
-          <TabsContent value="customer">
+          <TabsContent value='customer'>
             <DataTable
               columns={columns}
               data={users.filter((user) => user.role === 'customer')}
-              searchColumn={'fullName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'fullName',
+                },
+              }}
             />
           </TabsContent>
         </Tabs>

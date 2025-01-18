@@ -7,13 +7,16 @@ import ShopProfile from '../components/organisms/ShopProfile';
 import Statistic from '../components/organisms/Statistic';
 import ShopGuard from '../guards/ShopGuard';
 import { get } from '../api/config';
+import AuthGuard from '../guards/AuthGuard';
 const shopRoutes = [
   {
     path: 'shop',
     element: (
-      <ShopGuard>
-        <ShopPage />
-      </ShopGuard>
+      <AuthGuard>
+        <ShopGuard>
+          <ShopPage />
+        </ShopGuard>
+      </AuthGuard>
     ),
     children: [
       {

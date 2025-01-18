@@ -26,17 +26,18 @@ function AdminProductManagement() {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-      const response = await axios.get('https://lazapee-jivl.onrender.com/admin/product', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        'https://lazapee-jivl.onrender.com/admin/product',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setProducts(response.data.products);
       console.log('Products:', response.data.products);
-    }
-
-    catch (error) {
+    } catch (error) {
       console.error('Failed to fetch products:', error);
     }
   };
@@ -156,11 +157,14 @@ function AdminProductManagement() {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('ADMIN_ACCESS_TOKEN');
-      await axios.delete(`https://lazapee-jivl.onrender.com/admin/product/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `https://lazapee-jivl.onrender.com/admin/product/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert('Xóa sản phẩm thành công');
       fetchData(); // Cập nhật danh sách sau khi xóa
     } catch (error) {
@@ -184,35 +188,64 @@ function AdminProductManagement() {
             <DataTable
               columns={columns}
               data={products}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'productName',
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='available'>
             <DataTable
               columns={columns}
-              data={products.filter((product) => product.status === 'available')}
-              searchColumn={'productName'}
+              data={products.filter(
+                (product) => product.status === 'available'
+              )}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'productName',
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='out of stock'>
             <DataTable
               columns={columns}
-              data={products.filter((product) => product.status === 'out of stock')}
-              searchColumn={'productName'}
+              data={products.filter(
+                (product) => product.status === 'out of stock'
+              )}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'productName',
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='active'>
             <DataTable
               columns={columns}
               data={products.filter((product) => product.status === 'active')}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'productName',
+                },
+              }}
             />
           </TabsContent>
           <TabsContent value='inactive'>
             <DataTable
               columns={columns}
               data={products.filter((product) => product.status === 'inactive')}
-              searchColumn={'productName'}
+              options={{
+                search: {
+                  allowSearch: true,
+                  searchColumn: 'productName',
+                },
+              }}
             />
           </TabsContent>
         </Tabs>
