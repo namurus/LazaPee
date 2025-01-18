@@ -12,6 +12,7 @@ import shopRoutes from './shopRoutes';
 import adminRoutes from './adminRoutes';
 import CheckoutPage from '../components/pages/CheckoutPage';
 import QRPage from '../components/pages/QRPage';
+import { route as searchRoute } from './searchRoutes';
 
 const routes = [
   {
@@ -28,6 +29,7 @@ const routes = [
       ...userRoutes,
       ...productRoutes,
       cartRoute,
+      searchRoute,
       {
         path: '/checkout',
         element: (

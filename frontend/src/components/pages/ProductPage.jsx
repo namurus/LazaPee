@@ -92,7 +92,9 @@ function ProductPage() {
 
   const onFilterButtonClick = () => {
     if (pickedColor) searchParams.set('color', pickedColor.value);
+    else searchParams.delete('color');
     if (pickedSize) searchParams.set('size', pickedSize.value);
+    else searchParams.delete('size');
     searchParams.set('priceMin', priceRange[0]);
     searchParams.set('priceMax', priceRange[1]);
     searchParams.set('sortBy', sortBy);

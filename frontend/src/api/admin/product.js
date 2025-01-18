@@ -31,13 +31,9 @@ const getShippingUnits = () => {
 };
 
 const searchProducts = (search, queryParams = {}) => {
-  // return fetchWithInstance(`search?search=${search}`, {
-  //   params: queryParams,
-  // });
-  // Use mock data for now
-  const page = queryParams.page || 1;
-  const limit = queryParams.limit || 6;
-  return getCategoryProducts('1', { page, limit });
+  return fetchWithInstance(`search?keyword=${search}`, {
+    params: queryParams,
+  });
 };
 
 const addProduct = (product) => {
