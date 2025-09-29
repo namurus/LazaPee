@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+
 const instance = axios.create({
-  baseURL: 'https://lazapee-ceu1.onrender.com',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,6 +18,6 @@ instance.interceptors.response.use(
   }
 )
 
-export const baseURL = 'https://lazapee-ceu1.onrender.com';
+export { baseURL };
 
 export default instance;
