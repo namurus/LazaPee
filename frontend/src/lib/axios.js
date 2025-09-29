@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://lazapee-jivl.onrender.com/',
+  baseURL: 'https://lazapee-ceu1.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,6 +16,6 @@ instance.interceptors.response.use(
   }
 )
 
-export const baseURL = 'https://lazapee-jivl.onrender.com';
+export const baseURL = 'https://lazapee-ceu1.onrender.com';
 
 export default instance;
