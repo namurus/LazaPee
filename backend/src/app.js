@@ -3,7 +3,7 @@ import 'dotenv/config';
 import db from '@/database';
 import router from './routes/index.route';
 import cors from 'cors';
-import corsConfig from '@/config/cors';
+import corsOptions from '@/config/cors';
 
 const ping = async () => {
 	try {
@@ -21,7 +21,7 @@ const app = express();
 // parse application/json
 
 app.use(express.json())
-app.use(cors(corsConfig))
+app.use(cors(corsOptions))
 
 // routers
 router(app) 
